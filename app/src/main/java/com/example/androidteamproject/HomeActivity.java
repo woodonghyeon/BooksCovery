@@ -49,25 +49,19 @@ public class HomeActivity extends AppCompatActivity {
                         .commit();
                 return true;
             }
-            if (menuItem.getItemId() == R.id.tab_2) {
+            if (menuItem.getItemId() == R.id.tab_find) {
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.ly_home, new FragmentHome())
                         .commit();
                 return true;
             }
-            if (menuItem.getItemId() == R.id.tab_3) {
+            if (menuItem.getItemId() == R.id.tab_history) {
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.ly_home, new FragmentHome())
                         .commit();
                 return true;
             }
-            if (menuItem.getItemId() == R.id.tab_4) {
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.ly_home, new FragmentHome())
-                        .commit();
-                return true;
-            }
-            if (menuItem.getItemId() == R.id.tab_5) {
+            if (menuItem.getItemId() == R.id.tab_setting) {
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.ly_home, new FragmentHome())
                         .commit();
