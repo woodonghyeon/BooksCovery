@@ -24,10 +24,9 @@ public class FragmentHome extends Fragment {
     private ViewPager2 mPager;
     private FragmentStateAdapter pagerAdapter;
     private TextView tv_department_title;
-    private Animation anime_splash_ball;
+    private Animation anime_left_to_right;
 
     public FragmentHome() {
-        anime_splash_ball = null; // 기본값으로 초기화
     }
 
     public static FragmentHome newInstance(String param1, String param2) {
@@ -95,7 +94,7 @@ public class FragmentHome extends Fragment {
 
     private void startAnimation(View view) {
         tv_department_title = view.findViewById(R.id.tv_department_title);
-        anime_splash_ball = AnimationUtils.loadAnimation(getContext(), R.anim.anim_splash_ball);
-        tv_department_title.startAnimation(anime_splash_ball);
+        anime_left_to_right = AnimationUtils.loadAnimation(getContext(), R.anim.anime_left_to_right);
+        tv_department_title.startAnimation(anime_left_to_right);
     }
 }
