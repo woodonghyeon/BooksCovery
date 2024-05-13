@@ -16,7 +16,9 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_marginTop="100dp"
         android:layout_width="500dp"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:hintTextColor="@color/brandcolor5"
+        app:boxStrokeColor="@color/brandcolor5">
         <EditText
             android:id="@+id/et_input_id"
             android:layout_width="500dp"
@@ -24,14 +26,16 @@
             android:fontFamily="@font/suitebold"
             android:textSize="20dp"
             android:inputType="text"
-            android:hint="　아이디"/>
+            android:hint="　아이디" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="500dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        app:passwordToggleEnabled="true">
+        app:passwordToggleEnabled="true"
+        app:hintTextColor="@color/brandcolor5"
+        app:boxStrokeColor="@color/brandcolor5">
         <EditText
             android:id="@+id/et_input_pwd"
             android:layout_width="500dp"
@@ -39,7 +43,7 @@
             android:fontFamily="@font/suitebold"
             android:textSize="20dp"
             android:inputType="textPassword"
-            android:hint="　커밋테스트"/>
+            android:hint="　비밀번호" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.AppCompatButton
