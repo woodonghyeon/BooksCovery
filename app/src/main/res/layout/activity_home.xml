@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:src="@drawable/logo_bookscovery"
-        android:background="@color/white2">
+        android:background="@android:color/transparent">
     </ImageView>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -17,9 +17,9 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
         app:menu="@menu/btm_navi_menu"
-        app:itemBackground="@color/white"
-        app:itemIconTint="@color/tab_selection_color"
-        app:itemTextColor="@color/tab_selection_color" />
+        app:itemBackground="@color/brandcolor1"
+        app:itemIconTint="@color/brandcolor3"
+        app:itemTextColor="@color/brandcolor3" />
 
     <LinearLayout
         android:id="@+id/ly_home"
