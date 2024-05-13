@@ -9,19 +9,25 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.TextView;
 
 public class FragmentHome extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+    private final int num_page = 4;
     private String mParam1;
     private String mParam2;
     private ViewPager2 mPager;
     private FragmentStateAdapter pagerAdapter;
-    private final int num_page = 4;
+    private TextView tv_department_title;
+    private Animation anime_splash_ball;
 
     public FragmentHome() {
+        anime_splash_ball = null; // 기본값으로 초기화
     }
 
     public static FragmentHome newInstance(String param1, String param2) {
@@ -46,6 +52,7 @@ public class FragmentHome extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+        startAnimation(view);
         SettingImg(view);
         return view;
     }
@@ -84,5 +91,11 @@ public class FragmentHome extends Fragment {
                 super.onPageSelected(position);
             }
         });
+    }
+
+    private void startAnimation(View view) {
+        tv_department_title = view.findViewById(R.id.tv_department_title);
+        anime_splash_ball = AnimationUtils.loadAnimation(getContext(), R.anim.anim_splash_ball);
+        tv_department_title.startAnimation(anime_splash_ball);
     }
 }
