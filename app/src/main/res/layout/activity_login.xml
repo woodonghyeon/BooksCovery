@@ -1,0 +1,55 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <ImageView
+        android:id="@+id/iv_ic_book"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/logo_bookscovery" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_marginTop="100dp"
+        android:layout_width="500dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/til_input_layout_id"
+        android:layout_centerHorizontal="true">
+        <EditText
+            android:id="@+id/et_input_id"
+            android:layout_width="500dp"
+            android:layout_height="50dp"
+            android:textSize="15dp"
+            android:inputType="text"
+            android:hint="아이디"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="500dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/til_input_layout_id"
+        android:layout_centerHorizontal="true"
+        app:passwordToggleEnabled="true">
+        <EditText
+            android:id="@+id/et_input_pwd"
+            android:layout_width="500dp"
+            android:layout_height="50dp"
+            android:textSize="15dp"
+            android:inputType="textPassword"
+            android:hint="패스워드"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/bt_login"
+        android:layout_marginTop="50dp"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#80C3F9"
+        android:text="로그인"/>
+
+</LinearLayout>

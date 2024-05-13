@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 알파(alpha) 효과 애니메이션을 정의하는 XML -->
+<set xmlns:android="http://schemas.android.com/apk/res/android" android:fillAfter="true">
+
+    <!-- 알파(alpha) 속성을 변경하는 애니메이션 -->
+    <alpha
+        android:duration="3000"
+        android:fromAlpha="0.0"
+        android:interpolator="@android:anim/accelerate_interpolator"
+        android:toAlpha="1.0"/>
+    <!-- 애니메이션의 지속 시간: 3000ms(3초) -->
+    <!-- 시작 지점의 알파 값: 완전 투명(0.0) -->
+    <!-- 가속도 보간기를 사용하여 애니메이션 가속화 -->
+    <!-- 끝 지점의 알파 값: 완전 불투명(1.0) -->
+</set>
