@@ -21,7 +21,7 @@ public class FragmentHome extends Fragment {
     private String mParam2;
     private ViewPager2 mPager;
     private FragmentStateAdapter pagerAdapter;
-    private int num_page = 4;
+    private final int num_page = 4;
     private CircleIndicator3 mIndicator;
 
     public FragmentHome() {
