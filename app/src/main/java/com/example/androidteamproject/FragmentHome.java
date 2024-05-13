@@ -10,8 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import me.relex.circleindicator.CircleIndicator3;
-
 public class FragmentHome extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
@@ -22,7 +20,6 @@ public class FragmentHome extends Fragment {
     private ViewPager2 mPager;
     private FragmentStateAdapter pagerAdapter;
     private final int num_page = 4;
-    private CircleIndicator3 mIndicator;
 
     public FragmentHome() {
     }
@@ -63,12 +60,6 @@ public class FragmentHome extends Fragment {
         //Adapter
         pagerAdapter = new MyAdapter(requireActivity(), num_page);
         mPager.setAdapter(pagerAdapter);
-        //Indicator
-        mIndicator = view.findViewById(R.id.indicator);
-        mIndicator.setViewPager(mPager);
-        mIndicator.createIndicators(num_page,0);
-        //ViewPager Setting
-        mPager.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
 
         /**
          * 이 부분 조정하여 처음 시작하는 이미지 설정.
@@ -91,7 +82,6 @@ public class FragmentHome extends Fragment {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                mIndicator.animatePageSelected(position%num_page);
             }
         });
     }

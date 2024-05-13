@@ -6,15 +6,17 @@
     tools:context=".FragmentHome"
     android:orientation="vertical">
 
+    <TextView
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/suitebold"
+        android:text="전체 학과 인기 도서 TOP 10"
+        android:textSize="40dp">
+    </TextView>
+
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
-        android:layout_height="60dp" />
-
-    <me.relex.circleindicator.CircleIndicator3
-        android:id="@+id/indicator"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginBottom="10dp"
-        android:layout_gravity="bottom"/>
+        android:layout_height="400dp" />
 </FrameLayout>
