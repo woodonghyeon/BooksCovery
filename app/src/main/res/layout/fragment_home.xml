@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
+    android:background="@color/white"
     tools:context=".FragmentHome">
 
     <TextView
@@ -13,13 +14,48 @@
         android:fontFamily="@font/suitebold"
         android:text="전체 학과 인기 도서 TOP 10"
         android:textSize="40dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_gravity="center">
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="start">
     </TextView>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="400dp"/>
+
+    <TextView
+        android:id="@+id/tv_popular_book_week"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/suitebold"
+        android:text="이번주 인기도서 TOP 10"
+        android:textSize="40dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="end">
+    </TextView>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewpager2"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"/>
+
+    <TextView
+        android:id="@+id/tv_popular_book_month"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/suitebold"
+        android:text="이번달 인기도서 TOP 10"
+        android:textSize="40dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="start">
+    </TextView>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewpager3"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"/>
+
 </LinearLayout>
