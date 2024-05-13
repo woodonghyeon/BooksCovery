@@ -21,9 +21,9 @@ public class FragmentHome extends Fragment {
     private final int num_page = 10;
     private String mParam1;
     private String mParam2;
-    private ViewPager2 mPager, mPager2, mPager3;
+    private ViewPager2 mPager, mPager2, mPager3, mPager4;
     private FragmentStateAdapter pagerAdapter;
-    private TextView tv_department_title, tv_popular_book_week, tv_popular_book_month;
+    private TextView tv_department_title, tv_popular_book_week, tv_popular_book_month, tv_book_rental;
     private Animation anime_left_to_right, anime_right_to_left;
 
     public FragmentHome() {
@@ -123,6 +123,27 @@ public class FragmentHome extends Fragment {
                 super.onPageSelected(position);
             }
         });
+
+        // 네 번째 ViewPager2
+        mPager4 = view.findViewById(R.id.viewpager4);
+        pagerAdapter = new MyAdapter(requireActivity(), num_page); // 같은 어댑터 재사용
+        mPager4.setAdapter(pagerAdapter);
+        mPager4.setCurrentItem(1000);
+        mPager4.setOffscreenPageLimit(4);
+        mPager4.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+                if (positionOffsetPixels == 0) {
+                    mPager4.setCurrentItem(position);
+                }
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+            }
+        });
     }
 
     // 타이틀 애니메이션
@@ -130,6 +151,7 @@ public class FragmentHome extends Fragment {
         tv_department_title = view.findViewById(R.id.tv_department_title);
         tv_popular_book_week = view.findViewById(R.id.tv_popular_book_week);
         tv_popular_book_month = view.findViewById(R.id.tv_popular_book_month);
+        tv_book_rental = view.findViewById(R.id.tv_book_rental);
 
         anime_left_to_right = AnimationUtils.loadAnimation(getContext(), R.anim.anime_left_to_right);
         anime_right_to_left = AnimationUtils.loadAnimation(getContext(), R.anim.anime_right_to_left);
@@ -137,5 +159,6 @@ public class FragmentHome extends Fragment {
         tv_department_title.startAnimation(anime_right_to_left);
         tv_popular_book_week.startAnimation(anime_left_to_right);
         tv_popular_book_month.startAnimation(anime_right_to_left);
+        tv_book_rental.startAnimation(anime_left_to_right);
     }
 }

@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -6,6 +6,11 @@
     android:padding="16dp"
     android:background="@color/white"
     tools:context=".FragmentHome">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
     <TextView
         android:id="@+id/tv_department_title"
@@ -58,4 +63,22 @@
         android:layout_width="match_parent"
         android:layout_height="400dp"/>
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/tv_book_rental"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/suitebold"
+        android:text="대출 급상승 도서 TOP 10"
+        android:textSize="40dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="end">
+    </TextView>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewpager4"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"/>
+    </LinearLayout>
+
+</ScrollView>
