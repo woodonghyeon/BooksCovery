@@ -39,7 +39,7 @@
             android:fontFamily="@font/suitebold"
             android:textSize="20dp"
             android:inputType="textPassword"
-            android:hint="　패스워드"/>
+            android:hint="　커밋테스트"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.AppCompatButton
