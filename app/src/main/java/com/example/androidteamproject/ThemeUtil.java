@@ -31,7 +31,7 @@ public class ThemeUtil {
 
     public static void modSave(Context context, String select_mod){
         SharedPreferences sp;
-        sp = context.getSharedPreferences("mod", context.MODE_PRIVATE);
+        sp = context.getSharedPreferences("mod", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString("mod",select_mod);
         editor.commit();
@@ -39,7 +39,7 @@ public class ThemeUtil {
 
     public static String modLoad(Context context){
         SharedPreferences sp;
-        sp = context.getSharedPreferences("mod", context.MODE_PRIVATE);
+        sp = context.getSharedPreferences("mod", Context.MODE_PRIVATE);
         String load_mod = sp.getString("mod","light");
         return load_mod;
     }

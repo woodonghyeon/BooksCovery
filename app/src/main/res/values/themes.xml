@@ -4,8 +4,11 @@
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
-
     <style name="Theme.AndroidTeamProject" parent="Base.Theme.AndroidTeamProject" >
         <item name="colorPrimaryDark">@color/theme_title_color</item>
+    </style>
+    <style name="MyTextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
+        <!-- 힌트 텍스트의 색상을 지정 -->
+        <item name="android:textColorHint">@color/brandcolor5</item>
     </style>
 </resources>

@@ -5,19 +5,27 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/ly_home"
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_weight="1"/>
+        android:layout_height="100dp"
+        android:src="@drawable/logo_bookscovery"
+        android:background="@android:color/transparent">
+    </ImageView>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="80dp"
         app:menu="@menu/btm_navi_menu"
-        app:itemBackground="@android:color/transparent"
-        app:itemIconTint="@color/tab_selection_color"
-        app:itemTextColor="@color/tab_selection_color" />
+        app:itemBackground="@color/brandcolor1"
+        app:itemIconTint="@color/brandcolor3"
+        app:itemTextColor="@color/brandcolor3" />
+
+    <LinearLayout
+        android:id="@+id/ly_home"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_weight="1"/>
+
 </LinearLayout>

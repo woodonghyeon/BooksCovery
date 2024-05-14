@@ -9,20 +9,22 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import me.relex.circleindicator.CircleIndicator3;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.TextView;
 
 public class FragmentHome extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+    private final int num_page = 10;
     private String mParam1;
     private String mParam2;
-    private ViewPager2 mPager;
+    private ViewPager2 mPager, mPager2, mPager3, mPager4;
     private FragmentStateAdapter pagerAdapter;
-    private int num_page = 4;
-    private CircleIndicator3 mIndicator;
+    private TextView tv_department_title, tv_popular_book_week, tv_popular_book_month, tv_book_rental;
+    private Animation anime_left_to_right, anime_right_to_left;
 
     public FragmentHome() {
     }
@@ -49,6 +51,7 @@ public class FragmentHome extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+        startAnimation(view);
         SettingImg(view);
         return view;
     }
@@ -58,27 +61,12 @@ public class FragmentHome extends Fragment {
          * 가로 슬라이드 뷰 Fragment
          */
 
-        //ViewPager2
+        // 첫 번째 ViewPager2
         mPager = view.findViewById(R.id.viewpager);
-        //Adapter
         pagerAdapter = new MyAdapter(requireActivity(), num_page);
         mPager.setAdapter(pagerAdapter);
-        //Indicator
-        mIndicator = view.findViewById(R.id.indicator);
-        mIndicator.setViewPager(mPager);
-        mIndicator.createIndicators(num_page,0);
-        //ViewPager Setting
-        mPager.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
-
-        /**
-         * 이 부분 조정하여 처음 시작하는 이미지 설정.
-         * 2000장 생성하였으니 현재위치 1002로 설정하여
-         * 좌 우로 슬라이딩 할 수 있게 함. 거의 무한대로
-         */
-
-        mPager.setCurrentItem(1000); //시작 지점
-        mPager.setOffscreenPageLimit(4); //최대 이미지 수
-
+        mPager.setCurrentItem(1000);
+        mPager.setOffscreenPageLimit(4);
         mPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -91,8 +79,86 @@ public class FragmentHome extends Fragment {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                mIndicator.animatePageSelected(position%num_page);
             }
         });
+
+        // 두 번째 ViewPager2
+        mPager2 = view.findViewById(R.id.viewpager2);
+        pagerAdapter = new MyAdapter(requireActivity(), num_page); // 같은 어댑터 재사용
+        mPager2.setAdapter(pagerAdapter);
+        mPager2.setCurrentItem(1000);
+        mPager2.setOffscreenPageLimit(4);
+        mPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+                if (positionOffsetPixels == 0) {
+                    mPager2.setCurrentItem(position);
+                }
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+            }
+        });
+
+        // 세 번째 ViewPager2
+        mPager3 = view.findViewById(R.id.viewpager3);
+        pagerAdapter = new MyAdapter(requireActivity(), num_page); // 같은 어댑터 재사용
+        mPager3.setAdapter(pagerAdapter);
+        mPager3.setCurrentItem(1000);
+        mPager3.setOffscreenPageLimit(4);
+        mPager3.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+                if (positionOffsetPixels == 0) {
+                    mPager3.setCurrentItem(position);
+                }
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+            }
+        });
+
+        // 네 번째 ViewPager2
+        mPager4 = view.findViewById(R.id.viewpager4);
+        pagerAdapter = new MyAdapter(requireActivity(), num_page); // 같은 어댑터 재사용
+        mPager4.setAdapter(pagerAdapter);
+        mPager4.setCurrentItem(1000);
+        mPager4.setOffscreenPageLimit(4);
+        mPager4.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+                if (positionOffsetPixels == 0) {
+                    mPager4.setCurrentItem(position);
+                }
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+            }
+        });
+    }
+
+    // 타이틀 애니메이션
+    private void startAnimation(View view) {
+        tv_department_title = view.findViewById(R.id.tv_department_title);
+        tv_popular_book_week = view.findViewById(R.id.tv_popular_book_week);
+        tv_popular_book_month = view.findViewById(R.id.tv_popular_book_month);
+        tv_book_rental = view.findViewById(R.id.tv_book_rental);
+
+        anime_left_to_right = AnimationUtils.loadAnimation(getContext(), R.anim.anime_left_to_right);
+        anime_right_to_left = AnimationUtils.loadAnimation(getContext(), R.anim.anime_right_to_left);
+
+        tv_department_title.startAnimation(anime_right_to_left);
+        tv_popular_book_week.startAnimation(anime_left_to_right);
+        tv_popular_book_month.startAnimation(anime_right_to_left);
+        tv_book_rental.startAnimation(anime_left_to_right);
     }
 }

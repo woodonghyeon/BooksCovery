@@ -43,45 +43,29 @@ public class HomeActivity extends AppCompatActivity {
     class TabSelectedListener implements BottomNavigationView.OnNavigationItemSelectedListener {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-            switch (menuItem.getItemId()) {
-                case R.id.tab_home: {
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.ly_home, new FragmentHome())
-                            .commit();
-                    return true;
-                }
+            if (menuItem.getItemId() == R.id.tab_home) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.ly_home, new FragmentHome())
+                        .commit();
+                return true;
             }
-            switch (menuItem.getItemId()) {
-                case R.id.tab_2: {
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.ly_home, new FragmentHome())
-                            .commit();
-                    return true;
-                }
+            if (menuItem.getItemId() == R.id.tab_find) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.ly_home, new FragmentHome())
+                        .commit();
+                return true;
             }
-            switch (menuItem.getItemId()) {
-                case R.id.tab_3: {
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.ly_home, new FragmentHome())
-                            .commit();
-                    return true;
-                }
+            if (menuItem.getItemId() == R.id.tab_history) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.ly_home, new FragmentHome())
+                        .commit();
+                return true;
             }
-            switch (menuItem.getItemId()) {
-                case R.id.tab_4: {
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.ly_home, new FragmentHome())
-                            .commit();
-                    return true;
-                }
-            }
-            switch (menuItem.getItemId()) {
-                case R.id.tab_5: {
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.ly_home, new FragmentHome())
-                            .commit();
-                    return true;
-                }
+            if (menuItem.getItemId() == R.id.tab_setting) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.ly_home, new FragmentHome())
+                        .commit();
+                return true;
             }
             return false;
         }

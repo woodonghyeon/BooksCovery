@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 글자를 왼쪽에서 오른쪽으로 이동시키는 애니메이션 -->
+    <!-- 시작 위치: 왼쪽 끝 -->
+    <!-- android:fromXDelta="-100%" -->
+
+    <!-- 끝 위치: 오른쪽 끝 -->
+    <!-- android:toXDelta="0%" -->
+
+    <!-- 애니메이션 지속 시간: 2초 -->
+    <!-- android:duration="1000" -->
+
+    <translate
+        android:fromXDelta="-100%"
+        android:toXDelta="0%"
+        android:duration="2000" />
+
+    <!-- 글자의 투명도를 조절하여 나타나는 효과 -->
+    <!-- 시작 투명도: 완전히 투명 -->
+    <!-- android:fromAlpha="0" -->
+
+    <!-- 끝 투명도: 완전히 불투명 -->
+    <!-- android:toAlpha="1" -->
+
+    <!-- 애니메이션 지속 시간: 2초 -->
+    <!-- android:duration="1000" -->
+
+    <alpha
+        android:fromAlpha="0"
+        android:toAlpha="1"
+        android:duration="2000" />
+</set>

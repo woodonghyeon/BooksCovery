@@ -1,20 +1,84 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FragmentHome"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@color/white"
+    tools:context=".FragmentHome">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_department_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/suitebold"
+        android:text="전체 학과 인기 도서 TOP 10"
+        android:textSize="40dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="start">
+    </TextView>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="400dp"/>
 
-    <me.relex.circleindicator.CircleIndicator3
-        android:id="@+id/indicator"
+    <TextView
+        android:id="@+id/tv_popular_book_week"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginBottom="10dp"
-        android:layout_gravity="bottom"/>
-</FrameLayout>
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/suitebold"
+        android:text="이번주 인기도서 TOP 10"
+        android:textSize="40dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="end">
+    </TextView>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewpager2"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"/>
+
+    <TextView
+        android:id="@+id/tv_popular_book_month"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/suitebold"
+        android:text="이번달 인기도서 TOP 10"
+        android:textSize="40dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="start">
+    </TextView>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewpager3"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"/>
+
+    <TextView
+        android:id="@+id/tv_book_rental"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/suitebold"
+        android:text="대출 급상승 도서 TOP 10"
+        android:textSize="40dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="end">
+    </TextView>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewpager4"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"/>
+    </LinearLayout>
+
+</ScrollView>
