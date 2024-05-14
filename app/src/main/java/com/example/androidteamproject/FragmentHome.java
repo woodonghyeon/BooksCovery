@@ -18,7 +18,7 @@ public class FragmentHome extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    private final int num_page = 10;
+    private final int num_page = 4;
     private String mParam1;
     private String mParam2;
     private ViewPager2 mPager, mPager2, mPager3, mPager4;
