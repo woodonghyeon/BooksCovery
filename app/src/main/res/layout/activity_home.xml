@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         app:menu="@menu/btm_navi_menu"
-        app:itemBackground="@color/brandcolor3"
+        app:itemBackground="@color/brandcolor2"
         app:itemIconTint="@color/tab_selection_color"
         app:itemTextColor="@color/tab_selection_color" />
 

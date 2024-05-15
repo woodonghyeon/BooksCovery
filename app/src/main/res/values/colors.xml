@@ -3,12 +3,16 @@
     <color name="primaryDarkColor">#FF000000</color>
     <color name="primaryColor">#AAFFFFFF</color>
     <color name="gray">#E2E2E2</color>
+    <color name="red">#FF0000</color>
+
     <color name="theme_title_color">#75AAF6</color>
     <color name="theme_layout_color">#80C3F9</color>
     <color name="theme_text_color">#000000</color>
+
     <color name="brandcolor1">#FCFCFC</color>
     <color name="brandcolor2">#6079F2</color>
     <color name="brandcolor3">#6A91F4</color>
     <color name="brandcolor4">#75AAF6</color>
     <color name="brandcolor5">#80C3F9</color>
+
 </resources>

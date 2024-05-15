@@ -51,7 +51,7 @@ public class HomeActivity extends AppCompatActivity {
             }
             if (menuItem.getItemId() == R.id.tab_find) {
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.ly_home, new FragmentHome())
+                        .replace(R.id.ly_home, new FragmentSearch())
                         .commit();
                 return true;
             }

@@ -22,7 +22,6 @@
         </activity>
         <activity android:name=".LoginActivity" android:label="LoginActivity"></activity>
         <activity android:name=".HomeActivity" android:label="HomeActivity"></activity>
-        <activity android:name=".SearchActivity" android:label="SearchActivity"></activity>
     </application>
 
 </manifest>
