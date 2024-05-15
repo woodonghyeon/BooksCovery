@@ -2,6 +2,7 @@ package com.example.androidteamproject;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
@@ -57,16 +58,29 @@ public class FragmentHome extends Fragment {
     }
 
     private void SettingImg(View view) {
-        /**
-         * 가로 슬라이드 뷰 Fragment
-         */
+        // 가로 슬라이드 뷰 Fragment
 
         // 첫 번째 ViewPager2
         mPager = view.findViewById(R.id.viewpager);
-        pagerAdapter = new MyAdapter(requireActivity(), num_page);
+        pagerAdapter = new PageAdapter(requireActivity(), num_page);
         mPager.setAdapter(pagerAdapter);
         mPager.setCurrentItem(1000);
         mPager.setOffscreenPageLimit(4);
+
+        // viewpager2 간격 변환을 위함 -> res.values.dimes.xml에서 확인
+        int pageMarginPx = getResources().getDimensionPixelOffset(R.dimen.pageMargin);
+        int pagerWidth = getResources().getDimensionPixelOffset(R.dimen.pageWidth);
+        int screenWidth = getResources().getDisplayMetrics().widthPixels;
+        int offsetPx = screenWidth - pageMarginPx - pagerWidth;
+
+        // viewpager2 간격 변환
+        mPager.setPageTransformer(new ViewPager2.PageTransformer() {
+            @Override
+            public void transformPage(@NonNull View page, float position) {
+                page.setTranslationX(position * -offsetPx);
+            }
+        });
+
         mPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -84,10 +98,19 @@ public class FragmentHome extends Fragment {
 
         // 두 번째 ViewPager2
         mPager2 = view.findViewById(R.id.viewpager2);
-        pagerAdapter = new MyAdapter(requireActivity(), num_page); // 같은 어댑터 재사용
+        pagerAdapter = new PageAdapter(requireActivity(), num_page); // 같은 어댑터 재사용
         mPager2.setAdapter(pagerAdapter);
         mPager2.setCurrentItem(1000);
         mPager2.setOffscreenPageLimit(4);
+
+        // viewpager2 간격 변환
+        mPager2.setPageTransformer(new ViewPager2.PageTransformer() {
+            @Override
+            public void transformPage(@NonNull View page, float position) {
+                page.setTranslationX(position * -offsetPx);
+            }
+        });
+
         mPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -105,10 +128,19 @@ public class FragmentHome extends Fragment {
 
         // 세 번째 ViewPager2
         mPager3 = view.findViewById(R.id.viewpager3);
-        pagerAdapter = new MyAdapter(requireActivity(), num_page); // 같은 어댑터 재사용
+        pagerAdapter = new PageAdapter(requireActivity(), num_page); // 같은 어댑터 재사용
         mPager3.setAdapter(pagerAdapter);
         mPager3.setCurrentItem(1000);
         mPager3.setOffscreenPageLimit(4);
+
+        // viewpager2 간격 변환
+        mPager3.setPageTransformer(new ViewPager2.PageTransformer() {
+            @Override
+            public void transformPage(@NonNull View page, float position) {
+                page.setTranslationX(position * -offsetPx);
+            }
+        });
+
         mPager3.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -126,10 +158,19 @@ public class FragmentHome extends Fragment {
 
         // 네 번째 ViewPager2
         mPager4 = view.findViewById(R.id.viewpager4);
-        pagerAdapter = new MyAdapter(requireActivity(), num_page); // 같은 어댑터 재사용
+        pagerAdapter = new PageAdapter(requireActivity(), num_page); // 같은 어댑터 재사용
         mPager4.setAdapter(pagerAdapter);
         mPager4.setCurrentItem(1000);
         mPager4.setOffscreenPageLimit(4);
+
+        // viewpager2 간격 변환
+        mPager4.setPageTransformer(new ViewPager2.PageTransformer() {
+            @Override
+            public void transformPage(@NonNull View page, float position) {
+                page.setTranslationX(position * -offsetPx);
+            }
+        });
+
         mPager4.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
