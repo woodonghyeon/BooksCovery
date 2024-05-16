@@ -7,11 +7,11 @@
     android:orientation="vertical">
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:layout_width="700dp"
-        android:layout_height="700dp"
+        android:id="@+id/iv_currentImg"
+        android:layout_width="500dp"
+        android:layout_height="500dp"
         android:layout_gravity="center"
-        android:background="#FBE670"
-        android:src="@drawable/test2"/>
-
+        android:scaleType="fitXY"
+        android:src="@drawable/test1"/>
 
 </LinearLayout>

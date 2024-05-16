@@ -13,7 +13,7 @@
 
     <!-- BottomNavigationView Style 설정 -->
     <style name="CustomBottomNavigationView" parent="Base.Widget.Material3.BottomNavigationView">
-        <item name="android:background">@color/brandcolor1</item>
+        <item name="android:background">@color/lightGray</item>
     </style>
 
     <!-- Search TextInputLayout Style 설정 -->

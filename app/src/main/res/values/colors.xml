@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primaryDarkColor">#FF000000</color>
-    <color name="primaryColor">#AAFFFFFF</color>
-    <color name="gray">#C3C3C3</color>
+    <color name="primaryDarkColor">#000000</color>
+    <color name="primaryColor">#FFFFFF</color>
+    <color name="gray">#AFAFAF</color>
+    <color name="lightGray">#EFEFEF</color>
     <color name="red">#FF0000</color>
 
     <color name="theme_title_color">#75AAF6</color>
@@ -15,7 +16,8 @@
     <color name="brandcolor3">#6A91F4</color>
     <color name="brandcolor4">#75AAF6</color>
     <color name="brandcolor5">#80C3F9</color>
+    <color name="brandcolor5.5">#9CD3FF</color>
 
-    <color name="pastelYellow">#FDFFE699</color>
+    <color name="pastelYellow">#FDFFEFBD</color>
 
 </resources>

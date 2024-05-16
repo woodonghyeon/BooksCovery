@@ -4,6 +4,7 @@
     android:id="@+id/activity_home"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/primaryColor"
     android:orientation="vertical">
 
     <ImageView
@@ -13,14 +14,17 @@
         android:background="@android:color/transparent">
     </ImageView>
 
+    <!-- itemActiveIndicatorStyle은 선택시 아이콘 뒤로 나오는 색상 -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        app:menu="@menu/btm_navi_menu"
-        app:itemBackground="@color/brandcolor1"
+        app:itemBackground="@color/lightGray"
         app:itemIconTint="@color/tab_selection_color"
-        app:itemTextColor="@color/tab_selection_color" />
+        app:itemTextColor="@color/tab_selection_color"
+        app:itemActiveIndicatorStyle="@null"
+        app:elevation="16dp"
+        app:menu="@menu/btm_navi_menu" />
 
     <LinearLayout
         android:id="@+id/ly_home"
