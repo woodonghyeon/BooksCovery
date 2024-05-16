@@ -95,101 +95,11 @@ public class FragmentHome extends Fragment {
                 super.onPageSelected(position);
             }
         });
-
-        // 두 번째 ViewPager2
-        mPager2 = view.findViewById(R.id.viewpager2);
-        pagerAdapter = new PageAdapter(requireActivity(), num_page); // 같은 어댑터 재사용
-        mPager2.setAdapter(pagerAdapter);
-        mPager2.setCurrentItem(1000);
-        mPager2.setOffscreenPageLimit(4);
-
-        // viewpager2 간격 변환
-        mPager2.setPageTransformer(new ViewPager2.PageTransformer() {
-            @Override
-            public void transformPage(@NonNull View page, float position) {
-                page.setTranslationX(position * -offsetPx);
-            }
-        });
-
-        mPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
-                if (positionOffsetPixels == 0) {
-                    mPager2.setCurrentItem(position);
-                }
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                super.onPageSelected(position);
-            }
-        });
-
-        // 세 번째 ViewPager2
-        mPager3 = view.findViewById(R.id.viewpager3);
-        pagerAdapter = new PageAdapter(requireActivity(), num_page); // 같은 어댑터 재사용
-        mPager3.setAdapter(pagerAdapter);
-        mPager3.setCurrentItem(1000);
-        mPager3.setOffscreenPageLimit(4);
-
-        // viewpager2 간격 변환
-        mPager3.setPageTransformer(new ViewPager2.PageTransformer() {
-            @Override
-            public void transformPage(@NonNull View page, float position) {
-                page.setTranslationX(position * -offsetPx);
-            }
-        });
-
-        mPager3.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
-                if (positionOffsetPixels == 0) {
-                    mPager3.setCurrentItem(position);
-                }
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                super.onPageSelected(position);
-            }
-        });
-
-        // 네 번째 ViewPager2
-        mPager4 = view.findViewById(R.id.viewpager4);
-        pagerAdapter = new PageAdapter(requireActivity(), num_page); // 같은 어댑터 재사용
-        mPager4.setAdapter(pagerAdapter);
-        mPager4.setCurrentItem(1000);
-        mPager4.setOffscreenPageLimit(4);
-
-        // viewpager2 간격 변환
-        mPager4.setPageTransformer(new ViewPager2.PageTransformer() {
-            @Override
-            public void transformPage(@NonNull View page, float position) {
-                page.setTranslationX(position * -offsetPx);
-            }
-        });
-
-        mPager4.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
-                if (positionOffsetPixels == 0) {
-                    mPager4.setCurrentItem(position);
-                }
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                super.onPageSelected(position);
-            }
-        });
     }
 
     // 타이틀 애니메이션
     private void startAnimation(View view) {
-        tv_department_title = view.findViewById(R.id.tv_department_title);
+        tv_department_title = view.findViewById(R.id.tv_currentEvent);
         tv_popular_book_week = view.findViewById(R.id.tv_popular_book_week);
         tv_popular_book_month = view.findViewById(R.id.tv_popular_book_month);
         tv_book_rental = view.findViewById(R.id.tv_book_rental);

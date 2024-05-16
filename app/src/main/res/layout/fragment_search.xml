@@ -9,34 +9,48 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <com.google.android.material.search.SearchBar
+        <include layout="@layout/searchview"/>
+
+        <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <androidx.appcompat.widget.SearchView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </com.google.android.material.search.SearchBar>
-<!--        <com.google.android.material.textfield.TextInputLayout-->
-<!--            android:theme="@style/Widget.Material3.TextInputLayout.OutlinedBox"-->
-<!--            style="@style/SearchTextInputLayoutStyle"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="30dp"-->
-<!--            android:orientation="horizontal"-->
-<!--            app:boxBackgroundMode="outline"-->
-<!--            android:gravity="center">-->
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            app:dividerColor="@color/gray"/>
 
-<!--            <com.google.android.material.textfield.TextInputEditText-->
-<!--                android:id="@+id/tie_search_title"-->
-<!--                style="@style/TextInputEditTextStyle"-->
-<!--                android:layout_width="800dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:gravity="center"-->
-<!--                android:hint="도서 제목을 입력하세요."-->
-<!--                android:inputType="text"/>-->
-<!--        </com.google.android.material.textfield.TextInputLayout>-->
+        <LinearLayout
+            android:id="@+id/currentLayout"
+            android:layout_marginStart="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp">
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_currentEvent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/suitebold"
+                android:text="최근 많이 검색된 도서"
+                android:textSize="20dp"
+                android:gravity="start"/>
+        </LinearLayout>
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"/>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            app:dividerColor="@color/gray"/>
+
     </LinearLayout>
 
 </ScrollView>

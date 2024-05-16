@@ -59,7 +59,7 @@ public class Fragment_1 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(
-                R.layout.frame_1, container, false);
+                R.layout.current_event_1, container, false);
         return rootView;
     }
 }

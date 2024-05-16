@@ -13,7 +13,7 @@
 
     <!-- BottomNavigationView Style 설정 -->
     <style name="CustomBottomNavigationView" parent="Base.Widget.Material3.BottomNavigationView">
-        <item name="android:background">@color/brandcolor2</item>
+        <item name="android:background">@color/brandcolor1</item>
     </style>
 
     <!-- Search TextInputLayout Style 설정 -->
@@ -67,5 +67,10 @@
         <item name="android:includeFontPadding">false</item>
         <item name="android:textSize">30sp</item>
         <item name="android:textColor">@color/primaryDarkColor</item>
+    </style>
+
+    <!-- SearchView Style 설정 -->
+    <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">
+        <item name="android:background">@color/pastelYellow</item>
     </style>
 </resources>

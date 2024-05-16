@@ -12,73 +12,77 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_department_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/suitebold"
-        android:text="전체 학과 인기 도서 TOP 10"
-        android:textSize="40dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:gravity="start">
-    </TextView>
+        <LinearLayout
+            android:id="@+id/currentLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/radius_current_event_title">
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_currentEvent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/suitebold"
+                android:text="진행중인 이벤트"
+                android:textSize="30dp"
+                android:gravity="center_horizontal"/>
+        </LinearLayout>
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/viewpager"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"/>
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="700dp"/>
 
-    <TextView
-        android:id="@+id/tv_popular_book_week"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/suitebold"
-        android:text="이번주 인기도서 TOP 10"
-        android:textSize="40dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:gravity="end">
-    </TextView>
+        <TextView
+            android:id="@+id/tv_popular_book_week"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/suitebold"
+            android:text="이번주 인기도서 TOP 10"
+            android:textSize="40dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:gravity="end">
+        </TextView>
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/viewpager2"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"/>
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewpager2"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"/>
 
-    <TextView
-        android:id="@+id/tv_popular_book_month"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/suitebold"
-        android:text="이번달 인기도서 TOP 10"
-        android:textSize="40dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:gravity="start">
-    </TextView>
+        <TextView
+            android:id="@+id/tv_popular_book_month"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/suitebold"
+            android:text="이번달 인기도서 TOP 10"
+            android:textSize="40dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:gravity="start">
+        </TextView>
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/viewpager3"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"/>
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewpager3"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"/>
 
-    <TextView
-        android:id="@+id/tv_book_rental"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/suitebold"
-        android:text="대출 급상승 도서 TOP 10"
-        android:textSize="40dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:gravity="end">
-    </TextView>
+        <TextView
+            android:id="@+id/tv_book_rental"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/suitebold"
+            android:text="대출 급상승 도서 TOP 10"
+            android:textSize="40dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:gravity="end">
+        </TextView>
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/viewpager4"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"/>
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewpager4"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"/>
     </LinearLayout>
 
 </ScrollView>

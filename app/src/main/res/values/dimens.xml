@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- margin 값 -->
-    <dimen name="pageMargin">400dp</dimen>
+    <dimen name="pageMargin">700dp</dimen>
     <dimen name="pageWidth">50dp</dimen>
 </resources>
