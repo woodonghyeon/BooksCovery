@@ -1,15 +1,15 @@
-package com.example.androidteamproject;
+package com.example.androidteamproject.Search;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-public class HomePageAdapter extends FragmentStateAdapter {
+public class SearchPageAdapter extends FragmentStateAdapter {
     private final int[] imageResIds;
     private final int imageCount;
 
-    public HomePageAdapter(FragmentActivity fa, int count) {
+    public SearchPageAdapter(FragmentActivity fa, int count) {
         super(fa);
         imageCount = count;
         // 이미지 리소스 ID 배열 초기화
@@ -27,7 +27,7 @@ public class HomePageAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         // 이미지 리소스 ID 배열에서 현재 페이지에 해당하는 이미지의 리소스 ID를 가져와서 Fragment를 생성하여 반환
         int index = getRealPosition(position);
-        return CurrentEventFragment.newInstance(imageResIds[index]);
+        return LatelySearchImageFragment.newInstance(imageResIds[index]);
     }
 
     @Override

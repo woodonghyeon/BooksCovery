@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- margin 값 -->
-    <dimen name="pageMargin">500dp</dimen>
-    <dimen name="pageWidth">50dp</dimen>
+    <dimen name="eventPageMargin">500dp</dimen>
+    <dimen name="eventPageWidth">50dp</dimen>
+
+    <dimen name="searchPageMargin">300dp</dimen>
+    <dimen name="searchPageWidth">30dp</dimen>
 </resources>

@@ -1,4 +1,4 @@
-package com.example.androidteamproject;
+package com.example.androidteamproject.Home;
 
 import android.os.Bundle;
 
@@ -14,6 +14,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
+import com.example.androidteamproject.R;
+
 public class FragmentHome extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
@@ -23,7 +25,7 @@ public class FragmentHome extends Fragment {
     private String mParam1;
     private String mParam2;
     private ViewPager2 mPager;
-    private FragmentStateAdapter pagerAdapter;
+    private FragmentStateAdapter homePagerAdapter;
     private TextView tv_department_title, tv_popular_book_week, tv_popular_book_month, tv_book_rental;
     private Animation anime_left_to_right, anime_right_to_left;
 
@@ -62,14 +64,14 @@ public class FragmentHome extends Fragment {
 
         // 첫 번째 ViewPager2
         mPager = view.findViewById(R.id.event_viewpager);
-        pagerAdapter = new HomePageAdapter(requireActivity(), num_page);
-        mPager.setAdapter(pagerAdapter);
+        homePagerAdapter = new HomePageAdapter(requireActivity(), num_page);
+        mPager.setAdapter(homePagerAdapter);
         mPager.setCurrentItem(1000);
         mPager.setOffscreenPageLimit(4);
 
         // viewpager2 간격 변환을 위함 -> res.values.dimes.xml에서 확인
-        int pageMarginPx = getResources().getDimensionPixelOffset(R.dimen.pageMargin);
-        int pagerWidth = getResources().getDimensionPixelOffset(R.dimen.pageWidth);
+        int pageMarginPx = getResources().getDimensionPixelOffset(R.dimen.eventPageMargin);
+        int pagerWidth = getResources().getDimensionPixelOffset(R.dimen.eventPageWidth);
         int screenWidth = getResources().getDisplayMetrics().widthPixels;
         int offsetPx = screenWidth - pageMarginPx - pagerWidth;
 

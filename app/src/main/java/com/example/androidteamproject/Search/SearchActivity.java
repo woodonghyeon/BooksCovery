@@ -1,9 +1,11 @@
-package com.example.androidteamproject;
+package com.example.androidteamproject.Search;
 
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.androidteamproject.R;
 
 public class SearchActivity extends AppCompatActivity {
     @Override

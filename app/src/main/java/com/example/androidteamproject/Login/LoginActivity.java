@@ -1,4 +1,4 @@
-package com.example.androidteamproject;
+package com.example.androidteamproject.Login;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,7 +8,9 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
+
+import com.example.androidteamproject.Home.HomeActivity;
+import com.example.androidteamproject.R;
 
 public class LoginActivity extends Activity {
     @Override

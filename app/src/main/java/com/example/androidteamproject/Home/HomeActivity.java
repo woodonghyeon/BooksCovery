@@ -1,4 +1,4 @@
-package com.example.androidteamproject;
+package com.example.androidteamproject.Home;
 
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -9,12 +9,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.viewpager2.adapter.FragmentStateAdapter;
-import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.androidteamproject.Search.FragmentSearch;
+import com.example.androidteamproject.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import me.relex.circleindicator.CircleIndicator3;
 
 public class HomeActivity extends AppCompatActivity {
     private LinearLayout ly_home;
