@@ -29,7 +29,7 @@
         </LinearLayout>
 
         <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/viewpager"
+            android:id="@+id/event_viewpager"
             android:layout_width="match_parent"
             android:layout_height="500dp"/> <!-- currentEvent 이미지 크기 수정-->
 

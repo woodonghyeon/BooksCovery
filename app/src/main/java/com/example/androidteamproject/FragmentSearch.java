@@ -22,10 +22,8 @@ public class FragmentSearch extends Fragment {
     private final int num_page = 4;
     private String mParam1;
     private String mParam2;
-    private ViewPager2 mPager, mPager2, mPager3, mPager4;
+    private ViewPager2 mPager;
     private FragmentStateAdapter pagerAdapter;
-    private TextView tv_department_title, tv_popular_book_week, tv_popular_book_month, tv_book_rental;
-    private Animation anime_left_to_right, anime_right_to_left;
 
     public FragmentSearch() {
     }
