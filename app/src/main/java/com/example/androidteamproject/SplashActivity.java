@@ -1,4 +1,4 @@
-package com.example.androidteamproject.Splash;
+package com.example.androidteamproject;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -10,7 +10,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.example.androidteamproject.Login.LoginActivity;
-import com.example.androidteamproject.R;
 
 public class SplashActivity extends Activity {
 
