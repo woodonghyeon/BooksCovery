@@ -42,7 +42,7 @@ public class LatelySearchImageFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // 이미지를 표시하기 위한 ImageView를 생성하고 이미지 리소스 ID를 설정하여 이미지를 표시
-        View rootView = inflater.inflate(R.layout.lately_search_book, container, false);
+        View rootView = inflater.inflate(R.layout.lately_search_book_img, container, false);
         CircleImageView imageView = rootView.findViewById(R.id.iv_latelySearch);
         imageView.setImageResource(imageResId);
         return rootView;

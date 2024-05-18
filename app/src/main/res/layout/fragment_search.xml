@@ -40,6 +40,7 @@
                 android:fontFamily="@font/suitebold"
                 android:text="최근 많이 검색된 도서"
                 android:textSize="20dp"
+                android:textColor="@color/primaryDarkColor"
                 android:gravity="start"/>
         </LinearLayout>
 
@@ -47,7 +48,7 @@
             android:layout_marginTop="10dp"
             android:id="@+id/search_viewpager"
             android:layout_width="match_parent"
-            android:layout_height="300dp"/>
+            android:layout_height="match_parent"/>
 
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"

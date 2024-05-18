@@ -24,7 +24,7 @@ public class FragmentHome extends Fragment {
     private final int num_page = 4;
     private String mParam1;
     private String mParam2;
-    private ViewPager2 mPager;
+    private ViewPager2 currentEventPager, weekBookViewPager;
     private FragmentStateAdapter homePagerAdapter;
     private TextView tv_department_title, tv_popular_book_week, tv_popular_book_month, tv_book_rental;
     private Animation anime_left_to_right, anime_right_to_left;
@@ -55,19 +55,19 @@ public class FragmentHome extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         startAnimation(view);
-        SettingImg(view);
+        CurrentEventSettingImg(view);
         return view;
     }
 
-    private void SettingImg(View view) {
+    private void CurrentEventSettingImg(View view) {
         // 가로 슬라이드 뷰 Fragment
 
         // 첫 번째 ViewPager2
-        mPager = view.findViewById(R.id.event_viewpager);
-        homePagerAdapter = new HomePageAdapter(requireActivity(), num_page);
-        mPager.setAdapter(homePagerAdapter);
-        mPager.setCurrentItem(1000);
-        mPager.setOffscreenPageLimit(4);
+        currentEventPager = view.findViewById(R.id.event_viewpager);
+        homePagerAdapter = new CurrentEventAdapter(requireActivity(), num_page);
+        currentEventPager.setAdapter(homePagerAdapter);
+        currentEventPager.setCurrentItem(1000);
+        currentEventPager.setOffscreenPageLimit(4);
 
         // viewpager2 간격 변환을 위함 -> res.values.dimes.xml에서 확인
         int pageMarginPx = getResources().getDimensionPixelOffset(R.dimen.eventPageMargin);
@@ -76,19 +76,19 @@ public class FragmentHome extends Fragment {
         int offsetPx = screenWidth - pageMarginPx - pagerWidth;
 
         // viewpager2 간격 변환
-        mPager.setPageTransformer(new ViewPager2.PageTransformer() {
+        currentEventPager.setPageTransformer(new ViewPager2.PageTransformer() {
             @Override
             public void transformPage(@NonNull View page, float position) {
                 page.setTranslationX(position * -offsetPx);
             }
         });
 
-        mPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+        currentEventPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 super.onPageScrolled(position, positionOffset, positionOffsetPixels);
                 if (positionOffsetPixels == 0) {
-                    mPager.setCurrentItem(position);
+                    currentEventPager.setCurrentItem(position);
                 }
             }
 

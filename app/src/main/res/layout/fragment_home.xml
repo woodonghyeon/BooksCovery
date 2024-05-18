@@ -23,6 +23,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/suitebold"
+                android:textColor="@color/primaryDarkColor"
                 android:text="진행중인 이벤트"
                 android:textSize="30dp"
                 android:gravity="center_horizontal"/>
@@ -31,7 +32,7 @@
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/event_viewpager"
             android:layout_width="match_parent"
-            android:layout_height="500dp"/> <!-- currentEvent 이미지 크기 수정-->
+            android:layout_height="match_parent"/> <!-- currentEvent 이미지 크기 수정-->
 
         <TextView
             android:id="@+id/tv_popular_book_week"
@@ -39,6 +40,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/suitebold"
             android:text="이번주 인기도서 TOP 10"
+            android:textColor="@color/primaryDarkColor"
             android:textSize="40dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
@@ -46,9 +48,9 @@
         </TextView>
 
         <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/viewpager2"
+            android:id="@+id/week_book_viewpager"
             android:layout_width="match_parent"
-            android:layout_height="400dp"/>
+            android:layout_height="match_parent"/>
 
         <TextView
             android:id="@+id/tv_popular_book_month"
@@ -56,6 +58,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/suitebold"
             android:text="이번달 인기도서 TOP 10"
+            android:textColor="@color/primaryDarkColor"
             android:textSize="40dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
@@ -73,6 +76,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/suitebold"
             android:text="대출 급상승 도서 TOP 10"
+            android:textColor="@color/primaryDarkColor"
             android:textSize="40dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"

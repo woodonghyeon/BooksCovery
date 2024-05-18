@@ -5,11 +5,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-public class HomePageAdapter extends FragmentStateAdapter {
+public class CurrentEventAdapter extends FragmentStateAdapter {
     private final int[] imageResIds;
     private final int imageCount;
 
-    public HomePageAdapter(FragmentActivity fa, int count) {
+    public CurrentEventAdapter(FragmentActivity fa, int count) {
         super(fa);
         imageCount = count;
         // 이미지 리소스 ID 배열 초기화

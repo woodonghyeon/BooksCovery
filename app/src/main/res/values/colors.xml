@@ -11,7 +11,7 @@
     <color name="theme_text_color">#000000</color>
 
     <color name="brandcolor1">#FCFCFC</color>
-    <color name="brandcolor1.5">#DCEEFF</color>
+    <color name="brandcolor1.5">#F7FBFF</color>
     <color name="brandcolor2">#6079F2</color>
     <color name="brandcolor3">#6A91F4</color>
     <color name="brandcolor4">#75AAF6</color>
@@ -19,5 +19,6 @@
     <color name="brandcolor5.5">#9CD3FF</color>
 
     <color name="pastelYellow">#FDFFEFBD</color>
+    <color name="pastelBlue">#CAF4FF</color>
 
 </resources>
