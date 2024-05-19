@@ -55,8 +55,8 @@ public class HttpConnection {
         });
     }
 
-    public void getKeyword(int pageNo, int pageSize, String format, final HttpResponseCallback callback) {
-        String url = BASE_URL + "monthlyKeywords?authKey=" + API_KEY + "&month=2024-050" + pageNo + "&pageSize=" + pageSize + "&format=" + format;
+    public void getKeyword(String format, final HttpResponseCallback callback) {
+        String url = BASE_URL + "monthlyKeywords?authKey=" + API_KEY + "&month=2024-05";
         Request request = new Request.Builder().url(url).build();
 
         client.newCall(request).enqueue(new Callback() {

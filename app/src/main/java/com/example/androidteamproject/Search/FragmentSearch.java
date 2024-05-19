@@ -10,7 +10,9 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.example.androidteamproject.ApiData.HttpConnection;
 import com.example.androidteamproject.R;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -25,6 +27,7 @@ public class FragmentSearch extends Fragment {
     private String mParam2;
     private ViewPager2 mPager;
     private FragmentStateAdapter searchPagerAdapter;
+    private TextView resultTextView;
 
     public FragmentSearch() {
     }
@@ -53,6 +56,7 @@ public class FragmentSearch extends Fragment {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
         SettingImg(view);
         addChips(view); // addChips 메소드 호출
+        getResponseApiData(view);
         return view;
     }
 
@@ -103,6 +107,38 @@ public class FragmentSearch extends Fragment {
             chip.setChipStrokeColorResource(R.color.primaryDarkColor); // Chip 테두리 색상 설정
             chip.setChipStrokeWidth(1.0f); // Chip 테두리 두께 설정
             chipGroup.addView(chip); // Chip을 ChipGroup에 추가
+        }
+    }
+
+    private void getResponseApiData(View view) {
+        resultTextView = view.findViewById(R.id.resultTextView);
+
+        if (resultTextView != null) {
+            HttpConnection.getInstance(getContext()).getKeyword("json", new HttpConnection.HttpResponseCallback() {
+                @Override
+                public void onSuccess(String responseData) {
+                    if (getActivity() != null) {
+                        getActivity().runOnUiThread(() -> {
+                            if (resultTextView != null) {
+                                resultTextView.setText(responseData);
+                            }
+                        });
+                    }
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                    if (getActivity() != null) {
+                        getActivity().runOnUiThread(() -> {
+                            if (resultTextView != null) {
+                                resultTextView.setText("Failed to get data: " + e.getMessage());
+                            }
+                        });
+                    }
+                }
+            });
+        } else {
+            // resultTextView가 null인 경우 처리할 로직 추가
         }
     }
 }
