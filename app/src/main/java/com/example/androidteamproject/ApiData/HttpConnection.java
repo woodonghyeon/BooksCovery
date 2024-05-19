@@ -16,13 +16,12 @@ public class HttpConnection {
 
     private static final String BASE_URL = "http://data4library.kr/api/";
     private static String API_KEY;
-
     private static HttpConnection instance;
     private OkHttpClient client;
 
     private HttpConnection(Context context) {
         client = new OkHttpClient();
-        API_KEY = context.getResources().getString(R.string.api_key);
+        API_KEY = "cc355482ccb755beacd4ba6f7134c20c6b59a237e1ee656a155a6ed3a2003941";
     }
 
     public static HttpConnection getInstance(Context context) {
@@ -56,7 +55,7 @@ public class HttpConnection {
     }
 
     public void getKeyword(String format, final HttpResponseCallback callback) {
-        String url = BASE_URL + "monthlyKeywords?authKey=" + API_KEY + "&month=2024-05";
+        String url = BASE_URL + "monthlyKeywords?authKey=" + API_KEY + "&month=2024-04";
         Request request = new Request.Builder().url(url).build();
 
         client.newCall(request).enqueue(new Callback() {

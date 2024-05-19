@@ -2,7 +2,6 @@ package com.example.androidteamproject.Search;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
@@ -17,6 +16,9 @@ import com.example.androidteamproject.R;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class FragmentSearch extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
@@ -27,7 +29,8 @@ public class FragmentSearch extends Fragment {
     private String mParam2;
     private ViewPager2 mPager;
     private FragmentStateAdapter searchPagerAdapter;
-    private TextView resultTextView;
+    private List<String> chipTexts = Arrays.asList("1","2","3","4","5");
+    private TextView text;
 
     public FragmentSearch() {
     }
@@ -56,7 +59,7 @@ public class FragmentSearch extends Fragment {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
         SettingImg(view);
         addChips(view); // addChips 메소드 호출
-        getResponseApiData(view);
+        getResponseApiData(view); // API 응답 데이터 가져오기
         return view;
     }
 
@@ -94,33 +97,17 @@ public class FragmentSearch extends Fragment {
             }
         });
     }
-
-    private void addChips(View view) {
-        ChipGroup chipGroup = view.findViewById(R.id.chip_group);
-        String[] chipTexts = {"1", "2", "3", "4"}; // Chip에 사용할 텍스트 배열
-
-        for (String text : chipTexts) {
-            Chip chip = new Chip(requireContext());
-            chip.setText(text);
-            chip.setChipBackgroundColorResource(R.color.brandcolor1); // Chip 배경 색 설정
-            chip.setTextColor(getResources().getColor(R.color.primaryDarkColor)); // 텍스트 색상 설정
-            chip.setChipStrokeColorResource(R.color.primaryDarkColor); // Chip 테두리 색상 설정
-            chip.setChipStrokeWidth(1.0f); // Chip 테두리 두께 설정
-            chipGroup.addView(chip); // Chip을 ChipGroup에 추가
-        }
-    }
-
     private void getResponseApiData(View view) {
-        resultTextView = view.findViewById(R.id.resultTextView);
+        text = view.findViewById(R.id.text);
 
-        if (resultTextView != null) {
+        if (text != null) {
             HttpConnection.getInstance(getContext()).getKeyword("json", new HttpConnection.HttpResponseCallback() {
                 @Override
                 public void onSuccess(String responseData) {
                     if (getActivity() != null) {
                         getActivity().runOnUiThread(() -> {
-                            if (resultTextView != null) {
-                                resultTextView.setText(responseData);
+                            if (text != null) {
+                                text.setText(responseData);
                             }
                         });
                     }
@@ -130,8 +117,8 @@ public class FragmentSearch extends Fragment {
                 public void onFailure(Exception e) {
                     if (getActivity() != null) {
                         getActivity().runOnUiThread(() -> {
-                            if (resultTextView != null) {
-                                resultTextView.setText("Failed to get data: " + e.getMessage());
+                            if (text != null) {
+                                text.setText("Failed to get data: " + e.getMessage());
                             }
                         });
                     }
@@ -139,6 +126,20 @@ public class FragmentSearch extends Fragment {
             });
         } else {
             // resultTextView가 null인 경우 처리할 로직 추가
+        }
+    }
+
+    private void addChips(View view) {
+        ChipGroup chipGroup = view.findViewById(R.id.chip_group);
+
+        for (String text : chipTexts) {
+            Chip chip = new Chip(requireContext());
+            chip.setText(text);
+            chip.setChipBackgroundColorResource(R.color.brandcolor1); // 칩 배경 색 설정
+            chip.setTextColor(getResources().getColor(R.color.primaryDarkColor)); // 텍스트 색상 설정
+            chip.setChipStrokeColorResource(R.color.primaryDarkColor); // 칩 테두리 색상 설정
+            chip.setChipStrokeWidth(1.0f); // 칩 테두리 두께 설정
+            chipGroup.addView(chip); // 칩을 ChipGroup에 추가
         }
     }
 }
