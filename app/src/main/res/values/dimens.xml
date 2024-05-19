@@ -6,4 +6,7 @@
 
     <dimen name="searchPageMargin">300dp</dimen>
     <dimen name="searchPageWidth">30dp</dimen>
+
+    <dimen name="weekBookPageMargin">300dp</dimen>
+    <dimen name="weekBookPageWidth">30dp</dimen>
 </resources>
