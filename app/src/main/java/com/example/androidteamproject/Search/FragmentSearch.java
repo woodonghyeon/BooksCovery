@@ -16,6 +16,11 @@ import com.example.androidteamproject.R;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,8 +34,7 @@ public class FragmentSearch extends Fragment {
     private String mParam2;
     private ViewPager2 mPager;
     private FragmentStateAdapter searchPagerAdapter;
-    private List<String> chipTexts = Arrays.asList("1","2","3","4","5");
-    private TextView text;
+    private List<String> keywords = new ArrayList<>();
 
     public FragmentSearch() {
     }
@@ -58,8 +62,7 @@ public class FragmentSearch extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
         SettingImg(view);
-        addChips(view); // addChips 메소드 호출
-        getResponseApiData(view); // API 응답 데이터 가져오기
+        getResponseApiData(); // API 응답 데이터 가져오기
         return view;
     }
 
@@ -97,44 +100,55 @@ public class FragmentSearch extends Fragment {
             }
         });
     }
-    private void getResponseApiData(View view) {
-        text = view.findViewById(R.id.text);
 
-        if (text != null) {
-            HttpConnection.getInstance(getContext()).getKeyword("json", new HttpConnection.HttpResponseCallback() {
-                @Override
-                public void onSuccess(String responseData) {
-                    if (getActivity() != null) {
-                        getActivity().runOnUiThread(() -> {
-                            if (text != null) {
-                                text.setText(responseData);
-                            }
-                        });
-                    }
-                }
+    private void getResponseApiData() {
+        HttpConnection.getInstance(getContext()).getKeyword("json", new HttpConnection.HttpResponseCallback() {
+            @Override
+            public void onSuccess(String responseData) {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        try {
+                            JSONObject json = new JSONObject(responseData);
+                            JSONObject responseObject = json.getJSONObject("response");
+                            JSONArray keywordsArray = responseObject.getJSONArray("keywords");
 
-                @Override
-                public void onFailure(Exception e) {
-                    if (getActivity() != null) {
-                        getActivity().runOnUiThread(() -> {
-                            if (text != null) {
-                                text.setText("Failed to get data: " + e.getMessage());
+                            for (int i = 0; i < keywordsArray.length(); i++) {
+                                JSONObject keywordObject = keywordsArray.getJSONObject(i);
+                                JSONObject keyword = keywordObject.getJSONObject("keyword");
+                                String word = keyword.getString("word");
+                                keywords.add(word);
                             }
-                        });
-                    }
+                            // 키워드를 가져온 후 칩 추가
+                            addChips();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    });
                 }
-            });
-        } else {
-            // resultTextView가 null인 경우 처리할 로직 추가
-        }
+            }
+            @Override
+            public void onFailure(Exception e) {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        // 에러 처리 로직 추가
+                    });
+                }
+            }
+        });
     }
 
-    private void addChips(View view) {
-        ChipGroup chipGroup = view.findViewById(R.id.chip_group);
 
-        for (String text : chipTexts) {
+    private void addChips() {
+        if (getContext() == null) return;
+        ChipGroup chipGroup = requireView().findViewById(R.id.chip_group);
+
+        // 기존 칩들을 모두 제거
+        chipGroup.removeAllViews();
+
+        // 키워드를 이용하여 칩 추가
+        for (String keyword : keywords) {
             Chip chip = new Chip(requireContext());
-            chip.setText(text);
+            chip.setText(keyword);
             chip.setChipBackgroundColorResource(R.color.brandcolor1); // 칩 배경 색 설정
             chip.setTextColor(getResources().getColor(R.color.primaryDarkColor)); // 텍스트 색상 설정
             chip.setChipStrokeColorResource(R.color.primaryDarkColor); // 칩 테두리 색상 설정
