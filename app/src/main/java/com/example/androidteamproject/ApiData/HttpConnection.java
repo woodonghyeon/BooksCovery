@@ -14,7 +14,7 @@ import okhttp3.Response;
 
 public class HttpConnection {
 
-    private static final String BASE_URL = "http://data4library.kr/api/libSrch";
+    private static final String BASE_URL = "http://data4library.kr/api/";
     private static String API_KEY;
 
     private static HttpConnection instance;
@@ -33,7 +33,30 @@ public class HttpConnection {
     }
 
     public void getLibraries(int pageNo, int pageSize, String format, final HttpResponseCallback callback) {
-        String url = BASE_URL + "?authKey=" + API_KEY + "&pageNo=" + pageNo + "&pageSize=" + pageSize + "&format=" + format;
+        String url = BASE_URL + "libSrch?authKey=" + API_KEY + "&pageNo=" + pageNo + "&pageSize=" + pageSize + "&format=" + format;
+        Request request = new Request.Builder().url(url).build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+                callback.onFailure(e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String responseData = response.body().string();
+                    callback.onSuccess(responseData);
+                } else {
+                    callback.onFailure(new IOException("Unexpected code " + response));
+                }
+            }
+        });
+    }
+
+    public void getKeyword(int pageNo, int pageSize, String format, final HttpResponseCallback callback) {
+        String url = BASE_URL + "monthlyKeywords?authKey=" + API_KEY + "&month=2024-050" + pageNo + "&pageSize=" + pageSize + "&format=" + format;
         Request request = new Request.Builder().url(url).build();
 
         client.newCall(request).enqueue(new Callback() {

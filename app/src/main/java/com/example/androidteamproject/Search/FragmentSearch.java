@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.androidteamproject.R;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 
 public class FragmentSearch extends Fragment {
 
@@ -50,6 +52,7 @@ public class FragmentSearch extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
         SettingImg(view);
+        addChips(view); // addChips 메소드 호출
         return view;
     }
 
@@ -70,12 +73,7 @@ public class FragmentSearch extends Fragment {
         int offsetPx = screenWidth - pageMarginPx - pagerWidth;
 
         // viewpager2 간격 변환
-        mPager.setPageTransformer(new ViewPager2.PageTransformer() {
-            @Override
-            public void transformPage(@NonNull View page, float position) {
-                page.setTranslationX(position * -offsetPx);
-            }
-        });
+        mPager.setPageTransformer((page, position) -> page.setTranslationX(position * -offsetPx));
 
         mPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
@@ -91,5 +89,20 @@ public class FragmentSearch extends Fragment {
                 super.onPageSelected(position);
             }
         });
+    }
+
+    private void addChips(View view) {
+        ChipGroup chipGroup = view.findViewById(R.id.chip_group);
+        String[] chipTexts = {"1", "2", "3", "4"}; // Chip에 사용할 텍스트 배열
+
+        for (String text : chipTexts) {
+            Chip chip = new Chip(requireContext());
+            chip.setText(text);
+            chip.setChipBackgroundColorResource(R.color.brandcolor1); // Chip 배경 색 설정
+            chip.setTextColor(getResources().getColor(R.color.primaryDarkColor)); // 텍스트 색상 설정
+            chip.setChipStrokeColorResource(R.color.primaryDarkColor); // Chip 테두리 색상 설정
+            chip.setChipStrokeWidth(1.0f); // Chip 테두리 두께 설정
+            chipGroup.addView(chip); // Chip을 ChipGroup에 추가
+        }
     }
 }

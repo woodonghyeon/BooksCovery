@@ -73,4 +73,5 @@
     <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">
         <item name="android:background">@color/pastelYellow</item>
     </style>
+    
 </resources>
