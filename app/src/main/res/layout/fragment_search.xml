@@ -17,6 +17,26 @@
 
         <include layout="@layout/searchview"/>
 
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            app:dividerColor="@color/gray"/>
+
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/suitebold"
+            android:text="키워드로 검색"
+            android:textSize="20dp"
+            android:textColor="@color/primaryDarkColor"
+            android:gravity="start"></TextView>
+
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chip_group"
             android:layout_width="match_parent"
@@ -24,13 +44,6 @@
             android:layout_margin="10dp"
             android:singleLine="true"
             app:singleSelection="false" />
-
-        <TextView
-            android:id="@+id/text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Result will be displayed here"
-            android:visibility="visible" />
 
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
