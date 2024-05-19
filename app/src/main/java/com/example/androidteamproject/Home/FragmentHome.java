@@ -174,7 +174,7 @@ public class FragmentHome extends Fragment {
         anime_right_to_left = AnimationUtils.loadAnimation(getContext(), R.anim.anime_right_to_left);
 
         tv_department_title.startAnimation(anime_right_to_left);
-        tv_popular_book_week.startAnimation(anime_left_to_right);
+        tv_popular_book_week.startAnimation(anime_right_to_left);
         tv_popular_book_month.startAnimation(anime_right_to_left);
         tv_book_rental.startAnimation(anime_left_to_right);
     }

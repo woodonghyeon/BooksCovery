@@ -12,9 +12,17 @@
         android:layout_width="300dp"
         android:layout_height="300dp"
         android:scaleType="centerCrop"
-        app:civ_border_overlay="true"
-        app:civ_border_width="5dp"
         app:civ_border_color="@color/lightGray"
-        android:src="@drawable/test1"/>
+        app:civ_border_overlay="true"
+        app:civ_border_width="5dp" />
+
+    <TextView
+        android:id="@+id/tv_latelySearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/suitebold"
+        android:textStyle="bold"
+        android:layout_gravity="center"
+        android:paddingTop="8dp"/>
 
 </LinearLayout>
