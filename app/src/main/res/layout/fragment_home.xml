@@ -47,6 +47,13 @@
             android:gravity="end">
         </TextView>
 
+        <TextView
+            android:id="@+id/resultTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Result will be displayed here"
+            android:visibility="visible" />
+
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/week_book_viewpager"
             android:layout_width="match_parent"

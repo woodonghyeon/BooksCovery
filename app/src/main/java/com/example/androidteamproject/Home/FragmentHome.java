@@ -1,12 +1,6 @@
 package com.example.androidteamproject.Home;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager2.adapter.FragmentStateAdapter;
-import androidx.viewpager2.widget.ViewPager2;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +8,12 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
+
+import com.example.androidteamproject.ApiData.HttpConnection;
 import com.example.androidteamproject.R;
 
 public class FragmentHome extends Fragment {
@@ -28,6 +28,7 @@ public class FragmentHome extends Fragment {
     private FragmentStateAdapter homePagerAdapter;
     private TextView tv_department_title, tv_popular_book_week, tv_popular_book_month, tv_book_rental;
     private Animation anime_left_to_right, anime_right_to_left;
+    private TextView resultTextView;
 
     public FragmentHome() {
     }
@@ -56,6 +57,8 @@ public class FragmentHome extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         startAnimation(view);
         CurrentEventSettingImg(view);
+        getResponseApiData(view);
+
         return view;
     }
 
@@ -113,5 +116,38 @@ public class FragmentHome extends Fragment {
         tv_popular_book_week.startAnimation(anime_left_to_right);
         tv_popular_book_month.startAnimation(anime_right_to_left);
         tv_book_rental.startAnimation(anime_left_to_right);
+    }
+
+    // API Data 받아오는 부분 Test
+    private void getResponseApiData(View view) {
+        resultTextView = view.findViewById(R.id.resultTextView);
+
+        if (resultTextView != null) {
+            HttpConnection.getInstance(getContext()).getLibraries(1, 2, "json", new HttpConnection.HttpResponseCallback() {
+                @Override
+                public void onSuccess(String responseData) {
+                    if (getActivity() != null) {
+                        getActivity().runOnUiThread(() -> {
+                            if (resultTextView != null) {
+                                resultTextView.setText(responseData);
+                            }
+                        });
+                    }
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                    if (getActivity() != null) {
+                        getActivity().runOnUiThread(() -> {
+                            if (resultTextView != null) {
+                                resultTextView.setText("Failed to get data: " + e.getMessage());
+                            }
+                        });
+                    }
+                }
+            });
+        } else {
+            // resultTextView가 null인 경우 처리할 로직 추가
+        }
     }
 }
