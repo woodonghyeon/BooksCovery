@@ -17,6 +17,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class HomeActivity extends AppCompatActivity {
     private LinearLayout ly_home;
     private BottomNavigationView bottomNavigationView;
+    private FragmentHome fragmentHome;
+    private FragmentSearch fragmentSearch;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,40 +43,45 @@ public class HomeActivity extends AppCompatActivity {
     class TabSelectedListener implements BottomNavigationView.OnNavigationItemSelectedListener {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-            if (menuItem.getItemId() == R.id.tab_home) {
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.ly_home, new FragmentHome())
-                        .commit();
-                return true;
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+            Fragment selectedFragment = null;
+
+            switch (menuItem.getItemId()) {
+                case R.id.tab_home:
+                    if (fragmentHome == null) {
+                        fragmentHome = new FragmentHome();
+                        fragmentTransaction.add(R.id.ly_home, fragmentHome, "home");
+                    }
+                    selectedFragment = fragmentHome;
+                    break;
+                case R.id.tab_find:
+                    if (fragmentSearch == null) {
+                        fragmentSearch = new FragmentSearch();
+                        fragmentTransaction.add(R.id.ly_home, fragmentSearch, "search");
+                    }
+                    selectedFragment = fragmentSearch;
+                    break;
+                case R.id.tab_history:
+                    // 필요시 FragmentHistory 추가
+                    break;
+                case R.id.tab_setting:
+                    // 필요시 FragmentSetting 추가
+                    break;
             }
-            if (menuItem.getItemId() == R.id.tab_find) {
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.ly_home, new FragmentSearch())
-                        .commit();
-                return true;
-            }
-            if (menuItem.getItemId() == R.id.tab_history) {
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.ly_home, new FragmentHome())
-                        .commit();
-                return true;
-            }
-            if (menuItem.getItemId() == R.id.tab_setting) {
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.ly_home, new FragmentHome())
-                        .commit();
+            if (selectedFragment != null) {
+                for (Fragment fragment : fragmentManager.getFragments()) {
+                    if (fragment == selectedFragment) {
+                        fragmentTransaction.show(fragment);
+                    } else {
+                        fragmentTransaction.hide(fragment);
+                    }
+                }
+                fragmentTransaction.commit();
                 return true;
             }
             return false;
         }
     }
-
-    // 프래그먼트를 교체하는 메서드
-    private void replaceFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.ly_home, fragment);
-        fragmentTransaction.commit();
-    }
-
 }
