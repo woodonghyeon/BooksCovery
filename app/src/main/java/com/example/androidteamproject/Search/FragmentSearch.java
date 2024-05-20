@@ -26,8 +26,6 @@ public class FragmentSearch extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    private final int num_page = 4;
     private String mParam1;
     private String mParam2;
     private ViewPager2 mPager;
@@ -135,12 +133,14 @@ public class FragmentSearch extends Fragment {
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
                         List<String> imageUrls = new ArrayList<>();
+                        List<String> bookName = new ArrayList<>();
                         for (LatelySearchBook book : books) {
                             imageUrls.add(book.getBookImageUrl());
+                            bookName.add(book.getBookName());
                         }
                         // ViewPager2에 이미지 추가
-                        setupViewPager(imageUrls);
-                        Log.d("API Response", "Image URLs: " + imageUrls.toString());
+                        setupViewPager(bookName, imageUrls);
+                        Log.d("API Response", "Image URLs: " + imageUrls.toString() + ", BookName: " + bookName.toString());
                     });
                 }
             }
@@ -158,7 +158,7 @@ public class FragmentSearch extends Fragment {
     }
 
     // ViewPager2 Setting
-    private void setupViewPager(List<String> imageUrls) {
+    private void setupViewPager(List<String> bookName, List<String> imageUrls) {
         if (imageUrls == null || imageUrls.isEmpty()) {
             // 이미지 URL이 없는 경우 처리
             return;
@@ -168,7 +168,7 @@ public class FragmentSearch extends Fragment {
             return;
         }
         mPager = getView().findViewById(R.id.search_viewpager);
-        searchPagerAdapter = new SearchPageAdapter(requireActivity(), imageUrls);
+        searchPagerAdapter = new SearchPageAdapter(requireActivity(), bookName, imageUrls);
         mPager.setAdapter(searchPagerAdapter);
         mPager.setCurrentItem(1000);
         mPager.setOffscreenPageLimit(10);
