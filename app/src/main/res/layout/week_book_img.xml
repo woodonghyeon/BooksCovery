@@ -9,15 +9,17 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iv_weekBookImg"
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:scaleType="centerCrop"
+        android:layout_gravity="center"
+        android:scaleType="fitXY"
         android:background="@null"/>
 
     <TextView
         android:id="@+id/tv_weekBook"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/suitebold"
         android:layout_gravity="center"
         android:textAlignment="center"
         android:visibility="visible" />

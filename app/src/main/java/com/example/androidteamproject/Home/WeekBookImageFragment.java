@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -44,7 +45,7 @@ public class WeekBookImageFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.week_book_img, container, false);
-        CircleImageView imageView = view.findViewById(R.id.iv_weekBookImg);
+        ImageView imageView = view.findViewById(R.id.iv_weekBookImg);
         TextView textView = view.findViewById(R.id.tv_weekBook);
 
         // Glide를 사용하여 이미지 로드
