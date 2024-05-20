@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.example.androidteamproject.Home.HomeActivity;
+import com.example.androidteamproject.Join.JoinActivity;
 import com.example.androidteamproject.R;
 
 public class LoginActivity extends Activity {
@@ -26,6 +27,7 @@ public class LoginActivity extends Activity {
 
         Button bt_login;
         bt_login = findViewById(R.id.bt_login);
+        Button btJoin = (Button) findViewById(R.id.btJoin);
         // 로그인 버튼 클릭시
         bt_login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -35,7 +37,8 @@ public class LoginActivity extends Activity {
                 startActivity(intent); // 홈 액티비티로 시작
             }
         });
-        
+
+        btJoin.setOnClickListener(view -> {startActivity(new Intent(LoginActivity.this, JoinActivity.class));});
     }
 
     private void showProgressDialog(){
