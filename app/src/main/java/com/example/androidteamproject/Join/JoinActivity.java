@@ -1,6 +1,7 @@
 package com.example.androidteamproject.Join;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +18,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
+import com.example.androidteamproject.Home.HomeActivity;
+import com.example.androidteamproject.Login.LoginActivity;
 import com.example.androidteamproject.R;
 
 public class JoinActivity extends AppCompatActivity {
@@ -75,7 +78,7 @@ public class JoinActivity extends AppCompatActivity {
             try {
                 // JDBC 드라이버 로드
                 Class.forName("com.mysql.jdbc.Driver");
-                // 데이터베이스에 연결 (url : "jdbc:mysql://your-database-url:3306/your-database-name", user : DB 아이디, password : DB 비밀번호)
+                // 데이터베이스에 연결 (url : "jdbc:mysql://10.0.2.2 (에뮬레이터 로컬 호스트 주소) :3306/your-database-name", user : DB 아이디, password : DB 비밀번호)
                 conn = DriverManager.getConnection("jdbc:mysql://10.0.2.2:3306/test", "root", "root");
 
                 // 쿼리 실행
@@ -111,8 +114,9 @@ public class JoinActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
+            startActivity(new Intent(JoinActivity.this, LoginActivity.class));
             // 결과를 Toast로 표시
-            Toast.makeText(JoinActivity.this, result, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
         }
     }
 }
