@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -30,13 +31,10 @@ public class LoginActivity extends Activity {
         Button btJoin = (Button) findViewById(R.id.btJoin);
 
         // 로그인 버튼 클릭시
-        bt_login.setOnClickListener(view -> {
-            showProgressDialog();
-            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-        });
+        bt_login.setOnClickListener(view -> { showProgressDialog(); startActivity(new Intent(LoginActivity.this, HomeActivity.class)); });
 
         // 회원가입 버튼 클릭시
-        btJoin.setOnClickListener(view -> {startActivity(new Intent(LoginActivity.this, JoinActivity.class));});
+        btJoin.setOnClickListener(view -> { startActivity(new Intent(LoginActivity.this, JoinActivity.class)); });
     }
 
     private void showProgressDialog(){
