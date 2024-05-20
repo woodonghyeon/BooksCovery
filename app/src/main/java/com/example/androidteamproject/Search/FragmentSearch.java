@@ -5,20 +5,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
-
 import com.example.androidteamproject.ApiData.HttpConnection;
 import com.example.androidteamproject.R;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,7 +76,7 @@ public class FragmentSearch extends Fragment {
                                 keywords.add(word);
                             }
                             // 키워드를 가져온 후 칩 추가
-                            addChips();
+                            addChips(false); // 처음에는 제한된 수만큼의 칩 추가
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -99,8 +95,7 @@ public class FragmentSearch extends Fragment {
         });
     }
 
-
-    private void addChips() {
+    private void addChips(boolean showAll) {
         if (getContext() == null) return;
         ChipGroup chipGroup = requireView().findViewById(R.id.chip_group);
 
@@ -108,17 +103,30 @@ public class FragmentSearch extends Fragment {
         chipGroup.removeAllViews();
 
         // 키워드를 이용하여 칩 추가
-        for (String keyword : keywords) {
+        int keywordLimit = showAll ? keywords.size() : Math.min(20, keywords.size());
+
+        for (int i = 0; i < keywordLimit; i++) {
             Chip chip = new Chip(requireContext());
-            chip.setText(keyword);
+            chip.setText(keywords.get(i));
             chip.setChipBackgroundColorResource(R.color.brandcolor1); // 칩 배경 색 설정
             chip.setTextColor(getResources().getColor(R.color.primaryDarkColor)); // 텍스트 색상 설정
             chip.setChipStrokeColorResource(R.color.primaryDarkColor); // 칩 테두리 색상 설정
             chip.setChipStrokeWidth(1.0f); // 칩 테두리 두께 설정
             chipGroup.addView(chip); // 칩을 ChipGroup에 추가
         }
+
+        if (!showAll && keywords.size() > 20) {
+            Chip moreChip = new Chip(requireContext());
+            moreChip.setText("더보기...");
+            moreChip.setChipBackgroundColorResource(R.color.brandcolor1); // 칩 배경 색 설정
+            moreChip.setTextColor(getResources().getColor(R.color.primaryDarkColor)); // 텍스트 색상 설정
+            moreChip.setChipStrokeColorResource(R.color.primaryDarkColor); // 칩 테두리 색상 설정
+            moreChip.setChipStrokeWidth(1.0f); // 칩 테두리 두께 설정
+            moreChip.setOnClickListener(v -> addChips(true)); // "더보기" 클릭 시 모든 키워드 표시
+            chipGroup.addView(moreChip); // "더보기" 칩 추가
+        }
     }
-    
+
     // 최근 많이 검색된 도서 이미지 출력 (현재는 많이 대출된 도서로 출력함 -> 수정 예정)
     private void getResponseApiLoanItems() {
         String startDt = "2023-01-01"; // 시작 날짜 (예시)
