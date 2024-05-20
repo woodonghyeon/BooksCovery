@@ -1,7 +1,6 @@
 package com.example.androidteamproject.Home;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,19 +13,10 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.example.androidteamproject.ApiData.HttpConnection;
 import com.example.androidteamproject.R;
-import com.example.androidteamproject.Search.LatelySearchBook;
-import com.example.androidteamproject.Search.SearchPageAdapter;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class FragmentHome extends Fragment {
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -42,8 +32,6 @@ public class FragmentHome extends Fragment {
     private TextView tv_department_title, tv_popular_book_week, tv_popular_book_month, tv_book_rental;
     private Animation anime_left_to_right, anime_right_to_left;
     private TextView resultTextView;
-    private List<String> weekBookName = new ArrayList<>();
-    private List<String> weekBookImg = new ArrayList<>();
 
     public FragmentHome() {
     }
@@ -67,12 +55,12 @@ public class FragmentHome extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         startAnimation(view);
         CurrentEventSettingImg(view);
-        this.getWeekbook();
-        //여기 있던 WeekBookSettingImg는 getWeekbook안에 이동시킴
+        WeekBookSettingImg(view);
 //        getResponseApiData(view);
 
         return view;
@@ -118,16 +106,15 @@ public class FragmentHome extends Fragment {
         });
     }
 
-    private void WeekBookSettingImg(List<String> weekBookName, List<String> weekBookImg) {
+    private void WeekBookSettingImg(View view) {
         // 가로 슬라이드 뷰 Fragment
 
         // 첫 번째 ViewPager2
-        weekBookPager = getView().findViewById(R.id.week_book_viewpager);
-        //이번주 인기도서 배열 = weekbook;
-        homePagerAdapter = new WeekBookAdapter(requireActivity(), weekBookName, weekBookImg);
+        weekBookPager = view.findViewById(R.id.week_book_viewpager);
+        homePagerAdapter = new WeekBookAdapter(requireActivity(), weekBookNum);
         weekBookPager.setAdapter(homePagerAdapter);
         weekBookPager.setCurrentItem(1000);
-        weekBookPager.setOffscreenPageLimit(10);
+        weekBookPager.setOffscreenPageLimit(3);
 
         // viewpager2 간격 변환을 위함 -> res.values.dimes.xml에서 확인
         int pageMarginPx = getResources().getDimensionPixelOffset(R.dimen.weekBookPageMargin);
@@ -190,43 +177,6 @@ public class FragmentHome extends Fragment {
         tv_popular_book_week.startAnimation(anime_right_to_left);
         tv_popular_book_month.startAnimation(anime_right_to_left);
         tv_book_rental.startAnimation(anime_left_to_right);
-    }
-
-    private void getWeekbook() {
-
-        String startDt = "2021-05-10"; // 시작 날짜 (예시)
-        String endDt = "2022-05-20"; // 종료 날짜 (예시)
-        int pageNo = 1; // 페이지 번호 (예시)
-        int pageSize = 10; // 페이지 크기 (예시)
-        String format = "json"; // 응답 형식 (예시)
-        HttpConnection.getInstance(getContext()).getWeekbook(startDt, endDt, pageNo, pageSize, format, new HttpConnection.HttpResponseCallback<List<LatelySearchBook>>() {
-            @Override
-            public void onSuccess(List<LatelySearchBook> books) {
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> {
-                        for (LatelySearchBook book : books) {
-                            weekBookImg.add(book.getBookImageUrl());
-                            weekBookName.add(book.getBookName());
-                        }
-                        // ViewPager2에 이미지 추가
-                        // 원래 있던 것 ( 밑에 )
-                        //setupViewPager(weekBookName, weekBookImg);
-                        WeekBookSettingImg(weekBookName, weekBookImg);
-                        Log.d("API Response", "Image URLs: " + weekBookImg.toString() + ", BookName: " + weekBookName.toString());
-                    });
-                }
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> {
-                        // 에러 처리 로직 추가
-                        Log.e("API Failure", "Error: " + e.getMessage());
-                    });
-                }
-            }
-        });
     }
 
 //    // API Data 받아오는 부분 Test

@@ -22,7 +22,7 @@
         app:iconifiedByDefault="false"
         app:searchIcon="@drawable/ic_searchbook"
         app:queryBackground="@null"
-        app:queryHint="도서 제목을 입력하세요." />
+        app:queryHint="도서 제목" />
 
     <androidx.appcompat.widget.SearchView
         android:id="@+id/sv_author"
@@ -36,7 +36,7 @@
         app:iconifiedByDefault="false"
         app:searchIcon="@drawable/ic_searchperson"
         app:queryBackground="@null"
-        app:queryHint="저자를 입력하세요." />
+        app:queryHint="저자" />
 
     <androidx.appcompat.widget.SearchView
         android:id="@+id/sv_keyword"
@@ -48,6 +48,6 @@
         app:closeIcon="@drawable/ic_clear"
         app:iconifiedByDefault="false"
         app:queryBackground="@null"
-        app:queryHint="키워드를 입력하세요." />
+        app:queryHint="키워드" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

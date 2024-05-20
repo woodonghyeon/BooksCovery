@@ -1,46 +1,44 @@
 package com.example.androidteamproject.Home;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.androidteamproject.Search.LatelySearchImageFragment;
-
-import java.util.ArrayList;
-import java.util.List;
-
 public class WeekBookAdapter extends FragmentStateAdapter {
-    private final List<String> weekBookName;
-    private final List<String> weekBookImg;
+    private final int[] imageResIds;
+    private final int imageCount;
 
-    public WeekBookAdapter(FragmentActivity fa, List<String> weekBookName, List<String> weekBookNmg) {
+    public WeekBookAdapter(FragmentActivity fa, int count) {
         super(fa);
-        this.weekBookName = weekBookName;
-        this.weekBookImg = weekBookNmg;
+        imageCount = count;
+        // 이미지 리소스 ID 배열 초기화
+        imageResIds = new int[imageCount];
+        // 이미지 리소스 ID 배열에 각 이미지에 해당하는 리소스 ID 저장
+        for (int i = 0; i < imageCount; i++) {
+            // 이미지 파일 이름이 순차적으로 설정되어 있다면, 리소스 ID를 계산하여 배열에 저장
+            String imageName = "book" + (i + 1); // 예: test1, test2, test3
+            imageResIds[i] = fa.getResources().getIdentifier(imageName, "drawable", fa.getPackageName());
+        }
     }
 
     @NonNull
     @Override
     public Fragment createFragment(int position) {
         // 이미지 리소스 ID 배열에서 현재 페이지에 해당하는 이미지의 리소스 ID를 가져와서 Fragment를 생성하여 반환
-        int index = position % weekBookImg.size(); // 인덱스를 이미지 URL의 개수로 나눈 나머지로 계산
-        return LatelySearchImageFragment.newInstance(weekBookName.get(index), weekBookImg.get(index));
+        int index = getRealPosition(position);
+        return WeekBookImageFragment.newInstance(imageResIds[index]);
     }
 
     @Override
     public int getItemCount() {
         // 페이지 수는 이미지의 개수와 동일하게 설정
         // 이미지 개수의 배수로 설정하여 무한 스크롤 가능하도록 함
-        return weekBookImg.size(); // 1000은 임의로 설정한 값
+        return imageCount * 1000; // 1000은 임의로 설정한 값
     }
 
-    /*
     public int getRealPosition(int position) {
         // 무한 스크롤을 위해 실제 위치를 계산하여 반환
-        return position % 1;
+        return position % imageCount;
     }
-     */
 }
