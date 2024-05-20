@@ -11,19 +11,21 @@
     <ImageView
         android:id="@+id/iv_ic_book"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="200dp"
         android:src="@drawable/logo_bookscovery" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_marginTop="100dp"
-        android:layout_width="500dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:hintTextColor="@color/brandcolor5"
         app:boxStrokeColor="@color/brandcolor5">
         <EditText
             android:id="@+id/et_input_id"
-            android:layout_width="500dp"
+            android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
             android:fontFamily="@font/suitebold"
             android:textSize="20dp"
             android:inputType="text"
@@ -31,7 +33,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="500dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         app:passwordToggleEnabled="true"
@@ -39,8 +41,10 @@
         app:boxStrokeColor="@color/brandcolor5">
         <EditText
             android:id="@+id/et_input_pwd"
-            android:layout_width="500dp"
+            android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
             android:fontFamily="@font/suitebold"
             android:textSize="20dp"
             android:inputType="textPassword"
