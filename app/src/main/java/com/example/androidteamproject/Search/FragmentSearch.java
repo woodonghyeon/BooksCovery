@@ -117,7 +117,7 @@ public class FragmentSearch extends Fragment {
 
         if (!showAll && keywords.size() > 20) {
             Chip moreChip = new Chip(requireContext());
-            moreChip.setText("더보기...");
+            moreChip.setText("더보기...!");
             moreChip.setChipBackgroundColorResource(R.color.brandcolor1); // 칩 배경 색 설정
             moreChip.setTextColor(getResources().getColor(R.color.primaryDarkColor)); // 텍스트 색상 설정
             moreChip.setChipStrokeColorResource(R.color.primaryDarkColor); // 칩 테두리 색상 설정
