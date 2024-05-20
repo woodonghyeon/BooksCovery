@@ -28,16 +28,14 @@ public class LoginActivity extends Activity {
         Button bt_login;
         bt_login = findViewById(R.id.bt_login);
         Button btJoin = (Button) findViewById(R.id.btJoin);
+
         // 로그인 버튼 클릭시
-        bt_login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showProgressDialog();
-                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                startActivity(intent); // 홈 액티비티로 시작
-            }
+        bt_login.setOnClickListener(view -> {
+            showProgressDialog();
+            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
         });
 
+        // 회원가입 버튼 클릭시
         btJoin.setOnClickListener(view -> {startActivity(new Intent(LoginActivity.this, JoinActivity.class));});
     }
 
