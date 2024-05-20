@@ -1,0 +1,148 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/primaryColor"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:hintTextColor="@color/brandcolor5"
+        app:boxStrokeColor="@color/brandcolor5">
+        <EditText
+            android:id="@+id/et_input_name"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:fontFamily="@font/suitebold"
+            android:textSize="20dp"
+            android:inputType="text"
+            android:hint="　이름" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:hintTextColor="@color/brandcolor5"
+        app:boxStrokeColor="@color/brandcolor5">
+        <EditText
+            android:id="@+id/et_input_gender"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:fontFamily="@font/suitebold"
+            android:textSize="20dp"
+            android:inputType="text"
+            android:hint="　성별" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:hintTextColor="@color/brandcolor5"
+        app:boxStrokeColor="@color/brandcolor5">
+        <EditText
+            android:id="@+id/et_input_age"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:fontFamily="@font/suitebold"
+            android:textSize="20dp"
+            android:inputType="number"
+            android:hint="　나이" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:hintTextColor="@color/brandcolor5"
+        app:boxStrokeColor="@color/brandcolor5">
+        <EditText
+            android:id="@+id/et_input_department"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:fontFamily="@font/suitebold"
+            android:textSize="20dp"
+            android:inputType="text"
+            android:hint="　학과" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:hintTextColor="@color/brandcolor5"
+        app:boxStrokeColor="@color/brandcolor5">
+        <EditText
+            android:id="@+id/et_input_email"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:fontFamily="@font/suitebold"
+            android:textSize="20dp"
+            android:inputType="textEmailAddress"
+            android:hint="　이메일" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:hintTextColor="@color/brandcolor5"
+        app:boxStrokeColor="@color/brandcolor5">
+        <EditText
+            android:id="@+id/et_input_id"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:fontFamily="@font/suitebold"
+            android:textSize="20dp"
+            android:inputType="text"
+            android:hint="　아이디" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:passwordToggleEnabled="true"
+        app:hintTextColor="@color/brandcolor5"
+        app:boxStrokeColor="@color/brandcolor5">
+        <EditText
+            android:id="@+id/et_input_pwd"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:fontFamily="@font/suitebold"
+            android:textSize="20dp"
+            android:inputType="textPassword"
+            android:hint="　비밀번호" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btJoin"
+        android:layout_marginTop="20dp"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/suitebold"
+        android:backgroundTint="#80C3F9"
+        android:textSize="25dp"
+        android:text="가입하기"/>
+
+</LinearLayout>
