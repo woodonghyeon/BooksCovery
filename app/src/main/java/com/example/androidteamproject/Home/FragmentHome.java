@@ -136,12 +136,14 @@ public class FragmentHome extends Fragment {
                     getActivity().runOnUiThread(() -> {
                         List<String> imageUrls = new ArrayList<>();
                         List<String> bookName = new ArrayList<>();
+                        List<String> authors = new ArrayList<>();
                         for (LatelySearchBook book : books) {
                             imageUrls.add(book.getBookImageUrl());
                             bookName.add(book.getBookName());
+                            authors.add(book.getAuthors());
                         }
                         // ViewPager2에 이미지 추가
-                        setupViewPager(bookName, imageUrls);
+                        setupViewPager(bookName, authors, imageUrls);
                         Log.d("API Response", "Image URLs: " + imageUrls.toString() + ", BookName: " + bookName.toString());
                     });
                 }
@@ -160,7 +162,7 @@ public class FragmentHome extends Fragment {
     }
 
     // ViewPager2 Setting
-    private void setupViewPager(List<String> bookName, List<String> imageUrls) {
+    private void setupViewPager(List<String> bookName, List<String> authors, List<String> imageUrls) {
         if (imageUrls == null || imageUrls.isEmpty()) {
             // 이미지 URL이 없는 경우 처리
             return;
@@ -170,7 +172,7 @@ public class FragmentHome extends Fragment {
             return;
         }
         weekBookPager = getView().findViewById(R.id.week_book_viewpager);
-        weekBookAdapter = new WeekBookAdapter(requireActivity(), bookName, imageUrls);
+        weekBookAdapter = new WeekBookAdapter(requireActivity(), bookName, authors, imageUrls);
         weekBookPager.setAdapter(weekBookAdapter);
         weekBookPager.setCurrentItem(1000);
         weekBookPager.setOffscreenPageLimit(10);
@@ -189,7 +191,8 @@ public class FragmentHome extends Fragment {
             @Override
             public void transformPage(@NonNull View page, float position) {
                 View imageView = page.findViewById(R.id.iv_weekBookImg);
-                View textView = page.findViewById(R.id.tv_weekBook);
+                View weekBookTitle = page.findViewById(R.id.tv_weekBookTitle);
+                View weekBookAuthor = page.findViewById(R.id.tv_weekBookAuthor);
                 if(imageView != null) {
                     page.setTranslationX(position * -offsetPx);
                     if (position < -1) return;
@@ -197,13 +200,17 @@ public class FragmentHome extends Fragment {
                         float scaleFactor = Math.max(MIN_SCALE, 1 - Math.abs(position * getEase(Math.abs(position))));
                         imageView.setScaleX(scaleFactor);
                         imageView.setScaleY(scaleFactor);
-                        textView.setScaleX(scaleFactor);
-                        textView.setScaleY(scaleFactor);
+                        weekBookTitle.setScaleX(scaleFactor);
+                        weekBookTitle.setScaleY(scaleFactor);
+                        weekBookAuthor.setScaleX(scaleFactor);
+                        weekBookAuthor.setScaleY(scaleFactor);
                     } else {
                         imageView.setScaleX(MIN_SCALE);
                         imageView.setScaleY(MIN_SCALE);
-                        textView.setScaleX(MIN_SCALE);
-                        textView.setScaleY(MIN_SCALE);
+                        weekBookTitle.setScaleX(MIN_SCALE);
+                        weekBookTitle.setScaleY(MIN_SCALE);
+                        weekBookAuthor.setScaleX(MIN_SCALE);
+                        weekBookAuthor.setScaleY(MIN_SCALE);
                     }
                 }
             }
