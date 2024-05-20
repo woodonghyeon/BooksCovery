@@ -19,7 +19,10 @@ import com.example.androidteamproject.R;
 import com.example.androidteamproject.Search.LatelySearchBook;
 import com.example.androidteamproject.Search.SearchPageAdapter;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class FragmentHome extends Fragment {
@@ -32,6 +35,9 @@ public class FragmentHome extends Fragment {
 
     private final int currentEventNum = 4;
     private static final float MIN_SCALE = 0.75f; // WeekBook scale
+    long now = System.currentTimeMillis();
+    private Date mDate = new Date(now);
+    private static SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     private ViewPager2 currentEventPager, weekBookPager;
     private FragmentStateAdapter homePagerAdapter, weekBookAdapter;
@@ -112,8 +118,13 @@ public class FragmentHome extends Fragment {
 
     // 최근 많이 검색된 도서 이미지 출력 (현재는 많이 대출된 도서로 출력함 -> 수정 예정)
     private void getResponseApiLoanItems() {
-        String startDt = "2024-05-13"; // 시작 날짜 (예시)
-        String endDt = "2024-05-20"; // 종료 날짜 (예시)
+        String getTime = mFormat.format(mDate); // 현재 날짜 가져오기
+        Calendar calendar = Calendar.getInstance(); // 1주일 전 날짜 가져오기
+        calendar.setTime(mDate);
+        calendar.add(Calendar.DAY_OF_YEAR, -7);
+
+        String startDt = mFormat.format(calendar.getTime()); // 시작 날짜 (예시)
+        String endDt = getTime; // 종료 날짜 (예시)
         int pageNo = 1; // 페이지 번호 (예시)
         int pageSize = 10; // 페이지 크기 (예시)
         String format = "json"; // 응답 형식 (예시)
@@ -178,6 +189,7 @@ public class FragmentHome extends Fragment {
             @Override
             public void transformPage(@NonNull View page, float position) {
                 View imageView = page.findViewById(R.id.iv_weekBookImg);
+                View textView = page.findViewById(R.id.tv_weekBook);
                 if(imageView != null) {
                     page.setTranslationX(position * -offsetPx);
                     if (position < -1) return;
@@ -185,9 +197,13 @@ public class FragmentHome extends Fragment {
                         float scaleFactor = Math.max(MIN_SCALE, 1 - Math.abs(position * getEase(Math.abs(position))));
                         imageView.setScaleX(scaleFactor);
                         imageView.setScaleY(scaleFactor);
+                        textView.setScaleX(scaleFactor);
+                        textView.setScaleY(scaleFactor);
                     } else {
                         imageView.setScaleX(MIN_SCALE);
                         imageView.setScaleY(MIN_SCALE);
+                        textView.setScaleX(MIN_SCALE);
+                        textView.setScaleY(MIN_SCALE);
                     }
                 }
             }
