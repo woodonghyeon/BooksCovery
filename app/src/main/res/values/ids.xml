@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="et_input_email" type="id" />
+    <item name="et_input_department" type="id" />
+    <item name="et_input_age" type="id" />
+    <item name="et_input_gender" type="id" />
+    <item name="et_input_name" type="id" />
+</resources>
