@@ -96,7 +96,8 @@ public class HttpConnection {
                         JSONObject doc = docs.getJSONObject(i).getJSONObject("doc");
                         String bookName = doc.getString("bookname"); // 예시로 책 이름 가져오기
                         String bookImageUrl = doc.getString("bookImageURL"); // 예시로 책 이미지 URL 가져오기
-                        LatelySearchBook book = new LatelySearchBook(bookName, bookImageUrl);
+                        String authors = doc.getString("authors");
+                        LatelySearchBook book = new LatelySearchBook(bookName, authors, bookImageUrl);
                         books.add(book);
                     }
                     callback.onSuccess(books);
