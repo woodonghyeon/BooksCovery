@@ -65,6 +65,7 @@ public class HttpConnection {
         });
     }
 
+    // LoanItems -> 대출 많은 도서를 뽑아옴 후에 수정 예정
     public void getLoanItems(String startDt, String endDt, int pageNo, int pageSize, String format, HttpResponseCallback<List<LatelySearchBook>> callback) {
         String url = BASE_URL + "loanItemSrch?authKey=" + API_KEY
                 + "&startDt=" + startDt
