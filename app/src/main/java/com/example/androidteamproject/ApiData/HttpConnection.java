@@ -1,6 +1,7 @@
 package com.example.androidteamproject.ApiData;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.androidteamproject.Search.LatelySearchBook;
 
@@ -107,4 +108,43 @@ public class HttpConnection {
         });
     }
 
+    public void getWeekbook(String startDt, String endDt, int pageNo, int pageSize, String format, HttpResponseCallback<List<LatelySearchBook>> callback) {
+        String url = BASE_URL + "loanItemSrch?authKey=" + API_KEY
+                + "&startDt=" + startDt
+                + "&endDt=" + endDt
+                + "&pageNo=" + pageNo
+                + "&pageSize=" + pageSize
+                + "&format=" + format;
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                callback.onFailure(e);
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                try {
+                    if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+                    JSONObject responseBody = new JSONObject(response.body().string());
+                    JSONArray docs = responseBody.getJSONObject("response").getJSONArray("docs");
+                    List<LatelySearchBook> books = new ArrayList<>();
+                    for (int i = 0; i < docs.length(); i++) {
+                        JSONObject doc = docs.getJSONObject(i).getJSONObject("doc");
+                        String bookName = doc.getString("bookname"); // 예시로 책 이름 가져오기
+                        String bookImageUrl = doc.getString("bookImageURL"); // 예시로 책 이미지 URL 가져오기
+                        LatelySearchBook book = new LatelySearchBook(bookName, bookImageUrl);
+                        books.add(book);
+                    }
+                    callback.onSuccess(books);
+                } catch (JSONException e) {
+                    callback.onFailure(e);
+                }
+            }
+        });
+    }
 }
