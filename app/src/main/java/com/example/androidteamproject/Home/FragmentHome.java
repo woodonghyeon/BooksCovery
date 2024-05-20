@@ -1,6 +1,7 @@
 package com.example.androidteamproject.Home;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,13 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.androidteamproject.ApiData.HttpConnection;
 import com.example.androidteamproject.R;
+import com.example.androidteamproject.Search.LatelySearchBook;
+import com.example.androidteamproject.Search.SearchPageAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class FragmentHome extends Fragment {
 
@@ -24,14 +31,12 @@ public class FragmentHome extends Fragment {
     private String mParam2;
 
     private final int currentEventNum = 4;
-    private final int weekBookNum = 3;
     private static final float MIN_SCALE = 0.75f; // WeekBook scale
 
     private ViewPager2 currentEventPager, weekBookPager;
-    private FragmentStateAdapter homePagerAdapter;
+    private FragmentStateAdapter homePagerAdapter, weekBookAdapter;
     private TextView tv_department_title, tv_popular_book_week, tv_popular_book_month, tv_book_rental;
     private Animation anime_left_to_right, anime_right_to_left;
-    private TextView resultTextView;
 
     public FragmentHome() {
     }
@@ -60,8 +65,7 @@ public class FragmentHome extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         startAnimation(view);
         CurrentEventSettingImg(view);
-        WeekBookSettingImg(view);
-//        getResponseApiData(view);
+        getResponseApiLoanItems();
 
         return view;
     }
@@ -106,15 +110,62 @@ public class FragmentHome extends Fragment {
         });
     }
 
-    private void WeekBookSettingImg(View view) {
-        // 가로 슬라이드 뷰 Fragment
+    // 최근 많이 검색된 도서 이미지 출력 (현재는 많이 대출된 도서로 출력함 -> 수정 예정)
+    private void getResponseApiLoanItems() {
+        String startDt = "2024-05-13"; // 시작 날짜 (예시)
+        String endDt = "2024-05-20"; // 종료 날짜 (예시)
+        int pageNo = 1; // 페이지 번호 (예시)
+        int pageSize = 10; // 페이지 크기 (예시)
+        String format = "json"; // 응답 형식 (예시)
 
-        // 첫 번째 ViewPager2
-        weekBookPager = view.findViewById(R.id.week_book_viewpager);
-        homePagerAdapter = new WeekBookAdapter(requireActivity(), weekBookNum);
-        weekBookPager.setAdapter(homePagerAdapter);
+        HttpConnection.getInstance(getContext()).getLoanItems(startDt, endDt, pageNo, pageSize, format, new HttpConnection.HttpResponseCallback<List<LatelySearchBook>>() {
+            @Override
+            public void onSuccess(List<LatelySearchBook> books) {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        List<String> imageUrls = new ArrayList<>();
+                        List<String> bookName = new ArrayList<>();
+                        for (LatelySearchBook book : books) {
+                            imageUrls.add(book.getBookImageUrl());
+                            bookName.add(book.getBookName());
+                        }
+                        // ViewPager2에 이미지 추가
+                        setupViewPager(bookName, imageUrls);
+                        Log.d("API Response", "Image URLs: " + imageUrls.toString() + ", BookName: " + bookName.toString());
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        // 에러 처리 로직 추가
+                        Log.e("API Failure", "Error: " + e.getMessage());
+                    });
+                }
+            }
+        });
+    }
+
+    // ViewPager2 Setting
+    private void setupViewPager(List<String> bookName, List<String> imageUrls) {
+        if (imageUrls == null || imageUrls.isEmpty()) {
+            // 이미지 URL이 없는 경우 처리
+            return;
+        }
+        // 이미지 URL이 있을 경우 뷰페이저 설정
+        if (getView() == null) {
+            return;
+        }
+        weekBookPager = getView().findViewById(R.id.week_book_viewpager);
+        weekBookAdapter = new WeekBookAdapter(requireActivity(), bookName, imageUrls);
+        weekBookPager.setAdapter(weekBookAdapter);
         weekBookPager.setCurrentItem(1000);
-        weekBookPager.setOffscreenPageLimit(3);
+        weekBookPager.setOffscreenPageLimit(10);
+
+        int startPos = imageUrls.size() / 2;
+        weekBookPager.setCurrentItem(startPos);
 
         // viewpager2 간격 변환을 위함 -> res.values.dimes.xml에서 확인
         int pageMarginPx = getResources().getDimensionPixelOffset(R.dimen.weekBookPageMargin);
@@ -178,37 +229,4 @@ public class FragmentHome extends Fragment {
         tv_popular_book_month.startAnimation(anime_right_to_left);
         tv_book_rental.startAnimation(anime_left_to_right);
     }
-
-//    // API Data 받아오는 부분 Test
-//    private void getResponseApiData(View view) {
-//        resultTextView = view.findViewById(R.id.resultTextView);
-//
-//        if (resultTextView != null) {
-//            HttpConnection.getInstance(getContext()).getLibraries(1, 2, "json", new HttpConnection.HttpResponseCallback() {
-//                @Override
-//                public void onSuccess(String responseData) {
-//                    if (getActivity() != null) {
-//                        getActivity().runOnUiThread(() -> {
-//                            if (resultTextView != null) {
-//                                resultTextView.setText(responseData);
-//                            }
-//                        });
-//                    }
-//                }
-//
-//                @Override
-//                public void onFailure(Exception e) {
-//                    if (getActivity() != null) {
-//                        getActivity().runOnUiThread(() -> {
-//                            if (resultTextView != null) {
-//                                resultTextView.setText("Failed to get data: " + e.getMessage());
-//                            }
-//                        });
-//                    }
-//                }
-//            });
-//        } else {
-//            // resultTextView가 null인 경우 처리할 로직 추가
-//        }
-//    }
 }
