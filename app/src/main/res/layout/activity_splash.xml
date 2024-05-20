@@ -10,7 +10,7 @@
     <ImageView
         android:id="@+id/iv_ic_book"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="300dp"
         android:src="@drawable/logo_bookscovery_big" />
 
     <TextView
@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:text="당신의 책을 찾다"
         android:gravity="center"
-        android:textSize="40dp"
+        android:textSize="30dp"
         android:layout_marginTop="-100dp"
         android:textColor="#80C3F9"
         android:fontFamily="@font/suitebold"/>
