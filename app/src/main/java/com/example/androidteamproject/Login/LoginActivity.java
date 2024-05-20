@@ -1,6 +1,7 @@
 package com.example.androidteamproject.Login;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -29,6 +30,7 @@ public class LoginActivity extends Activity {
         bt_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                showProgressDialog();
                 Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                 startActivity(intent); // 홈 액티비티로 시작
             }
@@ -36,4 +38,10 @@ public class LoginActivity extends Activity {
         
     }
 
+    private void showProgressDialog(){
+        ProgressDialog dialog = new ProgressDialog(this);
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setMessage("로그인중입니다.");
+        dialog.show();
+    }
 }
