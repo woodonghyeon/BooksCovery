@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -27,6 +29,8 @@ import com.example.androidteamproject.R;
 
 public class JoinActivity extends AppCompatActivity {
     Button btJoin;
+    Spinner spinner_gender, et_input_department;
+    String gender, department;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +38,9 @@ public class JoinActivity extends AppCompatActivity {
         setContentView(R.layout.activity_join);
 
         EditText et_input_name = findViewById(R.id.et_input_name);
-        Spinner spinner_gender = findViewById(R.id.spinner_gender);
+        spinner_gender = (Spinner) findViewById(R.id.spinner_gender);
         EditText et_input_age = findViewById(R.id.et_input_age);
-        EditText et_input_department = findViewById(R.id.et_input_department);
+        et_input_department = findViewById(R.id.spinner_department);
         EditText et_input_email = findViewById(R.id.et_input_email);
         EditText et_input_id = findViewById(R.id.et_input_id);
         EditText et_input_pwd = findViewById(R.id.et_input_pwd);
@@ -46,9 +50,9 @@ public class JoinActivity extends AppCompatActivity {
         // 데이터베이스 연결 시작
         btJoin.setOnClickListener(view -> {
             String name = et_input_name.getText().toString();
-            String gender = spinner_gender.getText().toString();
+            gender = "";
             String age = et_input_age.getText().toString();
-            String department = et_input_department.getText().toString();
+            department = "";
             String email = et_input_email.getText().toString();
             String id = et_input_id.getText().toString();
             String pwd = et_input_pwd.getText().toString();
@@ -56,6 +60,29 @@ public class JoinActivity extends AppCompatActivity {
             new ConnectToDatabaseTask().execute(name, gender, age, department, email, id, pwd);
         });
 
+        spinner_gender.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                gender = (String) parent.getItemAtPosition(position);
+                Log.v("123",gender);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        et_input_department.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                department = String.valueOf(id+1);
+                Log.v("123",department);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
     }
 
     private class ConnectToDatabaseTask extends AsyncTask<String, Void, String> {

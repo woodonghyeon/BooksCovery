@@ -1,5 +1,7 @@
 package com.example.androidteamproject.Search;
 
+import static com.example.androidteamproject.Home.FragmentHome.mFormat;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +23,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class FragmentSearch extends Fragment {
@@ -33,6 +37,8 @@ public class FragmentSearch extends Fragment {
     private FragmentStateAdapter searchPagerAdapter;
     private List<String> keywords = new ArrayList<>();
     private List<String> search_word = new ArrayList<>(Arrays.asList("테스트용 검색어1" , "테스트용 검색어2" , "테스트용 검색어3" , "테스트용 검색어4" , "테스트용 검색어5" , "테스트용 검색어6" , "테스트용 검색어7" , "테스트용 검색어8" , "테스트용 검색어9" , "테스트용 검색어10"));
+    private Date mDate = new Date(System.currentTimeMillis());
+    private Date checkDate = null;
 
     public FragmentSearch() {
     }
@@ -56,10 +62,12 @@ public class FragmentSearch extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
-        getResponseApiKeyword(); // API 응답 데이터 가져오기
+        timeCheck(); //keyword 요청 전에 언제 요청했는가 확인하기
+        if(keywords.isEmpty()){
+            getResponseApiKeyword(); // API 응답 데이터 가져오기
+        }
         getResponseApiLoanItems();
         return view;
     }
@@ -256,5 +264,12 @@ public class FragmentSearch extends Fragment {
                 super.onPageSelected(position);
             }
         });
+    }
+
+    private void timeCheck(){
+        String getTime = mFormat.format(mDate); // 현재 날짜 가져오기
+        Calendar calendar = Calendar.getInstance(); // 1주일 전 날짜 가져오기
+        calendar.setTime(mDate);
+        calendar.add(Calendar.DAY_OF_YEAR, -7);
     }
 }
