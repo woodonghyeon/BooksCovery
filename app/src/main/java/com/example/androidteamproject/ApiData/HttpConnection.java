@@ -27,7 +27,7 @@ public class HttpConnection {
 
     private HttpConnection(Context context) {
         client = new OkHttpClient();
-        API_KEY = String.valueOf(R.string.api_key);
+        API_KEY = context.getString(R.string.api_key);
     }
 
     public static HttpConnection getInstance(Context context) {
@@ -202,9 +202,8 @@ public class HttpConnection {
     // LoanItems -> 대출 많은 도서를 뽑아옴 후에 수정 예정
     public void getHotTrend(String searchDt, String format, HttpResponseCallback<List<SearchBook>> callback) {
         String url = BASE_URL + "loanItemSrch?authKey=" + API_KEY
-                + "&searchDt="
-                + "&format="
-                + format;
+                + "&searchDt=" + searchDt
+                + "&format=" + format;
 
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
