@@ -6,6 +6,7 @@
     tools:context=".Search.FragmentKeywordSearch">
 
     <TextView
+        android:id="@+id/tv_booksearch"
         android:layout_marginTop="10dp"
         android:layout_marginStart="10dp"
         android:layout_width="match_parent"
