@@ -63,6 +63,29 @@ public class HttpConnection {
         });
     }
 
+    // 검색
+    public void bookSearch(String word, int pageNo, int pageSize, String format, final HttpResponseCallback callback) {
+        String url = BASE_URL + "srchBooks?authKey=" + API_KEY + "&keyword=" + word + "&pageNo=" + pageNo + "&pageSize=" + pageSize + "&format=" + format;
+        Request request = new Request.Builder().url(url).build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+                callback.onFailure(e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String responseData = response.body().string();
+                    callback.onSuccess(responseData);
+                } else {
+                    callback.onFailure(new IOException("Unexpected code " + response));
+                }
+            }
+        });
+    }
+
     // LoanItems -> 대출 많은 도서를 뽑아옴 후에 수정 예정
     public void getLoanItems(String startDt, String endDt, int pageNo, int pageSize, String format, HttpResponseCallback<List<SearchBook>> callback) {
         String url = BASE_URL + "loanItemSrch?authKey=" + API_KEY
