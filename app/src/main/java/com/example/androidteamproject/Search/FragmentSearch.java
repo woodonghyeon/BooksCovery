@@ -1,13 +1,10 @@
 package com.example.androidteamproject.Search;
 
-import static com.example.androidteamproject.Home.FragmentHome.mFormat;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -23,7 +20,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -37,8 +33,8 @@ public class FragmentSearch extends Fragment {
     private FragmentStateAdapter searchPagerAdapter;
     private List<String> keywords = new ArrayList<>();
     private List<String> search_word = new ArrayList<>(Arrays.asList("테스트용 검색어1" , "테스트용 검색어2" , "테스트용 검색어3" , "테스트용 검색어4" , "테스트용 검색어5" , "테스트용 검색어6" , "테스트용 검색어7" , "테스트용 검색어8" , "테스트용 검색어9" , "테스트용 검색어10"));
-    private Date mDate = new Date(System.currentTimeMillis());
-    private Date checkDate = null;
+    private Date mDate = new Date(System.currentTimeMillis()); //현재 시각
+    private Date checkDate = null; //기록된 시각
 
     public FragmentSearch() {
     }
@@ -267,9 +263,8 @@ public class FragmentSearch extends Fragment {
     }
 
     private void timeCheck(){
-        String getTime = mFormat.format(mDate); // 현재 날짜 가져오기
-        Calendar calendar = Calendar.getInstance(); // 1주일 전 날짜 가져오기
-        calendar.setTime(mDate);
-        calendar.add(Calendar.DAY_OF_YEAR, -7);
+        //기록된 시간, 현재시간 || 업데이트 카운터 비교해서 기록된 시간보다 현재시간이 하루 많거나 업데이트 카운터가 0이 아닐경우
+        //api요청
+        //만약 아니라면 아직 하루가 안지났고 에러가 나서 업데이트가 중단되지 않았기 때문에 최신 데이터임
     }
 }
