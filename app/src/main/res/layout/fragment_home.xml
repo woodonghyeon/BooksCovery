@@ -89,22 +89,22 @@
             android:layout_height="match_parent"/>
 
         <TextView
-            android:id="@+id/tv_book_rental"
+            android:id="@+id/tv_hotTrend_book_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/suitebold"
-            android:text="대출 급상승 도서 TOP 10"
+            android:text="대출 급상승 도서"
             android:textColor="@color/primaryDarkColor"
-            android:textSize="40dp"
+            android:textSize="30sp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
-            android:gravity="end">
+            android:gravity="start">
         </TextView>
 
         <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/viewpager4"
+            android:id="@+id/hotTrend_book_viewpager"
             android:layout_width="match_parent"
-            android:layout_height="400dp"/>
+            android:layout_height="match_parent"/>
     </LinearLayout>
 
 </ScrollView>
