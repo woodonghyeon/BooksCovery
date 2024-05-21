@@ -95,7 +95,7 @@ public class LoginCheckActivity extends AppCompatActivity {
             //결과값을 구분해서 있으면 OK , 없으면 CANCELED
             Intent outIntent = new Intent(LoginCheckActivity.this, LoginActivity.class);
 
-            if(name.isEmpty()){
+            if(name==null){
                 setResult(RESULT_CANCELED);
                 finish();
             }
