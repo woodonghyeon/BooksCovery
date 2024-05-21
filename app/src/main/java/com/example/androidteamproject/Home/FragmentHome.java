@@ -36,8 +36,7 @@ public class FragmentHome extends Fragment {
     private static final float MIN_SCALE = 0.6f; // WeekBook scale
     long now = System.currentTimeMillis();
     private Date mDate = new Date(now);
-    private static SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd");
-
+    public static SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd"); //딴 곳에도 쓸거라 public으로 바꿧음
     private ViewPager2 currentEventPager, weekBookPager, monthBookPager, hotTrendBookPager;
     private FragmentStateAdapter homePagerAdapter, weekBookAdapter, monthBookAdapter, hotTrendBookAdapter;
     private TextView tv_department_title, tv_popular_book_week, tv_popular_book_month, tv_hotTrend_title;
