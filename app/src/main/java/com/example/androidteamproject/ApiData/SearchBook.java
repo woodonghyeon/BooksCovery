@@ -1,14 +1,14 @@
-package com.example.androidteamproject.Search;
+package com.example.androidteamproject.ApiData;
 
-public class LatelySearchBook {
+public class SearchBook {
     private String bookName;
     private String bookImageUrl;
     private String authors;
 
-    public LatelySearchBook() {
+    public SearchBook() {
     }
 
-    public LatelySearchBook(String bookName, String authors, String bookImageUrl) {
+    public SearchBook(String bookName, String authors, String bookImageUrl) {
         this.bookName = bookName;
         this.bookImageUrl = bookImageUrl;
         this.authors = authors;

@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 import com.example.androidteamproject.ApiData.HttpConnection;
+import com.example.androidteamproject.ApiData.SearchBook;
 import com.example.androidteamproject.R;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -150,14 +151,14 @@ public class FragmentSearch extends Fragment {
         int pageSize = 10; // 페이지 크기 (예시)
         String format = "json"; // 응답 형식 (예시)
 
-        HttpConnection.getInstance(getContext()).getLoanItems(startDt, endDt, pageNo, pageSize, format, new HttpConnection.HttpResponseCallback<List<LatelySearchBook>>() {
+        HttpConnection.getInstance(getContext()).getLoanItems(startDt, endDt, pageNo, pageSize, format, new HttpConnection.HttpResponseCallback<List<SearchBook>>() {
             @Override
-            public void onSuccess(List<LatelySearchBook> books) {
+            public void onSuccess(List<SearchBook> books) {
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
                         List<String> imageUrls = new ArrayList<>();
                         List<String> bookName = new ArrayList<>();
-                        for (LatelySearchBook book : books) {
+                        for (SearchBook book : books) {
                             imageUrls.add(book.getBookImageUrl());
                             bookName.add(book.getBookName());
                         }

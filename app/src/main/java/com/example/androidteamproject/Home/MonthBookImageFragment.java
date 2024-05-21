@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.example.androidteamproject.R;
 
-public class WeekBookImageFragment extends Fragment {
+public class MonthBookImageFragment extends Fragment {
     private static final String ARG_IMAGE_URL = "imageUrl";
     private static final String ARG_BOOKNAME = "bookName";
     private static final String ARG_AUTHORS = "authors";
@@ -22,8 +22,8 @@ public class WeekBookImageFragment extends Fragment {
     private String bookName;
     private String authors;
 
-    public static WeekBookImageFragment newInstance(String bookName, String authors, String imageUrl) {
-        WeekBookImageFragment fragment = new WeekBookImageFragment();
+    public static MonthBookImageFragment newInstance(String bookName, String authors, String imageUrl) {
+        MonthBookImageFragment fragment = new MonthBookImageFragment();
         Bundle args = new Bundle();
         args.putString(ARG_IMAGE_URL, imageUrl);
         args.putString(ARG_BOOKNAME, bookName);
@@ -45,15 +45,15 @@ public class WeekBookImageFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.week_book_img, container, false);
-        ImageView weekBookImg = view.findViewById(R.id.iv_weekBookImg);
-        TextView weekBookTitle = view.findViewById(R.id.tv_weekBookTitle);
-        TextView weekBookAuthor = view.findViewById(R.id.tv_weekBookAuthor);
+        View view = inflater.inflate(R.layout.month_book_img, container, false);
+        ImageView monthBookImg = view.findViewById(R.id.iv_monthBookImg);
+        TextView monthBookTitle = view.findViewById(R.id.tv_monthBookTitle);
+        TextView monthBookAuthor = view.findViewById(R.id.tv_monthBookAuthor);
 
         // Glide를 사용하여 이미지 로드
-        Glide.with(this).load(imageUrl).into(weekBookImg);
-        weekBookTitle.setText(bookName);
-        weekBookAuthor.setText(authors);
+        Glide.with(this).load(imageUrl).into(monthBookImg);
+        monthBookTitle.setText(bookName);
+        monthBookAuthor.setText(authors);
 
         return view;
     }

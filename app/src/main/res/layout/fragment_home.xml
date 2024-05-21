@@ -49,7 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/suitebold"
-            android:text="이번주 인기도서"
+            android:text="이번 주 인기도서"
             android:textColor="@color/primaryDarkColor"
             android:textSize="30sp"
             android:layout_marginTop="20dp"
@@ -61,23 +61,31 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            app:dividerColor="@color/gray"/>
+
         <TextView
             android:id="@+id/tv_popular_book_month"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/suitebold"
-            android:text="이번달 인기도서 TOP 10"
+            android:text="이번 달 인기도서"
             android:textColor="@color/primaryDarkColor"
-            android:textSize="40dp"
+            android:textSize="30sp"
             android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
             android:gravity="start">
         </TextView>
 
         <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/viewpager3"
+            android:id="@+id/month_book_viewpager"
             android:layout_width="match_parent"
-            android:layout_height="400dp"/>
+            android:layout_height="match_parent"/>
 
         <TextView
             android:id="@+id/tv_book_rental"
