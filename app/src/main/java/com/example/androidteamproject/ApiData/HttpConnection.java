@@ -168,6 +168,9 @@ public class HttpConnection {
                         // 각 문서(doc) 객체를 가져옴
                         JSONObject doc = docs.getJSONObject(i).getJSONObject("doc");
 
+                        // 주제분류명(class_nm)을 가져옴
+                        String class_nm = doc.getString("class_nm");
+
                         // 책 이름(bookname)을 가져옴
                         String bookName = doc.getString("bookname");
 
@@ -178,7 +181,7 @@ public class HttpConnection {
                         String authors = doc.getString("authors");
 
                         // 책 정보를 담은 SearchBook 객체 생성
-                        SearchBook book = new SearchBook(bookName, authors, bookImageUrl);
+                        SearchBook book = new SearchBook(class_nm, bookName, authors, bookImageUrl);
 
                         // 생성한 SearchBook 객체를 리스트에 추가
                         books.add(book);

@@ -4,14 +4,23 @@ public class SearchBook {
     private String bookName;
     private String bookImageUrl;
     private String authors;
+    private String class_nm;
 
     public SearchBook() {
     }
 
-    public SearchBook(String bookName, String authors, String bookImageUrl) {
+    public SearchBook(String class_nm, String bookName, String authors, String bookImageUrl) {
         this.bookName = bookName;
         this.bookImageUrl = bookImageUrl;
         this.authors = authors;
+        this.class_nm = class_nm;
+    }
+    public String getClass_nm() {
+        return class_nm;
+    }
+
+    public void setClass_nm(String class_nm) {
+        this.class_nm = class_nm;
     }
 
     public String getBookName() {
