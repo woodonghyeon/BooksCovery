@@ -106,7 +106,7 @@ public class JoinActivity extends AppCompatActivity {
                 Class.forName("com.mysql.jdbc.Driver");
                 // 데이터베이스에 연결 (url : "jdbc:mysql://10.0.2.2 (에뮬레이터 로컬 호스트 주소) :3306/your-database-name", user : DB 아이디, password : DB 비밀번호)
                 conn = DriverManager.getConnection("jdbc:mysql://10.0.2.2:3306/test", "root", "root");
-                
+
                 //비밀번호 암호화
                 SecureRandom random = null;
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
