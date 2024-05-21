@@ -2,6 +2,8 @@ package com.example.androidteamproject.ApiData;
 
 import android.content.Context;
 
+import com.example.androidteamproject.R;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,7 +27,7 @@ public class HttpConnection {
 
     private HttpConnection(Context context) {
         client = new OkHttpClient();
-        API_KEY = "***REMOVED***";
+        API_KEY = String.valueOf(R.string.api_key);
     }
 
     public static HttpConnection getInstance(Context context) {
@@ -76,56 +78,56 @@ public class HttpConnection {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 try {
-                    // ?‘?‹µ?´ ?„±ê³µì ?´ì§? ?•Š?? ê²½ìš° ?˜ˆ?™¸ë¥? ?˜ì§?
+                    // ì‘ë‹µì´ ì„±ê³µì ì´ì§€ ì•Šì€ ê²½ìš° ì˜ˆì™¸ë¥¼ ë˜ì§
                     if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
-                    // ?‘?‹µ ë³¸ë¬¸?„ JSON ê°ì²´ë¡? ë³??™˜
+                    // ì‘ë‹µ ë³¸ë¬¸ì„ JSON ê°ì²´ë¡œ ë³€í™˜
                     JSONObject responseBody = new JSONObject(response.body().string());
 
-                    // JSON ê°ì²´?—?„œ "response" ê°ì²´ë¥? ê°?? ¸???„œ "docs" ë°°ì—´?„ ì¶”ì¶œ
+                    // JSON ê°ì²´ì—ì„œ "response" ê°ì²´ë¥¼ ê°€ì ¸ì™€ì„œ "docs" ë°°ì—´ì„ ì¶”ì¶œ
                     JSONArray docs = responseBody.getJSONObject("response").getJSONArray("docs");
 
-                    // SearchBookKeyword ê°ì²´ë¥? ???¥?•  ë¦¬ìŠ¤?Š¸ ì´ˆê¸°?™”
+                    // SearchBookKeyword ê°ì²´ë¥¼ ì €ì¥í•  ë¦¬ìŠ¤íŠ¸ ì´ˆê¸°í™”
                     List<SearchBookKeyword> books = new ArrayList<>();
 
-                    // docs ë°°ì—´?„ ?ˆœ?šŒ?•˜ë©? ê°? ë¬¸ì„œ?—?„œ ? •ë³´ë?? ì¶”ì¶œ
+                    // docs ë°°ì—´ì„ ìˆœíšŒí•˜ë©° ê° ë¬¸ì„œì—ì„œ ì •ë³´ë¥¼ ì¶”ì¶œ
                     for (int i = 0; i < docs.length(); i++) {
-                        // ê°? ë¬¸ì„œ(doc) ê°ì²´ë¥? ê°?? ¸?˜´
+                        // ê° ë¬¸ì„œ(doc) ê°ì²´ë¥¼ ê°€ì ¸ì˜´
                         JSONObject doc = docs.getJSONObject(i).getJSONObject("doc");
 
-                        // ì±? ?´ë¦?(bookname)?„ ê°?? ¸?˜´
+                        // ì±… ì´ë¦„(bookname)ì„ ê°€ì ¸ì˜´
                         String bookName = doc.getString("bookname");
 
-                        // ì±? ?´ë¯¸ì? URL(bookImageURL)?„ ê°?? ¸?˜´
+                        // ì±… ì´ë¯¸ì§€ URL(bookImageURL)ì„ ê°€ì ¸ì˜´
                         String bookImageUrl = doc.getString("bookImageURL");
 
-                        // ???(authors)ë¥? ê°?? ¸?˜´
+                        // ì €ì(authors)ë¥¼ ê°€ì ¸ì˜´
                         String authors = doc.getString("authors");
 
-                        // ì¶œíŒ?‚¬ë¥? ê°?? ¸?˜´
+                        // ì¶œíŒì‚¬ë¥¼ ê°€ì ¸ì˜´
                         String publisher = doc.getString("publisher");
 
-                        // ì¶œíŒ?…„?„ë¥? ê°?? ¸?˜´
+                        // ì¶œíŒë…„ë„ë¥¼ ê°€ì ¸ì˜´
                         String publication_year = doc.getString("publication_year");
 
-                        // ì±? ? •ë³´ë?? ?‹´?? SearchBookKeyword ê°ì²´ ?ƒ?„±
+                        // ì±… ì •ë³´ë¥¼ ë‹´ì€ SearchBookKeyword ê°ì²´ ìƒì„±
                         SearchBookKeyword book = new SearchBookKeyword(bookName, authors, bookImageUrl, publisher, publication_year);
 
-                        // ?ƒ?„±?•œ SearchBookKeyword ê°ì²´ë¥? ë¦¬ìŠ¤?Š¸?— ì¶”ê?
+                        // ìƒì„±í•œ SearchBookKeyword ê°ì²´ë¥¼ ë¦¬ìŠ¤íŠ¸ì— ì¶”ê°€
                         books.add(book);
                     }
 
-                    // ì½œë°±?„ ?†µ?•´ ?„±ê³µì ?¸ ?‘?‹µ ì²˜ë¦¬ (ì±? ë¦¬ìŠ¤?Š¸ ? „?‹¬)
+                    // ì½œë°±ì„ í†µí•´ ì„±ê³µì ì¸ ì‘ë‹µ ì²˜ë¦¬ (ì±… ë¦¬ìŠ¤íŠ¸ ì „ë‹¬)
                     callback.onSuccess(books);
                 } catch (JSONException e) {
-                    // JSON ?ŒŒ?‹± ì¤? ?˜ˆ?™¸ê°? ë°œìƒ?•œ ê²½ìš° ì½œë°±?„ ?†µ?•´ ?‹¤?Œ¨ ì²˜ë¦¬
+                    // JSON íŒŒì‹± ì¤‘ ì˜ˆì™¸ê°€ ë°œìƒí•œ ê²½ìš° ì½œë°±ì„ í†µí•´ ì‹¤íŒ¨ ì²˜ë¦¬
                     callback.onFailure(e);
                 }
             }
         });
     } // end of booksearch
 
-    // LoanItems -> ??ì¶? ë§ì? ?„?„œë¥? ë½‘ì•„?˜´ ?›„?— ?ˆ˜? • ?˜ˆ? •
+    // LoanItems -> ëŒ€ì¶œ ë§ì€ ë„ì„œë¥¼ ë½‘ì•„ì˜´ í›„ì— ìˆ˜ì • ì˜ˆì •
     public void getLoanItems(String startDt, String endDt, String from_age, String to_age, int pageNo, int pageSize, String format, HttpResponseCallback<List<SearchBook>> callback) {
         String url = BASE_URL + "loanItemSrch?authKey=" + API_KEY
                 + "&startDt=" + startDt
@@ -148,56 +150,56 @@ public class HttpConnection {
             }
 
             @Override
-            // HTTP ?‘?‹µ?„ ì²˜ë¦¬?•˜?Š” ë©”ì„œ?“œ
+            // HTTP ì‘ë‹µì„ ì²˜ë¦¬í•˜ëŠ” ë©”ì„œë“œ
             public void onResponse(Call call, Response response) throws IOException {
                 try {
-                    // ?‘?‹µ?´ ?„±ê³µì ?´ì§? ?•Š?? ê²½ìš° ?˜ˆ?™¸ë¥? ?˜ì§?
+                    // ì‘ë‹µì´ ì„±ê³µì ì´ì§€ ì•Šì€ ê²½ìš° ì˜ˆì™¸ë¥¼ ë˜ì§
                     if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
-                    // ?‘?‹µ ë³¸ë¬¸?„ JSON ê°ì²´ë¡? ë³??™˜
+                    // ì‘ë‹µ ë³¸ë¬¸ì„ JSON ê°ì²´ë¡œ ë³€í™˜
                     JSONObject responseBody = new JSONObject(response.body().string());
 
-                    // JSON ê°ì²´?—?„œ "response" ê°ì²´ë¥? ê°?? ¸???„œ "docs" ë°°ì—´?„ ì¶”ì¶œ
+                    // JSON ê°ì²´ì—ì„œ "response" ê°ì²´ë¥¼ ê°€ì ¸ì™€ì„œ "docs" ë°°ì—´ì„ ì¶”ì¶œ
                     JSONArray docs = responseBody.getJSONObject("response").getJSONArray("docs");
 
-                    // SearchBook ê°ì²´ë¥? ???¥?•  ë¦¬ìŠ¤?Š¸ ì´ˆê¸°?™”
+                    // SearchBook ê°ì²´ë¥¼ ì €ì¥í•  ë¦¬ìŠ¤íŠ¸ ì´ˆê¸°í™”
                     List<SearchBook> books = new ArrayList<>();
 
-                    // docs ë°°ì—´?„ ?ˆœ?šŒ?•˜ë©? ê°? ë¬¸ì„œ?—?„œ ? •ë³´ë?? ì¶”ì¶œ
+                    // docs ë°°ì—´ì„ ìˆœíšŒí•˜ë©° ê° ë¬¸ì„œì—ì„œ ì •ë³´ë¥¼ ì¶”ì¶œ
                     for (int i = 0; i < docs.length(); i++) {
-                        // ê°? ë¬¸ì„œ(doc) ê°ì²´ë¥? ê°?? ¸?˜´
+                        // ê° ë¬¸ì„œ(doc) ê°ì²´ë¥¼ ê°€ì ¸ì˜´
                         JSONObject doc = docs.getJSONObject(i).getJSONObject("doc");
 
-                        // ì£¼ì œë¶„ë¥˜ëª?(class_nm)?„ ê°?? ¸?˜´
+                        // ì£¼ì œë¶„ë¥˜ëª…(class_nm)ì„ ê°€ì ¸ì˜´
                         String class_nm = doc.getString("class_nm");
 
-                        // ì±? ?´ë¦?(bookname)?„ ê°?? ¸?˜´
+                        // ì±… ì´ë¦„(bookname)ì„ ê°€ì ¸ì˜´
                         String bookName = doc.getString("bookname");
 
-                        // ì±? ?´ë¯¸ì? URL(bookImageURL)?„ ê°?? ¸?˜´
+                        // ì±… ì´ë¯¸ì§€ URL(bookImageURL)ì„ ê°€ì ¸ì˜´
                         String bookImageUrl = doc.getString("bookImageURL");
 
-                        // ???(authors)ë¥? ê°?? ¸?˜´
+                        // ì €ì(authors)ë¥¼ ê°€ì ¸ì˜´
                         String authors = doc.getString("authors");
 
-                        // ì±? ? •ë³´ë?? ?‹´?? SearchBook ê°ì²´ ?ƒ?„±
+                        // ì±… ì •ë³´ë¥¼ ë‹´ì€ SearchBook ê°ì²´ ìƒì„±
                         SearchBook book = new SearchBook(class_nm, bookName, authors, bookImageUrl);
 
-                        // ?ƒ?„±?•œ SearchBook ê°ì²´ë¥? ë¦¬ìŠ¤?Š¸?— ì¶”ê?
+                        // ìƒì„±í•œ SearchBook ê°ì²´ë¥¼ ë¦¬ìŠ¤íŠ¸ì— ì¶”ê°€
                         books.add(book);
                     }
 
-                    // ì½œë°±?„ ?†µ?•´ ?„±ê³µì ?¸ ?‘?‹µ ì²˜ë¦¬ (ì±? ë¦¬ìŠ¤?Š¸ ? „?‹¬)
+                    // ì½œë°±ì„ í†µí•´ ì„±ê³µì ì¸ ì‘ë‹µ ì²˜ë¦¬ (ì±… ë¦¬ìŠ¤íŠ¸ ì „ë‹¬)
                     callback.onSuccess(books);
                 } catch (JSONException e) {
-                    // JSON ?ŒŒ?‹± ì¤? ?˜ˆ?™¸ê°? ë°œìƒ?•œ ê²½ìš° ì½œë°±?„ ?†µ?•´ ?‹¤?Œ¨ ì²˜ë¦¬
+                    // JSON íŒŒì‹± ì¤‘ ì˜ˆì™¸ê°€ ë°œìƒí•œ ê²½ìš° ì½œë°±ì„ í†µí•´ ì‹¤íŒ¨ ì²˜ë¦¬
                     callback.onFailure(e);
                 }
             }
         });
     } // end of LoanItems
 
-    // LoanItems -> ??ì¶? ë§ì? ?„?„œë¥? ë½‘ì•„?˜´ ?›„?— ?ˆ˜? • ?˜ˆ? •
+    // LoanItems -> ëŒ€ì¶œ ë§ì€ ë„ì„œë¥¼ ë½‘ì•„ì˜´ í›„ì— ìˆ˜ì • ì˜ˆì •
     public void getHotTrend(String searchDt, String format, HttpResponseCallback<List<SearchBook>> callback) {
         String url = BASE_URL + "loanItemSrch?authKey=" + API_KEY
                 + "&searchDt="
@@ -216,49 +218,49 @@ public class HttpConnection {
             }
 
             @Override
-            // HTTP ?‘?‹µ?„ ì²˜ë¦¬?•˜?Š” ë©”ì„œ?“œ
+            // HTTP ì‘ë‹µì„ ì²˜ë¦¬í•˜ëŠ” ë©”ì„œë“œ
             public void onResponse(Call call, Response response) throws IOException {
                 try {
-                    // ?‘?‹µ?´ ?„±ê³µì ?´ì§? ?•Š?? ê²½ìš° ?˜ˆ?™¸ë¥? ?˜ì§?
+                    // ì‘ë‹µì´ ì„±ê³µì ì´ì§€ ì•Šì€ ê²½ìš° ì˜ˆì™¸ë¥¼ ë˜ì§
                     if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
-                    // ?‘?‹µ ë³¸ë¬¸?„ JSON ê°ì²´ë¡? ë³??™˜
+                    // ì‘ë‹µ ë³¸ë¬¸ì„ JSON ê°ì²´ë¡œ ë³€í™˜
                     JSONObject responseBody = new JSONObject(response.body().string());
 
-                    // JSON ê°ì²´?—?„œ "response" ê°ì²´ë¥? ê°?? ¸???„œ "docs" ë°°ì—´?„ ì¶”ì¶œ
+                    // JSON ê°ì²´ì—ì„œ "response" ê°ì²´ë¥¼ ê°€ì ¸ì™€ì„œ "docs" ë°°ì—´ì„ ì¶”ì¶œ
                     JSONArray docs = responseBody.getJSONObject("response").getJSONArray("docs");
 
-                    // SearchBook ê°ì²´ë¥? ???¥?•  ë¦¬ìŠ¤?Š¸ ì´ˆê¸°?™”
+                    // SearchBook ê°ì²´ë¥¼ ì €ì¥í•  ë¦¬ìŠ¤íŠ¸ ì´ˆê¸°í™”
                     List<SearchBook> books = new ArrayList<>();
 
-                    // docs ë°°ì—´?„ ?ˆœ?šŒ?•˜ë©? ê°? ë¬¸ì„œ?—?„œ ? •ë³´ë?? ì¶”ì¶œ
+                    // docs ë°°ì—´ì„ ìˆœíšŒí•˜ë©° ê° ë¬¸ì„œì—ì„œ ì •ë³´ë¥¼ ì¶”ì¶œ
                     for (int i = 0; i < docs.length(); i++) {
-                        // ê°? ë¬¸ì„œ(doc) ê°ì²´ë¥? ê°?? ¸?˜´
+                        // ê° ë¬¸ì„œ(doc) ê°ì²´ë¥¼ ê°€ì ¸ì˜´
                         JSONObject doc = docs.getJSONObject(i).getJSONObject("doc");
 
-                        // ì£¼ì œë¶„ë¥˜ëª?(class_nm)?„ ê°?? ¸?˜´
+                        // ì£¼ì œë¶„ë¥˜ëª…(class_nm)ì„ ê°€ì ¸ì˜´
                         String class_nm = doc.getString("class_nm");
 
-                        // ì±? ?´ë¦?(bookname)?„ ê°?? ¸?˜´
+                        // ì±… ì´ë¦„(bookname)ì„ ê°€ì ¸ì˜´
                         String bookName = doc.getString("bookname");
 
-                        // ì±? ?´ë¯¸ì? URL(bookImageURL)?„ ê°?? ¸?˜´
+                        // ì±… ì´ë¯¸ì§€ URL(bookImageURL)ì„ ê°€ì ¸ì˜´
                         String bookImageUrl = doc.getString("bookImageURL");
 
-                        // ???(authors)ë¥? ê°?? ¸?˜´
+                        // ì €ì(authors)ë¥¼ ê°€ì ¸ì˜´
                         String authors = doc.getString("authors");
 
-                        // ì±? ? •ë³´ë?? ?‹´?? SearchBook ê°ì²´ ?ƒ?„±
+                        // ì±… ì •ë³´ë¥¼ ë‹´ì€ SearchBook ê°ì²´ ìƒì„±
                         SearchBook book = new SearchBook(class_nm, bookName, authors, bookImageUrl);
 
-                        // ?ƒ?„±?•œ SearchBook ê°ì²´ë¥? ë¦¬ìŠ¤?Š¸?— ì¶”ê?
+                        // ìƒì„±í•œ SearchBook ê°ì²´ë¥¼ ë¦¬ìŠ¤íŠ¸ì— ì¶”ê°€
                         books.add(book);
                     }
 
-                    // ì½œë°±?„ ?†µ?•´ ?„±ê³µì ?¸ ?‘?‹µ ì²˜ë¦¬ (ì±? ë¦¬ìŠ¤?Š¸ ? „?‹¬)
+                    // ì½œë°±ì„ í†µí•´ ì„±ê³µì ì¸ ì‘ë‹µ ì²˜ë¦¬ (ì±… ë¦¬ìŠ¤íŠ¸ ì „ë‹¬)
                     callback.onSuccess(books);
                 } catch (JSONException e) {
-                    // JSON ?ŒŒ?‹± ì¤? ?˜ˆ?™¸ê°? ë°œìƒ?•œ ê²½ìš° ì½œë°±?„ ?†µ?•´ ?‹¤?Œ¨ ì²˜ë¦¬
+                    // JSON íŒŒì‹± ì¤‘ ì˜ˆì™¸ê°€ ë°œìƒí•œ ê²½ìš° ì½œë°±ì„ í†µí•´ ì‹¤íŒ¨ ì²˜ë¦¬
                     callback.onFailure(e);
                 }
             }
