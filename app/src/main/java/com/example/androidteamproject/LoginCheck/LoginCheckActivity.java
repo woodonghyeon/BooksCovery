@@ -12,10 +12,13 @@ import com.example.androidteamproject.Join.JoinActivity;
 import com.example.androidteamproject.Login.LoginActivity;
 import com.example.androidteamproject.R;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class LoginCheckActivity extends AppCompatActivity {
 
@@ -44,6 +47,7 @@ public class LoginCheckActivity extends AppCompatActivity {
 
             Connection conn = null;
             PreparedStatement pstmt = null;
+            ResultSet rs = null;
 
             try {
                 // JDBC 드라이버 로드
@@ -55,8 +59,30 @@ public class LoginCheckActivity extends AppCompatActivity {
                 String sql = "Select * from member_info where id = ? && password = ? ";
                 pstmt = conn.prepareStatement(sql);
                 pstmt.setString(1, setId);
-                pstmt.setString(2, setPw);
-                ResultSet rs = pstmt.executeQuery();
+
+                //비밀번호 암호화 체크
+                String[] passwordAndSalt = getPasswordAndSaltFromDatabase(setId);
+                assert passwordAndSalt != null;
+                String pwd = passwordAndSalt[0];
+                String salt = passwordAndSalt[1];
+
+                if(pwd != null && setPw != null){
+                    // 입력된 비밀번호를 가져온 솔트와 함께 해싱
+                    MessageDigest md = MessageDigest.getInstance("SHA-256");
+                    md.update(salt.getBytes());
+                    md.update(setPw.getBytes());
+                    String hashedEnteredPassword = String.format("%064x", new BigInteger(1, md.digest()));
+                    Log.v("123",hashedEnteredPassword);
+
+                    if(pwd.equals(hashedEnteredPassword)){
+                        pstmt.setString(2, hashedEnteredPassword);
+                        rs = pstmt.executeQuery();
+                    }
+                    else {
+                        Log.e("ConnectToDatabaseTask", "Error connecting to database");
+                        return null;
+                    }
+                }
 
                 //결과 받기
                 while (rs.next()) {
@@ -113,6 +139,43 @@ public class LoginCheckActivity extends AppCompatActivity {
                 finish();
             }
         }
+
+        private String[] getPasswordAndSaltFromDatabase(String userId) throws SQLException {
+            String[] result = new String[2];
+
+            // 데이터베이스 연결
+            Connection connection = DriverManager.getConnection("jdbc:mysql://10.0.2.2:3306/test", "root", "root");
+            PreparedStatement statement = null;
+            ResultSet resultSet = null;
+
+            try {
+                // PreparedStatement 생성
+                String query = "SELECT password, password_key FROM member_info WHERE id = ?";
+                statement = connection.prepareStatement(query);
+                statement.setString(1, userId);
+
+                // 쿼리 실행 및 결과 가져오기
+                resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    result[0] = resultSet.getString("password");
+                    result[1] = resultSet.getString("password_key");
+                }
+            } catch (Exception e) {
+                Log.e("ConnectToDatabaseTask", "Error connecting to database", e);
+                return null;
+                // 오류 처리
+            } finally {
+                try {
+                    if (statement != null) statement.close();
+                    if (connection != null) connection.close();
+                    if (resultSet != null) resultSet.close();
+                } catch (Exception e) {
+                    Log.e("ConnectToDatabaseTask", "Error closing connection", e);
+                }
+            }
+            return result;
+        }
+
 
     }
 
