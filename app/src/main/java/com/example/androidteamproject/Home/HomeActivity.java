@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.androidteamproject.Search.FragmentSearch;
 import com.example.androidteamproject.R;
+import com.example.androidteamproject.Setting.FragmentSetting;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomeActivity extends AppCompatActivity {
@@ -19,6 +20,7 @@ public class HomeActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     private FragmentHome fragmentHome;
     private FragmentSearch fragmentSearch;
+    private FragmentSetting fragmentSetting;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,7 +69,11 @@ public class HomeActivity extends AppCompatActivity {
                     // 필요시 FragmentHistory 추가
                     break;
                 case R.id.tab_setting:
-                    // 필요시 FragmentSetting 추가
+                    if (fragmentSetting == null) {
+                        fragmentSetting = new FragmentSetting();
+                        fragmentTransaction.add(R.id.ly_home, fragmentSetting, "setting");
+                    }
+                    selectedFragment = fragmentSetting;
                     break;
             }
             if (selectedFragment != null) {
