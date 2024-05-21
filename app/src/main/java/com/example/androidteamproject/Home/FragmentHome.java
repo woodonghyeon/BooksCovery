@@ -16,8 +16,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.androidteamproject.ApiData.HttpConnection;
 import com.example.androidteamproject.R;
-import com.example.androidteamproject.Search.LatelySearchBook;
-import com.example.androidteamproject.Search.SearchPageAdapter;
+import com.example.androidteamproject.ApiData.SearchBook;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,8 +38,8 @@ public class FragmentHome extends Fragment {
     private Date mDate = new Date(now);
     private static SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-    private ViewPager2 currentEventPager, weekBookPager;
-    private FragmentStateAdapter homePagerAdapter, weekBookAdapter;
+    private ViewPager2 currentEventPager, weekBookPager, monthBookPager;
+    private FragmentStateAdapter homePagerAdapter, weekBookAdapter, monthBookAdapter;
     private TextView tv_department_title, tv_popular_book_week, tv_popular_book_month, tv_book_rental;
     private Animation anime_left_to_right, anime_right_to_left;
 
@@ -71,8 +70,9 @@ public class FragmentHome extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         startAnimation(view);
         CurrentEventSettingImg(view);
-        getResponseApiLoanItems();
-
+        getResponseApiWeekLoanItems();
+        getResponseApiMonthLoanItems();
+        
         return view;
     }
 
@@ -116,35 +116,35 @@ public class FragmentHome extends Fragment {
         });
     }
 
-    // 최근 많이 검색된 도서 이미지 출력 (현재는 많이 대출된 도서로 출력함 -> 수정 예정)
-    private void getResponseApiLoanItems() {
+    // 최근 많이 검색된 도서 출력 (주간)
+    private void getResponseApiWeekLoanItems() {
         String getTime = mFormat.format(mDate); // 현재 날짜 가져오기
         Calendar calendar = Calendar.getInstance(); // 1주일 전 날짜 가져오기
         calendar.setTime(mDate);
         calendar.add(Calendar.DAY_OF_YEAR, -7);
 
-        String startDt = mFormat.format(calendar.getTime()); // 시작 날짜 (예시)
-        String endDt = getTime; // 종료 날짜 (예시)
-        int pageNo = 1; // 페이지 번호 (예시)
-        int pageSize = 10; // 페이지 크기 (예시)
-        String format = "json"; // 응답 형식 (예시)
+        String startDt = mFormat.format(calendar.getTime()); // 시작 날짜
+        String endDt = getTime; // 종료 날짜
+        int pageNo = 1; // 페이지 번호
+        int pageSize = 10; // 페이지 크기
+        String format = "json"; // 응답 형식
 
-        HttpConnection.getInstance(getContext()).getLoanItems(startDt, endDt, pageNo, pageSize, format, new HttpConnection.HttpResponseCallback<List<LatelySearchBook>>() {
+        HttpConnection.getInstance(getContext()).getLoanItems(startDt, endDt, pageNo, pageSize, format, new HttpConnection.HttpResponseCallback<List<SearchBook>>() {
             @Override
-            public void onSuccess(List<LatelySearchBook> books) {
+            public void onSuccess(List<SearchBook> books) {
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
                         List<String> imageUrls = new ArrayList<>();
                         List<String> bookName = new ArrayList<>();
                         List<String> authors = new ArrayList<>();
-                        for (LatelySearchBook book : books) {
+                        for (SearchBook book : books) {
                             imageUrls.add(book.getBookImageUrl());
                             bookName.add(book.getBookName());
                             authors.add(book.getAuthors());
                         }
                         // ViewPager2에 이미지 추가
-                        setupViewPager(bookName, authors, imageUrls);
-                        Log.d("API Response", "Image URLs: " + imageUrls.toString() + ", BookName: " + bookName.toString());
+                        setupWeekViewPager(bookName, authors, imageUrls);
+                        Log.d("API Response(Week)", "Image URLs: " + imageUrls.toString() + ", BookName: " + bookName.toString());
                     });
                 }
             }
@@ -154,15 +154,15 @@ public class FragmentHome extends Fragment {
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
                         // 에러 처리 로직 추가
-                        Log.e("API Failure", "Error: " + e.getMessage());
+                        Log.e("API Failure(Week)", "Error: " + e.getMessage());
                     });
                 }
             }
         });
     }
 
-    // ViewPager2 Setting
-    private void setupViewPager(List<String> bookName, List<String> authors, List<String> imageUrls) {
+    // 주간 인기 도서 ViewPager2 setup
+    private void setupWeekViewPager(List<String> bookName, List<String> authors, List<String> imageUrls) {
         if (imageUrls == null || imageUrls.isEmpty()) {
             // 이미지 URL이 없는 경우 처리
             return;
@@ -186,27 +186,27 @@ public class FragmentHome extends Fragment {
         int screenWidth = getResources().getDisplayMetrics().widthPixels;
         int offsetPx = screenWidth - pageMarginPx - pagerWidth;
 
-        // viewpager2 간격 변환
+        // WeekBookViewPager2 간격 변환
         weekBookPager.setPageTransformer(new ViewPager2.PageTransformer() {
             @Override
             public void transformPage(@NonNull View page, float position) {
-                View imageView = page.findViewById(R.id.iv_weekBookImg);
+                View weekBookImg = page.findViewById(R.id.iv_weekBookImg);
                 View weekBookTitle = page.findViewById(R.id.tv_weekBookTitle);
                 View weekBookAuthor = page.findViewById(R.id.tv_weekBookAuthor);
-                if(imageView != null) {
+                if(weekBookImg != null) {
                     page.setTranslationX(position * -offsetPx);
                     if (position < -1) return;
                     if (position <= 1) {
                         float scaleFactor = Math.max(MIN_SCALE, 1 - Math.abs(position * getEase(Math.abs(position))));
-                        imageView.setScaleX(scaleFactor);
-                        imageView.setScaleY(scaleFactor);
+                        weekBookImg.setScaleX(scaleFactor);
+                        weekBookImg.setScaleY(scaleFactor);
                         weekBookTitle.setScaleX(scaleFactor);
                         weekBookTitle.setScaleY(scaleFactor);
                         weekBookAuthor.setScaleX(scaleFactor);
                         weekBookAuthor.setScaleY(scaleFactor);
                     } else {
-                        imageView.setScaleX(MIN_SCALE);
-                        imageView.setScaleY(MIN_SCALE);
+                        weekBookImg.setScaleX(MIN_SCALE);
+                        weekBookImg.setScaleY(MIN_SCALE);
                         weekBookTitle.setScaleX(MIN_SCALE);
                         weekBookTitle.setScaleY(MIN_SCALE);
                         weekBookAuthor.setScaleX(MIN_SCALE);
@@ -227,6 +227,95 @@ public class FragmentHome extends Fragment {
                 super.onPageScrolled(position, positionOffset, positionOffsetPixels);
                 if (positionOffsetPixels == 0) {
                     weekBookPager.setCurrentItem(position);
+                }
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+            }
+        });
+    }
+
+    // 최근 많이 검색된 도서 출력 (월간)
+    private void getResponseApiMonthLoanItems() {
+        String getTime = mFormat.format(mDate); // 현재 날짜 가져오기
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(mDate);
+        calendar.set(Calendar.DAY_OF_MONTH, 1); // 1일을 의미
+
+        String startDt = mFormat.format(calendar.getTime()); // 시작 날짜
+        String endDt = getTime; // 종료 날짜 (예시)
+        int pageNo = 1; // 페이지 번호 (예시)
+        int pageSize = 10; // 페이지 크기 (예시)
+        String format = "json"; // 응답 형식 (예시)
+
+        HttpConnection.getInstance(getContext()).getLoanItems(startDt, endDt, pageNo, pageSize, format, new HttpConnection.HttpResponseCallback<List<SearchBook>>() {
+            @Override
+            public void onSuccess(List<SearchBook> books) {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        List<String> imageUrls = new ArrayList<>();
+                        List<String> bookName = new ArrayList<>();
+                        List<String> authors = new ArrayList<>();
+                        for (SearchBook book : books) {
+                            imageUrls.add(book.getBookImageUrl());
+                            bookName.add(book.getBookName());
+                            authors.add(book.getAuthors());
+                        }
+                        // ViewPager2에 이미지 추가
+                        setupMonthViewPager(bookName, authors, imageUrls);
+                        Log.d("API Response(Month)", "Image URLs: " + imageUrls.toString() + ", BookName: " + bookName.toString());
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        // 에러 처리 로직 추가
+                        Log.e("API Failure(Month)", "Error: " + e.getMessage());
+                    });
+                }
+            }
+        });
+    }
+
+    // 주간 인기 도서 ViewPager2 setup
+    private void setupMonthViewPager(List<String> bookName, List<String> authors, List<String> imageUrls) {
+        if (imageUrls == null || imageUrls.isEmpty()) {
+            // 이미지 URL이 없는 경우 처리
+            return;
+        }
+        // 이미지 URL이 있을 경우 뷰페이저 설정
+        if (getView() == null) {
+            return;
+        }
+        monthBookPager = getView().findViewById(R.id.month_book_viewpager);
+        monthBookAdapter = new MonthBookAdapter(requireActivity(), bookName, authors, imageUrls);
+        monthBookPager.setAdapter(monthBookAdapter);
+        monthBookPager.setCurrentItem(1000);
+        monthBookPager.setOffscreenPageLimit(10);
+
+        int startPos = imageUrls.size() / 2;
+        monthBookPager.setCurrentItem(startPos);
+
+        // viewpager2 간격 변환을 위함 -> res.values.dimes.xml에서 확인
+        int pageMarginPx = getResources().getDimensionPixelOffset(R.dimen.monthBookPageMargin);
+        int pagerWidth = getResources().getDimensionPixelOffset(R.dimen.monthBookPageWidth);
+        int screenWidth = getResources().getDisplayMetrics().widthPixels;
+        int offsetPx = screenWidth - pageMarginPx - pagerWidth;
+
+        // viewpager2 간격 변환
+        monthBookPager.setPageTransformer((page, position) -> page.setTranslationX(position * -offsetPx));
+
+        monthBookPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+                if (positionOffsetPixels == 0) {
+                    monthBookPager.setCurrentItem(position);
                 }
             }
 

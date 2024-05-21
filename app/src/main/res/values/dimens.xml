@@ -9,4 +9,7 @@
 
     <dimen name="weekBookPageMargin">300dp</dimen>
     <dimen name="weekBookPageWidth">30dp</dimen>
+
+    <dimen name="monthBookPageMargin">300dp</dimen>
+    <dimen name="monthBookPageWidth">30dp</dimen>
 </resources>

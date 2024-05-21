@@ -17,7 +17,7 @@
         <EditText
             android:id="@+id/et_input_name"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="60dp"
             android:layout_marginStart="15dp"
             android:layout_marginEnd="15dp"
             android:fontFamily="@font/suitebold"
@@ -35,7 +35,7 @@
         <EditText
             android:id="@+id/et_input_gender"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="60dp"
             android:layout_marginStart="15dp"
             android:layout_marginEnd="15dp"
             android:fontFamily="@font/suitebold"
@@ -53,7 +53,7 @@
         <EditText
             android:id="@+id/et_input_age"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="60dp"
             android:layout_marginStart="15dp"
             android:layout_marginEnd="15dp"
             android:fontFamily="@font/suitebold"
@@ -71,7 +71,7 @@
         <EditText
             android:id="@+id/et_input_department"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="60dp"
             android:layout_marginStart="15dp"
             android:layout_marginEnd="15dp"
             android:fontFamily="@font/suitebold"
@@ -89,7 +89,7 @@
         <EditText
             android:id="@+id/et_input_email"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="60dp"
             android:layout_marginStart="15dp"
             android:layout_marginEnd="15dp"
             android:fontFamily="@font/suitebold"
@@ -107,7 +107,7 @@
         <EditText
             android:id="@+id/et_input_id"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="60dp"
             android:layout_marginStart="15dp"
             android:layout_marginEnd="15dp"
             android:fontFamily="@font/suitebold"
@@ -126,7 +126,7 @@
         <EditText
             android:id="@+id/et_input_pwd"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="60dp"
             android:layout_marginStart="15dp"
             android:layout_marginEnd="15dp"
             android:fontFamily="@font/suitebold"
