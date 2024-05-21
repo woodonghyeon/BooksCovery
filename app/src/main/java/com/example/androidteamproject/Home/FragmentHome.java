@@ -38,9 +38,9 @@ public class FragmentHome extends Fragment {
     private Date mDate = new Date(now);
     private static SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-    private ViewPager2 currentEventPager, weekBookPager, monthBookPager;
-    private FragmentStateAdapter homePagerAdapter, weekBookAdapter, monthBookAdapter;
-    private TextView tv_department_title, tv_popular_book_week, tv_popular_book_month, tv_book_rental;
+    private ViewPager2 currentEventPager, weekBookPager, monthBookPager, hotTrendBookPager;
+    private FragmentStateAdapter homePagerAdapter, weekBookAdapter, monthBookAdapter, hotTrendBookAdapter;
+    private TextView tv_department_title, tv_popular_book_week, tv_popular_book_month, tv_hotTrend_title;
     private Animation anime_left_to_right, anime_right_to_left;
 
     public FragmentHome() {
@@ -53,7 +53,7 @@ public class FragmentHome extends Fragment {
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
-    }
+    } // end of FragmentHome
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,7 +62,7 @@ public class FragmentHome extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-    }
+    } // end of onCreate
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -72,9 +72,10 @@ public class FragmentHome extends Fragment {
         CurrentEventSettingImg(view);
         getResponseApiWeekLoanItems();
         getResponseApiMonthLoanItems();
+        getResponseApiHotTrend();
         
         return view;
-    }
+    } // end of onCreateView
 
     private void CurrentEventSettingImg(View view) {
         // 가로 슬라이드 뷰 Fragment
@@ -163,7 +164,7 @@ public class FragmentHome extends Fragment {
                 }
             }
         });
-    }
+    } // end of getResponseApiWeekLoanItems
 
     // 주간 인기 도서 ViewPager2 setup
     private void setupWeekViewPager(List<String> class_nm, List<String> bookName, List<String> authors, List<String> imageUrls) {
@@ -244,7 +245,7 @@ public class FragmentHome extends Fragment {
                 super.onPageSelected(position);
             }
         });
-    }
+    } // end of setupWeekViewPager
 
     // 최근 많이 검색된 도서 출력 (월간)
     private void getResponseApiMonthLoanItems() {
@@ -293,9 +294,9 @@ public class FragmentHome extends Fragment {
                 }
             }
         });
-    }
+    } // end of getResponseApiMonthLoanItems
 
-    // 주간 인기 도서 ViewPager2 setup
+    // 월간 인기 도서 ViewPager2 setup
     private void setupMonthViewPager(List<String> class_nm, List<String> bookName, List<String> authors, List<String> imageUrls) {
         if (imageUrls == null || imageUrls.isEmpty()) {
             // 이미지 URL이 없는 경우 처리
@@ -337,14 +338,99 @@ public class FragmentHome extends Fragment {
                 super.onPageSelected(position);
             }
         });
-    }
+    } // end of setupMonthViewPager
+
+    // 대출 급상승(hotTrend) 도서 (최근 3일)
+    private void getResponseApiHotTrend() {
+        String getTime = mFormat.format(mDate); // 현재 날짜 가져오기
+
+        String searchDt = getTime; // 시작 날짜
+        String format = "json"; // 응답 형식 (예시)
+
+        HttpConnection.getInstance(getContext()).getHotTrend(searchDt, format, new HttpConnection.HttpResponseCallback<List<SearchBook>>() {
+            @Override
+            public void onSuccess(List<SearchBook> books) {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        List<String> imageUrls = new ArrayList<>();
+                        List<String> bookName = new ArrayList<>();
+                        List<String> authors = new ArrayList<>();
+                        List<String> class_nm = new ArrayList<>();
+                        for (SearchBook book : books) {
+                            imageUrls.add(book.getBookImageUrl());
+                            bookName.add(book.getBookName());
+                            authors.add(book.getAuthors());
+                            class_nm.add(book.getClass_nm());
+                        }
+                        // ViewPager2에 이미지 추가
+                        setupHotTrendViewPager(class_nm, bookName, authors, imageUrls);
+                        Log.d("API Response(HotTrend)", "Image URLs: " + imageUrls.toString() + ", BookName: " + bookName.toString());
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        // 에러 처리 로직 추가
+                        Log.e("API Failure(HotTrend)", "Error: " + e.getMessage());
+                    });
+                }
+            }
+        });
+    } // end of getResponseApiHotTrend
+
+    // 대출 급상승(hotTrend) 도서 ViewPager2 setup
+    private void setupHotTrendViewPager(List<String> class_nm, List<String> bookName, List<String> authors, List<String> imageUrls) {
+        if (imageUrls == null || imageUrls.isEmpty()) {
+            // 이미지 URL이 없는 경우 처리
+            return;
+        }
+        // 이미지 URL이 있을 경우 뷰페이저 설정
+        if (getView() == null) {
+            return;
+        }
+        hotTrendBookPager = getView().findViewById(R.id.hotTrend_book_viewpager);
+        hotTrendBookAdapter = new HotTrendBookAdapter(requireActivity(), class_nm, bookName, authors, imageUrls);
+        hotTrendBookPager.setAdapter(hotTrendBookAdapter);
+        hotTrendBookPager.setCurrentItem(1000);
+        hotTrendBookPager.setOffscreenPageLimit(10);
+
+        int startPos = imageUrls.size() / 2;
+        hotTrendBookPager.setCurrentItem(startPos);
+
+        // viewpager2 간격 변환을 위함 -> res.values.dimes.xml에서 확인
+        int pageMarginPx = getResources().getDimensionPixelOffset(R.dimen.monthBookPageMargin);
+        int pagerWidth = getResources().getDimensionPixelOffset(R.dimen.monthBookPageWidth);
+        int screenWidth = getResources().getDisplayMetrics().widthPixels;
+        int offsetPx = screenWidth - pageMarginPx - pagerWidth;
+
+        // viewpager2 간격 변환
+        hotTrendBookPager.setPageTransformer((page, position) -> page.setTranslationX(position * -offsetPx));
+
+        hotTrendBookPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+                if (positionOffsetPixels == 0) {
+                    hotTrendBookPager.setCurrentItem(position);
+                }
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+            }
+        });
+    } // end of setupHotTrendViewPager
 
     // 타이틀 애니메이션
     private void startAnimation(View view) {
         tv_department_title = view.findViewById(R.id.tv_currentEvent);
         tv_popular_book_week = view.findViewById(R.id.tv_popular_book_week);
         tv_popular_book_month = view.findViewById(R.id.tv_popular_book_month);
-        tv_book_rental = view.findViewById(R.id.tv_book_rental);
+        tv_hotTrend_title = view.findViewById(R.id.tv_hotTrend_book_title);
 
         anime_left_to_right = AnimationUtils.loadAnimation(getContext(), R.anim.anime_left_to_right);
         anime_right_to_left = AnimationUtils.loadAnimation(getContext(), R.anim.anime_right_to_left);
@@ -352,6 +438,6 @@ public class FragmentHome extends Fragment {
         tv_department_title.startAnimation(anime_right_to_left);
         tv_popular_book_week.startAnimation(anime_right_to_left);
         tv_popular_book_month.startAnimation(anime_right_to_left);
-        tv_book_rental.startAnimation(anime_left_to_right);
-    }
+        tv_hotTrend_title.startAnimation(anime_right_to_left);
+    } // end of startAnimation
 }
