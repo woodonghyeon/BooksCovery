@@ -19,6 +19,7 @@ import com.example.androidteamproject.R;
 
 public class LoginActivity extends Activity {
 
+    ProgressDialog dialog;
     private EditText et_input_id;
     private EditText et_input_pwd;
     @Override
@@ -53,7 +54,7 @@ public class LoginActivity extends Activity {
     }
 
     private void showProgressDialog(){
-        ProgressDialog dialog = new ProgressDialog(this);
+        dialog = new ProgressDialog(this);
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         dialog.setMessage("로그인중입니다.");
         dialog.show();
@@ -63,6 +64,7 @@ public class LoginActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        dialog.cancel();
 
         //결과가 CANCELED = 로그인에 실패함
         if(resultCode == RESULT_CANCELED){
