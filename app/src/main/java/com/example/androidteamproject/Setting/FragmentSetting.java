@@ -14,7 +14,6 @@ public class FragmentSetting extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     private String mParam1;
     private String mParam2;
-
     public FragmentSetting() {
         // Required empty public constructor
     }
@@ -38,8 +37,7 @@ public class FragmentSetting extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_setting, container, false);
         return view;
     }

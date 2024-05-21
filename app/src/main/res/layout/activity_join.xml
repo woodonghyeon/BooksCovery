@@ -12,17 +12,43 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:orientation="horizontal"
-        android:background="@drawable/spinner_background">
+        android:background="@drawable/spinner_background"
+        android:layout_marginBottom="20dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginEnd="15dp"
             android:text="이름"
-            android:textSize="20sp"
+            android:textSize="20dp"
             android:fontFamily="@font/suitebold"/>
         <EditText
             android:id="@+id/et_input_name"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:fontFamily="@font/suitebold"
+            android:textSize="20dp"
+            android:inputType="text"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:background="@drawable/spinner_background"
+        android:layout_marginBottom="20dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:text="성별"
+            android:textSize="20dp"
+            android:fontFamily="@font/suitebold"/>
+        <Spinner
+            android:id="@+id/spinner_gender"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_marginStart="15dp"
@@ -36,32 +62,16 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:orientation="horizontal"
-        android:background="@drawable/spinner_background">
+        android:background="@drawable/spinner_background"
+        android:layout_marginBottom="20dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginEnd="15dp"
-            android:text="성별"
-            android:textSize="20sp"
-            android:fontFamily="@font/suitebold"/>
-        <Spinner
-            android:id="@+id/spinner_gender"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:fontFamily="@font/suitebold"
+            android:text="나이"
             android:textSize="20dp"
-            android:entries="@array/gender_array" />
-    </LinearLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_marginTop="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:hintTextColor="@color/brandcolor5"
-        app:boxStrokeColor="@color/brandcolor5">
+            android:fontFamily="@font/suitebold"/>
         <EditText
             android:id="@+id/et_input_age"
             android:layout_width="match_parent"
@@ -70,34 +80,48 @@
             android:layout_marginEnd="15dp"
             android:fontFamily="@font/suitebold"
             android:textSize="20dp"
-            android:inputType="number"
-            android:hint="　나이" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:inputType="number"/>
+    </LinearLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_marginTop="20dp"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:hintTextColor="@color/brandcolor5"
-        app:boxStrokeColor="@color/brandcolor5">
-        <EditText
-            android:id="@+id/et_input_department"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:background="@drawable/spinner_background"
+        android:layout_marginBottom="20dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:text="학과"
+            android:textSize="20dp"
+            android:fontFamily="@font/suitebold"/>
+        <Spinner
+            android:id="@+id/spinner_department"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_marginStart="15dp"
             android:layout_marginEnd="15dp"
             android:fontFamily="@font/suitebold"
             android:textSize="20dp"
-            android:inputType="text"
-            android:hint="　학과" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:entries="@array/department_array" />
+    </LinearLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_marginTop="20dp"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:hintTextColor="@color/brandcolor5"
-        app:boxStrokeColor="@color/brandcolor5">
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:background="@drawable/spinner_background"
+        android:layout_marginBottom="20dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:text="이메일"
+            android:textSize="20dp"
+            android:fontFamily="@font/suitebold"/>
         <EditText
             android:id="@+id/et_input_email"
             android:layout_width="match_parent"
@@ -106,16 +130,23 @@
             android:layout_marginEnd="15dp"
             android:fontFamily="@font/suitebold"
             android:textSize="20dp"
-            android:inputType="textEmailAddress"
-            android:hint="　이메일" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:inputType="textEmailAddress"/>
+    </LinearLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_marginTop="20dp"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:hintTextColor="@color/brandcolor5"
-        app:boxStrokeColor="@color/brandcolor5">
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:background="@drawable/spinner_background"
+        android:layout_marginBottom="20dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:text="아이디"
+            android:textSize="20dp"
+            android:fontFamily="@font/suitebold"/>
         <EditText
             android:id="@+id/et_input_id"
             android:layout_width="match_parent"
@@ -124,17 +155,23 @@
             android:layout_marginEnd="15dp"
             android:fontFamily="@font/suitebold"
             android:textSize="20dp"
-            android:inputType="text"
-            android:hint="　아이디" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:inputType="text"/>
+    </LinearLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        app:passwordToggleEnabled="true"
-        app:hintTextColor="@color/brandcolor5"
-        app:boxStrokeColor="@color/brandcolor5">
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:background="@drawable/spinner_background"
+        android:layout_marginBottom="20dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:text="비밀번호"
+            android:textSize="20dp"
+            android:fontFamily="@font/suitebold"/>
         <EditText
             android:id="@+id/et_input_pwd"
             android:layout_width="match_parent"
@@ -143,9 +180,8 @@
             android:layout_marginEnd="15dp"
             android:fontFamily="@font/suitebold"
             android:textSize="20dp"
-            android:inputType="textPassword"
-            android:hint="　비밀번호" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:inputType="textPassword"/>
+    </LinearLayout>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btJoin"
