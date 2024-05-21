@@ -16,6 +16,7 @@ import com.example.androidteamproject.Home.HomeActivity;
 import com.example.androidteamproject.LoginCheck.LoginCheckActivity;
 import com.example.androidteamproject.Join.JoinActivity;
 import com.example.androidteamproject.R;
+import com.example.androidteamproject.Setting.FragmentSetting;
 
 public class LoginActivity extends Activity {
 
@@ -84,6 +85,5 @@ public class LoginActivity extends Activity {
             intent.putExtra("UpdateDate",data.getStringExtra("UpdateDate"));
             startActivity(intent);
         }
-
     }
 }
