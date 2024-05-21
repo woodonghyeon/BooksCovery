@@ -30,7 +30,7 @@ import com.example.androidteamproject.R;
 public class JoinActivity extends AppCompatActivity {
     Button btJoin;
     Spinner spinner_gender, et_input_department;
-    String gender, department;
+    String gender = "", department = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +50,7 @@ public class JoinActivity extends AppCompatActivity {
         // 데이터베이스 연결 시작
         btJoin.setOnClickListener(view -> {
             String name = et_input_name.getText().toString();
-            gender = "";
             String age = et_input_age.getText().toString();
-            department = "";
             String email = et_input_email.getText().toString();
             String id = et_input_id.getText().toString();
             String pwd = et_input_pwd.getText().toString();
@@ -64,7 +62,6 @@ public class JoinActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 gender = (String) parent.getItemAtPosition(position);
-                Log.v("123",gender);
             }
 
             @Override
@@ -76,7 +73,6 @@ public class JoinActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 department = String.valueOf(id+1);
-                Log.v("123",department);
             }
 
             @Override
