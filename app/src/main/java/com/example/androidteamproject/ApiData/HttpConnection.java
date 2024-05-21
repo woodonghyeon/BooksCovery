@@ -63,7 +63,6 @@ public class HttpConnection {
         });
     }
 
-    // 검색
     public void bookSearch(String word, int pageNo, int pageSize, String format, final HttpResponseCallback callback) {
         String url = BASE_URL + "srchBooks?authKey=" + API_KEY + "&keyword=" + word + "&pageNo=" + pageNo + "&pageSize=" + pageSize + "&format=" + format;
         Request request = new Request.Builder().url(url).build();

@@ -83,6 +83,6 @@ public class LoginActivity extends Activity {
             intent.putExtra("UpdateDate",data.getStringExtra("UpdateDate"));
             startActivity(intent);
         }
-        
+
     }
 }
