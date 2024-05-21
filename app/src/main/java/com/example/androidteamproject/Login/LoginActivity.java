@@ -65,12 +65,15 @@ public class LoginActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        
+        //로그인중입니다 dialog 삭제
         dialog.cancel();
 
         //결과가 CANCELED = 로그인에 실패함
         if(resultCode == RESULT_CANCELED){
             Toast.makeText(getApplicationContext(),"로그인에 실패했습니다.",Toast.LENGTH_SHORT).show();
         }
+
         //결과가 OK = 로그인이 되었다.
         else if(resultCode == RESULT_OK){
             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
@@ -79,7 +82,8 @@ public class LoginActivity extends Activity {
             intent.putExtra("Age",data.getIntExtra("Age",0));
             intent.putExtra("Department_id",data.getIntExtra("Department_id",0));
             intent.putExtra("Id",data.getStringExtra("Id"));
-            intent.putExtra("Pwd",data.getStringExtra("Pwd"));
+            //굳이 비밀번호 필요함?
+            //intent.putExtra("Pwd",data.getStringExtra("Pwd"));
             intent.putExtra("Email",data.getStringExtra("Email"));
             intent.putExtra("Mode",data.getStringExtra("Mode"));
             intent.putExtra("UpdateDate",data.getStringExtra("UpdateDate"));

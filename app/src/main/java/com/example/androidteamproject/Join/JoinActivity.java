@@ -1,6 +1,5 @@
 package com.example.androidteamproject.Join;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,14 +10,17 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.SecureRandom;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.text.SimpleDateFormat;
+import java.util.Base64;
 import java.util.Calendar;
 import java.util.Locale;
 
-import com.example.androidteamproject.Home.HomeActivity;
 import com.example.androidteamproject.Login.LoginActivity;
 import com.example.androidteamproject.R;
 
@@ -80,9 +82,26 @@ public class JoinActivity extends AppCompatActivity {
                 Class.forName("com.mysql.jdbc.Driver");
                 // 데이터베이스에 연결 (url : "jdbc:mysql://10.0.2.2 (에뮬레이터 로컬 호스트 주소) :3306/your-database-name", user : DB 아이디, password : DB 비밀번호)
                 conn = DriverManager.getConnection("jdbc:mysql://10.0.2.2:3306/test", "root", "root");
+                
+                //비밀번호 암호화
+                SecureRandom random = null;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                    random = SecureRandom.getInstanceStrong();
+                }
+                byte[] bytes = new byte[16];
+                random.nextBytes(bytes);
+                String salt = null;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                    salt = new String(Base64.getEncoder().encode(bytes));
+                }
+
+                MessageDigest md = MessageDigest.getInstance("SHA-256");
+                md.update(salt.getBytes());
+                md.update(pwd.getBytes());
+                String hex = String.format("%064x", new BigInteger(1, md.digest()));
 
                 // 쿼리 실행
-                String sql = "Insert into member_info (name, gender, age, department_id, email, id, password, mode, update_date) Values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                String sql = "Insert into member_info (name, gender, age, department_id, email, id, password, password_key, mode, update_date) Values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                 pstmt = conn.prepareStatement(sql);
                 pstmt.setString(1, name);
                 pstmt.setString(2, gender);
@@ -90,9 +109,10 @@ public class JoinActivity extends AppCompatActivity {
                 pstmt.setInt(4, Integer.parseInt(department));
                 pstmt.setString(5, email);
                 pstmt.setString(6, id);
-                pstmt.setString(7, pwd);
-                pstmt.setString(8, "w");
-                pstmt.setString(9, currentTime);
+                pstmt.setString(7, hex);
+                pstmt.setString(8, salt);
+                pstmt.setString(9, "w");
+                pstmt.setString(10, currentTime);
 
                 // 쿼리 실행
                 int rowsInserted = pstmt.executeUpdate();
