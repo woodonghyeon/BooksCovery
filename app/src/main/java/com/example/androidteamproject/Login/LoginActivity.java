@@ -57,6 +57,7 @@ public class LoginActivity extends Activity {
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         dialog.setMessage("로그인중입니다.");
         dialog.show();
+        dialog.dismiss();
     }
 
     //로그인 결과
