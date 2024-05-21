@@ -195,6 +195,73 @@ public class HttpConnection {
                 }
             }
         });
-    }
+    } // end of LoanItems
 
+    // LoanItems -> ??ì¶? ë§ì? ?„?„œë¥? ë½‘ì•„?˜´ ?›„?— ?ˆ˜? • ?˜ˆ? •
+    public void getHotTrend(String searchDt, String format, HttpResponseCallback<List<SearchBook>> callback) {
+        String url = BASE_URL + "loanItemSrch?authKey=" + API_KEY
+                + "&searchDt="
+                + "&format="
+                + format;
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                callback.onFailure(e);
+            }
+
+            @Override
+            // HTTP ?‘?‹µ?„ ì²˜ë¦¬?•˜?Š” ë©”ì„œ?“œ
+            public void onResponse(Call call, Response response) throws IOException {
+                try {
+                    // ?‘?‹µ?´ ?„±ê³µì ?´ì§? ?•Š?? ê²½ìš° ?˜ˆ?™¸ë¥? ?˜ì§?
+                    if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+                    // ?‘?‹µ ë³¸ë¬¸?„ JSON ê°ì²´ë¡? ë³??™˜
+                    JSONObject responseBody = new JSONObject(response.body().string());
+
+                    // JSON ê°ì²´?—?„œ "response" ê°ì²´ë¥? ê°?? ¸???„œ "docs" ë°°ì—´?„ ì¶”ì¶œ
+                    JSONArray docs = responseBody.getJSONObject("response").getJSONArray("docs");
+
+                    // SearchBook ê°ì²´ë¥? ???¥?•  ë¦¬ìŠ¤?Š¸ ì´ˆê¸°?™”
+                    List<SearchBook> books = new ArrayList<>();
+
+                    // docs ë°°ì—´?„ ?ˆœ?šŒ?•˜ë©? ê°? ë¬¸ì„œ?—?„œ ? •ë³´ë?? ì¶”ì¶œ
+                    for (int i = 0; i < docs.length(); i++) {
+                        // ê°? ë¬¸ì„œ(doc) ê°ì²´ë¥? ê°?? ¸?˜´
+                        JSONObject doc = docs.getJSONObject(i).getJSONObject("doc");
+
+                        // ì£¼ì œë¶„ë¥˜ëª?(class_nm)?„ ê°?? ¸?˜´
+                        String class_nm = doc.getString("class_nm");
+
+                        // ì±? ?´ë¦?(bookname)?„ ê°?? ¸?˜´
+                        String bookName = doc.getString("bookname");
+
+                        // ì±? ?´ë¯¸ì? URL(bookImageURL)?„ ê°?? ¸?˜´
+                        String bookImageUrl = doc.getString("bookImageURL");
+
+                        // ???(authors)ë¥? ê°?? ¸?˜´
+                        String authors = doc.getString("authors");
+
+                        // ì±? ? •ë³´ë?? ?‹´?? SearchBook ê°ì²´ ?ƒ?„±
+                        SearchBook book = new SearchBook(class_nm, bookName, authors, bookImageUrl);
+
+                        // ?ƒ?„±?•œ SearchBook ê°ì²´ë¥? ë¦¬ìŠ¤?Š¸?— ì¶”ê?
+                        books.add(book);
+                    }
+
+                    // ì½œë°±?„ ?†µ?•´ ?„±ê³µì ?¸ ?‘?‹µ ì²˜ë¦¬ (ì±? ë¦¬ìŠ¤?Š¸ ? „?‹¬)
+                    callback.onSuccess(books);
+                } catch (JSONException e) {
+                    // JSON ?ŒŒ?‹± ì¤? ?˜ˆ?™¸ê°? ë°œìƒ?•œ ê²½ìš° ì½œë°±?„ ?†µ?•´ ?‹¤?Œ¨ ì²˜ë¦¬
+                    callback.onFailure(e);
+                }
+            }
+        });
+    } // end of hotTrend
 }
