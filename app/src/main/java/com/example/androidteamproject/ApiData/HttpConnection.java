@@ -2,6 +2,8 @@ package com.example.androidteamproject.ApiData;
 
 import android.content.Context;
 
+import com.example.androidteamproject.R;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,7 +27,7 @@ public class HttpConnection {
 
     private HttpConnection(Context context) {
         client = new OkHttpClient();
-        API_KEY = "cc355482ccb755beacd4ba6f7134c20c6b59a237e1ee656a155a6ed3a2003941";
+        API_KEY = String.valueOf(R.string.api_key);
     }
 
     public static HttpConnection getInstance(Context context) {
