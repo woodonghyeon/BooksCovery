@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.Target;
 import com.example.androidteamproject.R;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -47,7 +48,7 @@ public class LatelySearchImageFragment extends Fragment {
         TextView textView = view.findViewById(R.id.tv_latelySearch);
 
         // Glide를 사용하여 이미지 로드
-        Glide.with(this).load(imageUrl).into(imageView);
+        Glide.with(this).load(imageUrl).override(Target.SIZE_ORIGINAL).error(R.drawable.ic_error).into(imageView);
         textView.setText(bookName);
 
         return view;

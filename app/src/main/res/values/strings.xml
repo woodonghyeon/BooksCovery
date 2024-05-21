@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">AndroidTeamProject</string>
     <string name="api_key">cc355482ccb755beacd4ba6f7134c20c6b59a237e1ee656a155a6ed3a2003941</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
