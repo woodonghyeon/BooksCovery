@@ -4,4 +4,8 @@
     <string name="sub_api_key">f70cc907c5ad6fdc570e3516681abb23dfd73f4bdaa2dfdad3f99c65bfc32846</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="gender_array">
+        <item>남자</item>
+        <item>여자</item>
+    </string-array>
 </resources>

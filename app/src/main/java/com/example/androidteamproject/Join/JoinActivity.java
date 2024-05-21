@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,7 +34,7 @@ public class JoinActivity extends AppCompatActivity {
         setContentView(R.layout.activity_join);
 
         EditText et_input_name = findViewById(R.id.et_input_name);
-        EditText et_input_gender = findViewById(R.id.et_input_gender);
+        Spinner spinner_gender = findViewById(R.id.spinner_gender);
         EditText et_input_age = findViewById(R.id.et_input_age);
         EditText et_input_department = findViewById(R.id.et_input_department);
         EditText et_input_email = findViewById(R.id.et_input_email);
@@ -45,7 +46,7 @@ public class JoinActivity extends AppCompatActivity {
         // 데이터베이스 연결 시작
         btJoin.setOnClickListener(view -> {
             String name = et_input_name.getText().toString();
-            String gender = et_input_gender.getText().toString();
+            String gender = spinner_gender.getText().toString();
             String age = et_input_age.getText().toString();
             String department = et_input_department.getText().toString();
             String email = et_input_email.getText().toString();
