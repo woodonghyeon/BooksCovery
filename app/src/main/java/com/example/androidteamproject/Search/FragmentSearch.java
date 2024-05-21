@@ -156,7 +156,12 @@ public class FragmentSearch extends Fragment {
 
     // 칩 클릭 이벤트 처리 메서드
     private void onChipClick(String keyword) {
-
+        // FragmentKeywordSearch로 이동
+        FragmentKeywordSearch fragment = FragmentKeywordSearch.newInstance(keyword, ""); // 두 번째 인자는 필요에 따라 변경
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.ly_home, fragment) // R.id.fragment_container는 실제로 프래그먼트를 교체할 컨테이너 ID로 대체
+                .addToBackStack(null) // 백스택에 추가하여 뒤로가기 버튼을 눌렀을 때 이전 프래그먼트로 돌아갈 수 있음
+                .commit();
     }
 
     // 최근 많이 검색된 도서 이미지 출력 (현재는 많이 대출된 도서로 출력함 -> 수정 예정)
