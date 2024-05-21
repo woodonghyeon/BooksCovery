@@ -33,7 +33,7 @@ public class FragmentHome extends Fragment {
     private String mParam2;
 
     private final int currentEventNum = 4;
-    private static final float MIN_SCALE = 0.75f; // WeekBook scale
+    private static final float MIN_SCALE = 0.6f; // WeekBook scale
     long now = System.currentTimeMillis();
     private Date mDate = new Date(now);
     private static SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -139,13 +139,15 @@ public class FragmentHome extends Fragment {
                         List<String> imageUrls = new ArrayList<>();
                         List<String> bookName = new ArrayList<>();
                         List<String> authors = new ArrayList<>();
+                        List<String> class_nm = new ArrayList<>();
                         for (SearchBook book : books) {
                             imageUrls.add(book.getBookImageUrl());
                             bookName.add(book.getBookName());
                             authors.add(book.getAuthors());
+                            class_nm.add(book.getClass_nm());
                         }
                         // ViewPager2에 이미지 추가
-                        setupWeekViewPager(bookName, authors, imageUrls);
+                        setupWeekViewPager(class_nm, bookName, authors, imageUrls);
                         Log.d("API Response(Week)", "Image URLs: " + imageUrls.toString() + ", BookName: " + bookName.toString());
                     });
                 }
@@ -164,7 +166,7 @@ public class FragmentHome extends Fragment {
     }
 
     // 주간 인기 도서 ViewPager2 setup
-    private void setupWeekViewPager(List<String> bookName, List<String> authors, List<String> imageUrls) {
+    private void setupWeekViewPager(List<String> class_nm, List<String> bookName, List<String> authors, List<String> imageUrls) {
         if (imageUrls == null || imageUrls.isEmpty()) {
             // 이미지 URL이 없는 경우 처리
             return;
@@ -174,7 +176,7 @@ public class FragmentHome extends Fragment {
             return;
         }
         weekBookPager = getView().findViewById(R.id.week_book_viewpager);
-        weekBookAdapter = new WeekBookAdapter(requireActivity(), bookName, authors, imageUrls);
+        weekBookAdapter = new WeekBookAdapter(requireActivity(), class_nm, bookName, authors, imageUrls);
         weekBookPager.setAdapter(weekBookAdapter);
         weekBookPager.setCurrentItem(1000);
         weekBookPager.setOffscreenPageLimit(10);
@@ -195,6 +197,7 @@ public class FragmentHome extends Fragment {
                 View weekBookImg = page.findViewById(R.id.iv_weekBookImg);
                 View weekBookTitle = page.findViewById(R.id.tv_weekBookTitle);
                 View weekBookAuthor = page.findViewById(R.id.tv_weekBookAuthor);
+                View weekBookClassNM = page.findViewById(R.id.tv_weekBookClassName);
                 if(weekBookImg != null) {
                     page.setTranslationX(position * -offsetPx);
                     if (position < -1) return;
@@ -206,6 +209,8 @@ public class FragmentHome extends Fragment {
                         weekBookTitle.setScaleY(scaleFactor);
                         weekBookAuthor.setScaleX(scaleFactor);
                         weekBookAuthor.setScaleY(scaleFactor);
+                        weekBookClassNM.setScaleX(scaleFactor);
+                        weekBookClassNM.setScaleY(scaleFactor);
                     } else {
                         weekBookImg.setScaleX(MIN_SCALE);
                         weekBookImg.setScaleY(MIN_SCALE);
@@ -213,6 +218,8 @@ public class FragmentHome extends Fragment {
                         weekBookTitle.setScaleY(MIN_SCALE);
                         weekBookAuthor.setScaleX(MIN_SCALE);
                         weekBookAuthor.setScaleY(MIN_SCALE);
+                        weekBookClassNM.setScaleX(MIN_SCALE);
+                        weekBookClassNM.setScaleY(MIN_SCALE);
                     }
                 }
             }
@@ -262,13 +269,15 @@ public class FragmentHome extends Fragment {
                         List<String> imageUrls = new ArrayList<>();
                         List<String> bookName = new ArrayList<>();
                         List<String> authors = new ArrayList<>();
+                        List<String> class_nm = new ArrayList<>();
                         for (SearchBook book : books) {
                             imageUrls.add(book.getBookImageUrl());
                             bookName.add(book.getBookName());
                             authors.add(book.getAuthors());
+                            class_nm.add(book.getClass_nm());
                         }
                         // ViewPager2에 이미지 추가
-                        setupMonthViewPager(bookName, authors, imageUrls);
+                        setupMonthViewPager(class_nm, bookName, authors, imageUrls);
                         Log.d("API Response(Month)", "Image URLs: " + imageUrls.toString() + ", BookName: " + bookName.toString());
                     });
                 }
@@ -287,7 +296,7 @@ public class FragmentHome extends Fragment {
     }
 
     // 주간 인기 도서 ViewPager2 setup
-    private void setupMonthViewPager(List<String> bookName, List<String> authors, List<String> imageUrls) {
+    private void setupMonthViewPager(List<String> class_nm, List<String> bookName, List<String> authors, List<String> imageUrls) {
         if (imageUrls == null || imageUrls.isEmpty()) {
             // 이미지 URL이 없는 경우 처리
             return;
@@ -297,7 +306,7 @@ public class FragmentHome extends Fragment {
             return;
         }
         monthBookPager = getView().findViewById(R.id.month_book_viewpager);
-        monthBookAdapter = new MonthBookAdapter(requireActivity(), bookName, authors, imageUrls);
+        monthBookAdapter = new MonthBookAdapter(requireActivity(), class_nm, bookName, authors, imageUrls);
         monthBookPager.setAdapter(monthBookAdapter);
         monthBookPager.setCurrentItem(1000);
         monthBookPager.setOffscreenPageLimit(10);
