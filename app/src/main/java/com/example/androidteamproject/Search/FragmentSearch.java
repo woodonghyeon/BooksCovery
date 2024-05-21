@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
@@ -111,12 +112,15 @@ public class FragmentSearch extends Fragment {
         int keywordLimit = showAll ? keywords.size() : Math.min(20, keywords.size());
 
         for (int i = 0; i < keywordLimit; i++) {
+            final String keyword = keywords.get(i); // i 값을 복사하여 final 변수에 저장
             Chip chip = new Chip(requireContext());
-            chip.setText(keywords.get(i));
+            chip.setText(keyword);
             chip.setChipBackgroundColorResource(R.color.brandcolor1); // 칩 배경 색 설정
             chip.setTextColor(getResources().getColor(R.color.primaryDarkColor)); // 텍스트 색상 설정
             chip.setChipStrokeColorResource(R.color.primaryDarkColor); // 칩 테두리 색상 설정
             chip.setChipStrokeWidth(1.0f); // 칩 테두리 두께 설정
+            // 칩 클릭 이벤트 추가
+            chip.setOnClickListener(v -> onChipClick(keyword));
             chipGroup1.addView(chip); // 칩을 ChipGroup에 추가
         }
 
@@ -139,8 +143,14 @@ public class FragmentSearch extends Fragment {
             chip.setTextColor(getResources().getColor(R.color.primaryDarkColor)); // 텍스트 색상 설정
             chip.setChipStrokeColorResource(R.color.primaryDarkColor); // 칩 테두리 색상 설정
             chip.setChipStrokeWidth(1.0f); // 칩 테두리 두께 설정
+            // 칩 클릭 이벤트 추가
+            chip.setOnClickListener(v -> onChipClick(word));
             chipGroup2.addView(chip); // 칩을 ChipGroup에 추가
         }
+    }
+
+    // 칩 클릭 이벤트 처리 메서드
+    private void onChipClick(String keyword) {
     }
 
     // 최근 많이 검색된 도서 이미지 출력 (현재는 많이 대출된 도서로 출력함 -> 수정 예정)
