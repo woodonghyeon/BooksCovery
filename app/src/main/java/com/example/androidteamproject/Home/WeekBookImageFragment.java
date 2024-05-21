@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.Target;
 import com.example.androidteamproject.R;
 
 public class WeekBookImageFragment extends Fragment {
@@ -51,7 +52,7 @@ public class WeekBookImageFragment extends Fragment {
         TextView weekBookAuthor = view.findViewById(R.id.tv_weekBookAuthor);
 
         // Glide를 사용하여 이미지 로드
-        Glide.with(this).load(imageUrl).into(weekBookImg);
+        Glide.with(this).load(imageUrl).override(Target.SIZE_ORIGINAL).error(R.drawable.ic_error).into(weekBookImg);
         weekBookTitle.setText(bookName);
         weekBookAuthor.setText(authors);
 

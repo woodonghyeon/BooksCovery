@@ -125,11 +125,13 @@ public class FragmentHome extends Fragment {
 
         String startDt = mFormat.format(calendar.getTime()); // 시작 날짜
         String endDt = getTime; // 종료 날짜
+        String from_age = "20"; // 최소 나이
+        String to_age = "40"; // 최대 나이
         int pageNo = 1; // 페이지 번호
         int pageSize = 10; // 페이지 크기
         String format = "json"; // 응답 형식
 
-        HttpConnection.getInstance(getContext()).getLoanItems(startDt, endDt, pageNo, pageSize, format, new HttpConnection.HttpResponseCallback<List<SearchBook>>() {
+        HttpConnection.getInstance(getContext()).getLoanItems(startDt, endDt, from_age, to_age, pageNo, pageSize, format, new HttpConnection.HttpResponseCallback<List<SearchBook>>() {
             @Override
             public void onSuccess(List<SearchBook> books) {
                 if (getActivity() != null) {
@@ -246,11 +248,13 @@ public class FragmentHome extends Fragment {
 
         String startDt = mFormat.format(calendar.getTime()); // 시작 날짜
         String endDt = getTime; // 종료 날짜 (예시)
+        String from_age = "20"; // 최소 나이
+        String to_age = "40"; // 최대 나이
         int pageNo = 1; // 페이지 번호 (예시)
         int pageSize = 10; // 페이지 크기 (예시)
         String format = "json"; // 응답 형식 (예시)
 
-        HttpConnection.getInstance(getContext()).getLoanItems(startDt, endDt, pageNo, pageSize, format, new HttpConnection.HttpResponseCallback<List<SearchBook>>() {
+        HttpConnection.getInstance(getContext()).getLoanItems(startDt, endDt, from_age, to_age, pageNo, pageSize, format, new HttpConnection.HttpResponseCallback<List<SearchBook>>() {
             @Override
             public void onSuccess(List<SearchBook> books) {
                 if (getActivity() != null) {
