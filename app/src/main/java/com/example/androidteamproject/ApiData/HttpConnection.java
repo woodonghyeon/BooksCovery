@@ -2,8 +2,6 @@ package com.example.androidteamproject.ApiData;
 
 import android.content.Context;
 
-import com.example.androidteamproject.Search.LatelySearchBook;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -66,7 +64,7 @@ public class HttpConnection {
     }
 
     // LoanItems -> 대출 많은 도서를 뽑아옴 후에 수정 예정
-    public void getLoanItems(String startDt, String endDt, int pageNo, int pageSize, String format, HttpResponseCallback<List<LatelySearchBook>> callback) {
+    public void getLoanItems(String startDt, String endDt, int pageNo, int pageSize, String format, HttpResponseCallback<List<SearchBook>> callback) {
         String url = BASE_URL + "loanItemSrch?authKey=" + API_KEY
                 + "&startDt=" + startDt
                 + "&endDt=" + endDt
@@ -91,13 +89,13 @@ public class HttpConnection {
                     if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
                     JSONObject responseBody = new JSONObject(response.body().string());
                     JSONArray docs = responseBody.getJSONObject("response").getJSONArray("docs");
-                    List<LatelySearchBook> books = new ArrayList<>();
+                    List<SearchBook> books = new ArrayList<>();
                     for (int i = 0; i < docs.length(); i++) {
                         JSONObject doc = docs.getJSONObject(i).getJSONObject("doc");
                         String bookName = doc.getString("bookname"); // 예시로 책 이름 가져오기
                         String bookImageUrl = doc.getString("bookImageURL"); // 예시로 책 이미지 URL 가져오기
                         String authors = doc.getString("authors");
-                        LatelySearchBook book = new LatelySearchBook(bookName, authors, bookImageUrl);
+                        SearchBook book = new SearchBook(bookName, authors, bookImageUrl);
                         books.add(book);
                     }
                     callback.onSuccess(books);

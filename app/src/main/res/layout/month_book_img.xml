@@ -8,7 +8,7 @@
     android:orientation="vertical">
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/iv_weekBookImg"
+        android:id="@+id/iv_monthBookImg"
         android:layout_width="250dp"
         android:layout_height="350dp"
         android:layout_gravity="center"
@@ -16,7 +16,7 @@
         android:background="@null"/>
 
     <TextView
-        android:id="@+id/tv_weekBookTitle"
+        android:id="@+id/tv_monthBookTitle"
         android:layout_margin="10dp"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
         android:visibility="visible" />
 
     <TextView
-        android:id="@+id/tv_weekBookAuthor"
+        android:id="@+id/tv_monthBookAuthor"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:fontFamily="@font/suitebold"
