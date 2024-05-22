@@ -13,15 +13,17 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.androidteamproject.R;
+import com.example.androidteamproject.ThemeUtil;
+
 public class FragmentSetting extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private String mParam1;
     private String mParam2;
     private TextView tv_userid;
-    private Button bt_logout;
+    private Button bt_logout, bt_white, bt_dark;
+    String themeColor;
     public FragmentSetting() {
-        // Required empty public constructor
     }
 
     public static FragmentSetting newInstance(String param1, String param2) {
@@ -51,15 +53,36 @@ public class FragmentSetting extends Fragment {
             SharedPreferences sharedPreferences = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
             String userid = sharedPreferences.getString("userid", null);
 
-            TextView tv_userid = view.findViewById(R.id.tv_userid);
+            tv_userid = view.findViewById(R.id.tv_userid);
             tv_userid.setText(userid);
             bt_logout = view.findViewById(R.id.bt_logout);
+            bt_white = view.findViewById(R.id.bt_white);
+            bt_dark = view.findViewById(R.id.bt_dark);
 
             // 로그아웃 버튼 클릭시
             bt_logout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
+                }
+            });
+
+            // 화이트 테마
+            bt_white.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    themeColor = ThemeUtil.LIGHT_MODE;
+                    ThemeUtil.applyTheme(themeColor);
+                    ThemeUtil.modSave(getContext().getApplicationContext(), themeColor);
+                }
+            });
+
+            bt_dark.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    themeColor = ThemeUtil.DARK_MODE;
+                    ThemeUtil.applyTheme(themeColor);
+                    ThemeUtil.modSave(getContext().getApplicationContext(), themeColor);
                 }
             });
         }
