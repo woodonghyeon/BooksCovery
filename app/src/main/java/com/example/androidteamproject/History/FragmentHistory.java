@@ -50,6 +50,7 @@ public class FragmentHistory extends Fragment {
     private static String id; //회원 아이디
 
     private ListView list;
+    private static CustomList adapter;
 
     public static FragmentHistory newInstance(String param1, String param2) {
         FragmentHistory fragment = new FragmentHistory();
@@ -67,6 +68,10 @@ public class FragmentHistory extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        adapter = new CustomList(this, bookname, bookImageURL, authors, publisher, searchDate);
+
+        //처음에만 DB에서 불러옴
+        new getHistoryForDB().execute();
     }
 
     @Nullable
@@ -80,9 +85,6 @@ public class FragmentHistory extends Fragment {
         SessionManager sessionManager = new SessionManager(context);
         id = String.valueOf(sessionManager.getId());
 
-        //처음에만 DB에서 불러옴
-        if(bookname.isEmpty()){ new getHistoryForDB().execute(); }
-        CustomList adapter = new CustomList(this, bookname, bookImageURL, authors, publisher, searchDate);
         list.setAdapter(adapter);
         return view;
     }
@@ -94,10 +96,6 @@ public class FragmentHistory extends Fragment {
         public CustomList(FragmentHistory context, List<String> bookNames, List<String> bookImages, List<String> bookAuthors, List<String> bookPublishers, List<String> bookSearchDates) {
             super(context.getActivity(), R.layout.history_item, bookNames);
             this.context = context;
-            bookname = bookNames;
-            bookImageURL = bookImages;
-            authors = bookAuthors;
-            publisher = bookPublishers;
             //this.bookSearchDates = bookSearchDates;
         }
 
@@ -161,6 +159,12 @@ public class FragmentHistory extends Fragment {
                 pstmt.setInt(1, member_id);
                 rs = pstmt.executeQuery();
 
+                //기존 데이터를 지우고 새로운 데이터 추가
+                bookname.clear();
+                authors.clear();
+                publisher.clear();
+                bookImageURL.clear();
+
                 //결과 받기
                 while (rs.next()) {
                     bookname.add(rs.getString("bookname"));
@@ -176,6 +180,15 @@ public class FragmentHistory extends Fragment {
                 return null;
             } catch (SQLException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            // 어댑터에 데이터 변경 알리기
+            if (adapter != null) {
+                adapter.notifyDataSetChanged();
             }
         }
     }
