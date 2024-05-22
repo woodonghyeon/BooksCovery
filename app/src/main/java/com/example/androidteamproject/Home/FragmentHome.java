@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
+import android.os.Handler;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -100,21 +101,41 @@ public class FragmentHome extends Fragment {
             }
         });
 
-        currentEventPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
-                if (positionOffsetPixels == 0) {
-                    currentEventPager.setCurrentItem(position);
+        // 자동 스크롤 설정
+        final Handler handler = new Handler();
+        final Runnable update = new Runnable() {
+            public void run() {
+                int currentPage = currentEventPager.getCurrentItem();
+                int nextPage = currentPage + 1;
+                if (nextPage >= homePagerAdapter.getItemCount()) {
+                    nextPage = 0; // 마지막 페이지 이후에는 첫 페이지로 돌아가기
                 }
+                currentEventPager.setCurrentItem(nextPage, true);
+                handler.postDelayed(this, 5000); // 5초마다 페이지 변경
             }
+        };
+
+        // 초기 지연 후 자동 스크롤 시작
+        handler.postDelayed(update, 5000);
+
+        // 사용자가 수동으로 스크롤할 때 자동 스크롤 중지 및 재시작
+        currentEventPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            private boolean isUserScrolling = false;
 
             @Override
-            public void onPageSelected(int position) {
-                super.onPageSelected(position);
+            public void onPageScrollStateChanged(int state) {
+                super.onPageScrollStateChanged(state);
+                if (state == ViewPager2.SCROLL_STATE_DRAGGING) {
+                    handler.removeCallbacks(update);
+                    isUserScrolling = true;
+                } else if (state == ViewPager2.SCROLL_STATE_IDLE && isUserScrolling) {
+                    isUserScrolling = false;
+                    handler.postDelayed(update, 5000);
+                }
             }
         });
     }
+
 
     // 최근 많이 검색된 도서 출력 (주간)
     private void getResponseApiWeekLoanItems() {
