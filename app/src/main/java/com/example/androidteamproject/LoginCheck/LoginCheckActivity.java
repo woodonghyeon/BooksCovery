@@ -26,7 +26,7 @@ public class LoginCheckActivity extends AppCompatActivity {
     String setId, setPw;
     String name,gender,id,pwd,email,mode;
     int age,department_id;
-    String updateDate;
+    //String updateDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +72,6 @@ public class LoginCheckActivity extends AppCompatActivity {
                     md.update(salt.getBytes());
                     md.update(setPw.getBytes());
                     String hashedEnteredPassword = String.format("%064x", new BigInteger(1, md.digest()));
-                    Log.v("123",hashedEnteredPassword);
 
                     if(pwd.equals(hashedEnteredPassword)){
                         pstmt.setString(2, hashedEnteredPassword);
@@ -94,7 +93,7 @@ public class LoginCheckActivity extends AppCompatActivity {
                     pwd = rs.getString("password");
                     email = rs.getString("email");
                     mode = rs.getString("mode");
-                    updateDate = rs.getString("update_date");
+                    //updateDate = rs.getString("update_date");
                 }
 
                 //끝
@@ -134,7 +133,7 @@ public class LoginCheckActivity extends AppCompatActivity {
                 outIntent.putExtra("Pwd",pwd);
                 outIntent.putExtra("Email",email);
                 outIntent.putExtra("Mode",mode);
-                outIntent.putExtra("UpdateDate",updateDate);
+                //outIntent.putExtra("UpdateDate",updateDate);
                 setResult(RESULT_OK,outIntent);
                 finish();
             }
