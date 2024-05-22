@@ -73,7 +73,7 @@ public class FragmentHome extends Fragment {
         getResponseApiWeekLoanItems();
         getResponseApiMonthLoanItems();
         getResponseApiHotTrend();
-        
+
         return view;
     } // end of onCreateView
 
