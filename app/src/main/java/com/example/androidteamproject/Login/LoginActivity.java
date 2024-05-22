@@ -2,7 +2,9 @@ package com.example.androidteamproject.Login;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.animation.Animation;
@@ -19,14 +21,16 @@ import com.example.androidteamproject.R;
 import com.example.androidteamproject.Setting.FragmentSetting;
 
 public class LoginActivity extends Activity {
-
     ProgressDialog dialog;
     private EditText et_input_id;
     private EditText et_input_pwd;
+    private SharedPreferences sharedPreferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
 
         // fadein 애니메이션 설정
         final ImageView iv_ic_book = findViewById(R.id.iv_ic_book);
@@ -65,28 +69,31 @@ public class LoginActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        
-        //로그인중입니다 dialog 삭제
-        dialog.cancel();
 
-        //결과가 CANCELED = 로그인에 실패함
-        if(resultCode == RESULT_CANCELED){
-            Toast.makeText(getApplicationContext(),"로그인에 실패했습니다.",Toast.LENGTH_SHORT).show();
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
         }
 
-        //결과가 OK = 로그인이 되었다.
-        else if(resultCode == RESULT_OK){
+        if (resultCode == RESULT_CANCELED) {
+            Toast.makeText(getApplicationContext(), "로그인에 실패했습니다.", Toast.LENGTH_SHORT).show();
+        } else if (resultCode == RESULT_OK) {
+            String userid = data.getStringExtra("Id");
+
+            // SharedPreferences에 userid 저장
+            SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("userid", userid);
+            editor.apply();
+
             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-            intent.putExtra("Name",data.getStringExtra("Name"));
-            intent.putExtra("Gender",data.getStringExtra("Gender"));
-            intent.putExtra("Age",data.getIntExtra("Age",0));
-            intent.putExtra("Department_id",data.getIntExtra("Department_id",0));
-            intent.putExtra("Id",data.getStringExtra("Id"));
-            //굳이 비밀번호 필요함?
-            //intent.putExtra("Pwd",data.getStringExtra("Pwd"));
-            intent.putExtra("Email",data.getStringExtra("Email"));
-            intent.putExtra("Mode",data.getStringExtra("Mode"));
-            intent.putExtra("UpdateDate",data.getStringExtra("UpdateDate"));
+            intent.putExtra("Name", data.getStringExtra("Name"));
+            intent.putExtra("Gender", data.getStringExtra("Gender"));
+            intent.putExtra("Age", data.getIntExtra("Age", 0));
+            intent.putExtra("Department_id", data.getIntExtra("Department_id", 0));
+            intent.putExtra("Id", userid);
+            intent.putExtra("Email", data.getStringExtra("Email"));
+            intent.putExtra("Mode", data.getStringExtra("Mode"));
+            intent.putExtra("UpdateDate", data.getStringExtra("UpdateDate"));
             startActivity(intent);
         }
     }
