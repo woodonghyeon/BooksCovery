@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.androidteamproject.History.FragmentHistory;
 import com.example.androidteamproject.R;
 import com.example.androidteamproject.Search.FragmentSearch;
 import com.example.androidteamproject.Setting.FragmentSetting;
@@ -28,6 +29,7 @@ public class HomeActivity extends AppCompatActivity {
 
         ly_home = findViewById(R.id.ly_home);
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
+
         // 초기 홈 프래그먼트 설정
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -56,7 +58,7 @@ public class HomeActivity extends AppCompatActivity {
             }
             if (menuItem.getItemId() == R.id.tab_history) {
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.ly_home, new FragmentHome())
+                        .replace(R.id.ly_home, new FragmentHistory())
                         .commit();
                 return true;
             }
