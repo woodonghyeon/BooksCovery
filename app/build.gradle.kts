@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.androidteamproject"
-        minSdk = 24
+        minSdk = 26 // 원래 24였음
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
