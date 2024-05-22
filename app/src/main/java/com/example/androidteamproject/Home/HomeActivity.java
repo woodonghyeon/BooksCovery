@@ -12,14 +12,20 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.androidteamproject.R;
 import com.example.androidteamproject.Search.FragmentSearch;
 import com.example.androidteamproject.Setting.FragmentSetting;
+import com.example.androidteamproject.ThemeUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class HomeActivity extends AppCompatActivity {
     private LinearLayout ly_home;
     private BottomNavigationView bottomNavigationView;
+    String themeColor;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        themeColor = ThemeUtil.modLoad(getApplicationContext());
+        ThemeUtil.applyTheme(themeColor);
+
         ly_home = findViewById(R.id.ly_home);
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         // 초기 홈 프래그먼트 설정

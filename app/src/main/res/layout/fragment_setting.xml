@@ -5,56 +5,44 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Setting.FragmentSetting"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="10dp">
 
     <TextView
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:fontFamily="@font/suitebold"
         android:text="로그인"
         android:textSize="30dp"
         android:textColor="@color/primaryDarkColor"
-        android:gravity="start" />
-
-    <com.google.android.material.divider.MaterialDivider
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        app:dividerColor="@color/gray" />
+        android:gravity="center" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:gravity="center_vertical">
+        android:layout_marginTop="20dp"
+        android:gravity="center_vertical|center_horizontal">
 
         <TextView
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:textSize="20dp"
             android:fontFamily="@font/suitebold"
-            android:text="아이디"
-            android:textColor="@color/primaryDarkColor" />
+            android:text="아이디 : "
+            android:textColor="@color/primaryDarkColor"
+            android:gravity="center" />
 
         <TextView
             android:id="@+id/tv_userid"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginStart="10dp"
             android:fontFamily="@font/suitebold"
             android:textSize="20dp"
             android:textColor="@color/primaryDarkColor"
-            android:gravity="start" />
+            android:gravity="center" />
 
         <Button
             android:id="@+id/bt_logout"
@@ -64,7 +52,63 @@
             android:textColor="@color/primaryDarkColor"
             android:backgroundTint="@color/brandcolor5"
             android:padding="10dp"
-            android:layout_gravity="end" />
+            android:layout_marginStart="10dp"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
+        app:dividerColor="@color/gray" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/suitebold"
+        android:text="메인 화면"
+        android:textSize="30dp"
+        android:textColor="@color/primaryDarkColor"
+        android:gravity="center" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:fontFamily="@font/suitebold"
+            android:text="메인 모드"
+            android:textColor="@color/primaryDarkColor"
+            android:layout_marginEnd="20dp"
+            android:gravity="center" />
+
+        <Button
+            android:id="@+id/bt_white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="화이트"
+            android:textColor="@color/primaryDarkColor"
+            android:backgroundTint="@color/brandcolor5"
+            android:padding="10dp"
+            android:layout_marginEnd="10dp"
+            android:gravity="center" />
+
+        <Button
+            android:id="@+id/bt_dark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="다크"
+            android:textColor="@color/primaryDarkColor"
+            android:backgroundTint="@color/brandcolor5"
+            android:padding="10dp"
+            android:gravity="center" />
     </LinearLayout>
 
 </LinearLayout>
