@@ -5,10 +5,10 @@ CREATE TABLE `member_info` (
 	`age`	int	NOT NULL,
 	`department_id`	int	NOT NULL,
 	`id`	varchar(30)	NOT NULL UNIQUE,
-	`password`	varchar(50)	NOT NULL,
+	`password`	varchar(100)	NOT NULL,
+    `password_key` varchar(50) NOT NULL,
 	`email`	varchar(30)	NOT NULL,
 	`mode`	varchar(5)	NOT NULL,
-	`update_date`	DateTime NOT NULL,
     PRIMARY KEY (`member_id`)
 );
 
@@ -19,8 +19,10 @@ CREATE TABLE `search_history` (
 	`bookname`	varchar(100) NULL,
 	`authors`	varchar(30)	NULL,
 	`publisher`	varchar(30)	NULL,
+    `book_image_URL` varchar(50) NOT NULL,
+    `search_date` DateTime NOT NULL,
     PRIMARY KEY (`search_history_id`)
-);member_info
+);
 
 CREATE TABLE `favorite` (
 	`favorite_id`	int	NOT NULL AUTO_INCREMENT,
