@@ -85,15 +85,20 @@ public class LoginActivity extends Activity {
             editor.putString("userid", userid);
             editor.apply();
 
+            //세션 매니저 만들었는데 위에꺼 필요할까?
+            SessionManager sessionManager = new SessionManager(getApplicationContext());
+            sessionManager.createLoginSession(
+                    data.getStringExtra("Name"),
+                    data.getStringExtra("Gender"),
+                    data.getIntExtra("Age", 0),
+                    data.getIntExtra("Department_id", 0),
+                    data.getStringExtra("Id"),
+                    data.getStringExtra("Email"),
+                    data.getStringExtra("Mode"),
+                    data.getStringExtra("UpdateDate")
+            );
+            // HomeActivity로 이동
             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-            intent.putExtra("Name", data.getStringExtra("Name"));
-            intent.putExtra("Gender", data.getStringExtra("Gender"));
-            intent.putExtra("Age", data.getIntExtra("Age", 0));
-            intent.putExtra("Department_id", data.getIntExtra("Department_id", 0));
-            intent.putExtra("Id", userid);
-            intent.putExtra("Email", data.getStringExtra("Email"));
-            intent.putExtra("Mode", data.getStringExtra("Mode"));
-            intent.putExtra("UpdateDate", data.getStringExtra("UpdateDate"));
             startActivity(intent);
         }
     }
