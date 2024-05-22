@@ -38,7 +38,7 @@ public class JoinActivity extends AppCompatActivity {
         setContentView(R.layout.activity_join);
 
         EditText et_input_name = findViewById(R.id.et_input_name);
-        spinner_gender = (Spinner) findViewById(R.id.spinner_gender);
+        spinner_gender = findViewById(R.id.spinner_gender);
         EditText et_input_age = findViewById(R.id.et_input_age);
         et_input_department = findViewById(R.id.spinner_department);
         EditText et_input_email = findViewById(R.id.et_input_email);
@@ -94,9 +94,11 @@ public class JoinActivity extends AppCompatActivity {
             String pwd = params[6];
 
             // 현재 시간 가져오기
+            /*
             Calendar calendar = Calendar.getInstance();
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
             String currentTime = dateFormat.format(calendar.getTime());
+             */
 
             Connection conn = null;
             PreparedStatement pstmt = null;
@@ -125,7 +127,7 @@ public class JoinActivity extends AppCompatActivity {
                 String hex = String.format("%064x", new BigInteger(1, md.digest()));
 
                 // 쿼리 실행
-                String sql = "Insert into member_info (name, gender, age, department_id, email, id, password, password_key, mode, update_date) Values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                String sql = "Insert into member_info (name, gender, age, department_id, email, id, password, password_key, mode, update_date) Values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
                 pstmt = conn.prepareStatement(sql);
                 pstmt.setString(1, name);
                 pstmt.setString(2, gender);
@@ -136,7 +138,7 @@ public class JoinActivity extends AppCompatActivity {
                 pstmt.setString(7, hex);
                 pstmt.setString(8, salt);
                 pstmt.setString(9, "w");
-                pstmt.setString(10, currentTime);
+                //pstmt.setString(10, currentTime);  //지금 사용 X (회원가입 한 시간)
 
                 // 쿼리 실행
                 int rowsInserted = pstmt.executeUpdate();
