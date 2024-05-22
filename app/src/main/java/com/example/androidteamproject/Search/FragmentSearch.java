@@ -35,8 +35,8 @@ public class FragmentSearch extends Fragment {
     private static List<String> keywords; //상수로 변경
     private List<String> search_word = new ArrayList<>(Arrays.asList("테스트용 검색어1" , "테스트용 검색어2" , "테스트용 검색어3" , "테스트용 검색어4" , "테스트용 검색어5" , "테스트용 검색어6" , "테스트용 검색어7" , "테스트용 검색어8" , "테스트용 검색어9" , "테스트용 검색어10"));
     @SuppressLint("SimpleDateFormat")
-//    private static LocalDate mDate = LocalDate.now(); //현재 시각 (static 부여)
-//    private static LocalDate checkDate; // 기록된 시각 (static 부여)
+    private static LocalDate mDate = LocalDate.now(); //현재 시각 (static 부여)
+    private static LocalDate checkDate; // 기록된 시각 (static 부여)
 
     public FragmentSearch() {
     }
@@ -62,9 +62,9 @@ public class FragmentSearch extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
-//        if( timeCheck() ){ //keyword 요청 전에 언제 요청했는가 확인하기
-//            getResponseApiKeyword(); // API 응답 데이터 가져오기
-//        }
+        if( timeCheck() ){ //keyword 요청 전에 언제 요청했는가 확인하기
+            getResponseApiKeyword(); // API 응답 데이터 가져오기
+        }
         getResponseApiKeyword(); // API 응답 데이터 가져오기
         getResponseApiLoanItems();
         return view;
@@ -265,23 +265,23 @@ public class FragmentSearch extends Fragment {
         });
     }
 
-//    private boolean timeCheck(){
-//        //간단 설명
-//        //기록된 시간, 현재시간을 비교해서 기록된 시간보다 현재시간이 하루 이상 많을 때 api요청
-//        //만약 아니라면 아직 하루가 안지났기 때문에 최신 데이터임
-//        // mDate가 현재 시각, checkDate가 기록된 시간
-//        try{
-//            int check = mDate.compareTo(checkDate); //시간 비교
-//
-//            //현재 시간이 기록된 시간보다 높다 => 기록된 키워드는 예전 데이터이다. => API요청해야한다.
-//            if(check > 0){ return true; }
-//            else { return false; }
-//        }
-//        //만약에 checkDate가 비어있다 => 처음 들어왔다 => API요청해야한다.
-//        catch (NullPointerException ignored){
-//            checkDate = mDate; //기록을 현재 시간으로 교체 => 왜냐하면 지금 요청 할꺼니까?
-//            return true;
-//        }
-//
-//    }
+    private boolean timeCheck(){
+        //간단 설명
+        //기록된 시간, 현재시간을 비교해서 기록된 시간보다 현재시간이 하루 이상 많을 때 api요청
+        //만약 아니라면 아직 하루가 안지났기 때문에 최신 데이터임
+        // mDate가 현재 시각, checkDate가 기록된 시간
+        try{
+            int check = mDate.compareTo(checkDate); //시간 비교
+
+            //현재 시간이 기록된 시간보다 높다 => 기록된 키워드는 예전 데이터이다. => API요청해야한다.
+            if(check > 0){ return true; }
+            else { return false; }
+        }
+        //만약에 checkDate가 비어있다 => 처음 들어왔다 => API요청해야한다.
+        catch (NullPointerException ignored){
+            checkDate = mDate; //기록을 현재 시간으로 교체 => 왜냐하면 지금 요청 할꺼니까?
+            return true;
+        }
+
+    }
 }
