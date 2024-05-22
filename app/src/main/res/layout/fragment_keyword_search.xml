@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Search.FragmentKeywordSearch"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@android:color/transparent">
 
     <TextView
         android:id="@+id/tv_booksearch"
@@ -16,7 +17,7 @@
         android:fontFamily="@font/suitebold"
         android:text=""
         android:textSize="30dp"
-        android:textColor="@color/primaryDarkColor"
+        android:textColor="@color/brandcolor2"
         android:gravity="start"></TextView>
 
     <ListView

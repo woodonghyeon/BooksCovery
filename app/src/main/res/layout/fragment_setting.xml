@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".Setting.FragmentSetting"
     android:orientation="vertical"
-    android:padding="10dp">
+    android:padding="10dp"
+    android:background="@android:color/transparent">
 
     <TextView
         android:layout_width="match_parent"
@@ -15,7 +16,7 @@
         android:fontFamily="@font/suitebold"
         android:text="로그인"
         android:textSize="30dp"
-        android:textColor="@color/primaryDarkColor"
+        android:textColor="@color/brandcolor2"
         android:gravity="center" />
 
     <LinearLayout
@@ -31,7 +32,7 @@
             android:textSize="20dp"
             android:fontFamily="@font/suitebold"
             android:text="아이디 : "
-            android:textColor="@color/primaryDarkColor"
+            android:textColor="@color/brandcolor2"
             android:gravity="center" />
 
         <TextView
@@ -41,7 +42,7 @@
             android:layout_marginStart="10dp"
             android:fontFamily="@font/suitebold"
             android:textSize="20dp"
-            android:textColor="@color/primaryDarkColor"
+            android:textColor="@color/brandcolor5"
             android:gravity="center" />
 
         <Button
@@ -69,7 +70,7 @@
         android:fontFamily="@font/suitebold"
         android:text="메인 화면"
         android:textSize="30dp"
-        android:textColor="@color/primaryDarkColor"
+        android:textColor="@color/brandcolor2"
         android:gravity="center" />
 
     <LinearLayout
@@ -85,7 +86,7 @@
             android:textSize="20dp"
             android:fontFamily="@font/suitebold"
             android:text="메인 모드"
-            android:textColor="@color/primaryDarkColor"
+            android:textColor="@color/brandcolor2"
             android:layout_marginEnd="20dp"
             android:gravity="center" />
 
