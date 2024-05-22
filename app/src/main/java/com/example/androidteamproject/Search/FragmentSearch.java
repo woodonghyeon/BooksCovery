@@ -1,5 +1,6 @@
 package com.example.androidteamproject.Search;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,13 +20,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class FragmentSearch extends Fragment {
-
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private String mParam1;
@@ -34,8 +34,9 @@ public class FragmentSearch extends Fragment {
     private FragmentStateAdapter searchPagerAdapter;
     private static List<String> keywords; //상수로 변경
     private List<String> search_word = new ArrayList<>(Arrays.asList("테스트용 검색어1" , "테스트용 검색어2" , "테스트용 검색어3" , "테스트용 검색어4" , "테스트용 검색어5" , "테스트용 검색어6" , "테스트용 검색어7" , "테스트용 검색어8" , "테스트용 검색어9" , "테스트용 검색어10"));
-    private LocalDateTime mDate = LocalDateTime.now(); //현재 시각
-    private static LocalDateTime checkDate; //기록된 시각 (상수)
+    @SuppressLint("SimpleDateFormat")
+    private static LocalDate mDate = LocalDate.now(); //현재 시각 (static 부여)
+    private static LocalDate checkDate; // 기록된 시각 (static 부여)
 
     public FragmentSearch() {
     }
@@ -55,7 +56,6 @@ public class FragmentSearch extends Fragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
-            Log.v("mDate",String.valueOf(mDate));
         }
     }
 
@@ -80,7 +80,6 @@ public class FragmentSearch extends Fragment {
                             JSONObject responseObject = json.getJSONObject("response");
                             JSONArray keywordsArray = responseObject.getJSONArray("keywords");
                             keywords = new ArrayList<>(); //키워드 초기화
-                            Log.v("요청을 보냈다 예시","123123");
 
                             for (int i = 0; i < keywordsArray.length(); i++) {
                                 JSONObject keywordObject = keywordsArray.getJSONObject(i);
@@ -266,15 +265,20 @@ public class FragmentSearch extends Fragment {
     }
 
     private boolean timeCheck(){
-        //기록된 시간, 현재시간 || 업데이트 카운터 비교해서 기록된 시간보다 현재시간이 하루 많거나 업데이트 카운터가 0이 아닐경우
-        //api요청
+        //기록된 시간, 현재시간 || 업데이트 카운터 비교해서 기록된 시간보다 현재시간이 하루 많거나 업데이트 카운터가 0이 아닐경우 api요청
         //만약 아니라면 아직 하루가 안지났고 에러가 나서 업데이트가 중단되지 않았기 때문에 최신 데이터임
+        // mDate가 현재 시각, checkDate가 기록된 시간
+        try{
+            int check = mDate.compareTo(checkDate); //시간 비교
 
-        if(1 == 1){
-            return true;
+            //현재 시간이 기록된 시간보다 높다 => 기록된 키워드는 예전 데이터이다. => API요청해야한다.
+            if(check > 0){ return true; }
+            else { return false; }
         }
-        else {
-            return false;
+        //만약에 checkDate가 비어있다 => 처음 들어왔다 => API요청해야한다.
+        catch (NullPointerException ignored){
+            checkDate = mDate; //기록을 현재 시간으로 교체 => 왜냐하면 지금 요청 할꺼니까?
+            return true;
         }
 
     }
