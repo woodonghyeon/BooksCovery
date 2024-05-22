@@ -265,8 +265,9 @@ public class FragmentSearch extends Fragment {
     }
 
     private boolean timeCheck(){
-        //기록된 시간, 현재시간 || 업데이트 카운터 비교해서 기록된 시간보다 현재시간이 하루 많거나 업데이트 카운터가 0이 아닐경우 api요청
-        //만약 아니라면 아직 하루가 안지났고 에러가 나서 업데이트가 중단되지 않았기 때문에 최신 데이터임
+        //간단 설명
+        //기록된 시간, 현재시간을 비교해서 기록된 시간보다 현재시간이 하루 이상 많을 때 api요청
+        //만약 아니라면 아직 하루가 안지났기 때문에 최신 데이터임
         // mDate가 현재 시각, checkDate가 기록된 시간
         try{
             int check = mDate.compareTo(checkDate); //시간 비교
