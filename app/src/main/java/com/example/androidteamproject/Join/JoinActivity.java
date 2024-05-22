@@ -127,7 +127,7 @@ public class JoinActivity extends AppCompatActivity {
                 String hex = String.format("%064x", new BigInteger(1, md.digest()));
 
                 // 쿼리 실행
-                String sql = "Insert into member_info (name, gender, age, department_id, email, id, password, password_key, mode, update_date) Values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                String sql = "Insert into member_info (name, gender, age, department_id, email, id, password, password_key, mode) Values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
                 pstmt = conn.prepareStatement(sql);
                 pstmt.setString(1, name);
                 pstmt.setString(2, gender);
