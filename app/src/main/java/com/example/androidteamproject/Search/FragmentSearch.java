@@ -65,7 +65,6 @@ public class FragmentSearch extends Fragment {
         if( timeCheck() ){ //keyword 요청 전에 언제 요청했는가 확인하기
             getResponseApiKeyword(); // API 응답 데이터 가져오기
         }
-        getResponseApiKeyword(); // API 응답 데이터 가져오기
         getResponseApiLoanItems();
         return view;
     }
