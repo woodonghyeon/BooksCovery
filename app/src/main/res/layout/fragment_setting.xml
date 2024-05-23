@@ -99,6 +99,73 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/suitebold"
+                    android:text="회원 정보"
+                    android:textSize="30dp"
+                    android:textColor="@color/brandcolor2"
+                    android:gravity="center" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="20dp"
+                        android:fontFamily="@font/suitebold"
+                        android:text="정보 수정"
+                        android:textColor="@color/brandcolor2"
+                        android:layout_marginEnd="20dp"
+                        android:gravity="center" />
+
+                    <Button
+                        android:id="@+id/bt_update"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="수정"
+                        android:textColor="@color/primaryDarkColor"
+                        android:backgroundTint="@color/brandcolor5"
+                        android:padding="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:gravity="center" />
+
+                    <Button
+                        android:id="@+id/bt_member_withdrawal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="회원 탈퇴"
+                        android:textColor="@color/primaryDarkColor"
+                        android:backgroundTint="@color/brandcolor5"
+                        android:padding="10dp"
+                        android:gravity="center" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+
+
+        <!-- 메인 화면 섹션 -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:padding="20dp"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="5dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/suitebold"
                     android:text="메인 화면"
                     android:textSize="30dp"
                     android:textColor="@color/brandcolor2"

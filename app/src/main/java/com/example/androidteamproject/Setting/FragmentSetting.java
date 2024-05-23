@@ -24,7 +24,7 @@ public class FragmentSetting extends Fragment {
     private String mParam1;
     private String mParam2;
     private TextView tv_userid;
-    private Button bt_logout, bt_white, bt_dark;
+    private Button bt_logout, bt_white, bt_dark, bt_update, bt_member_withdrawal;
     String themeColor, userid;
 
     public FragmentSetting() {
