@@ -23,6 +23,7 @@ public class FragmentSetting extends Fragment {
     private TextView tv_userid;
     private Button bt_logout, bt_white, bt_dark;
     String themeColor;
+
     public FragmentSetting() {
     }
 
@@ -63,7 +64,7 @@ public class FragmentSetting extends Fragment {
             bt_logout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    // 로그아웃 로직을 여기에 추가합니다.
                 }
             });
 
@@ -74,6 +75,9 @@ public class FragmentSetting extends Fragment {
                     themeColor = ThemeUtil.LIGHT_MODE;
                     ThemeUtil.applyTheme(themeColor);
                     ThemeUtil.modSave(getContext().getApplicationContext(), themeColor);
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.ly_home, new FragmentSetting())
+                            .commit();
                 }
             });
 
@@ -83,6 +87,9 @@ public class FragmentSetting extends Fragment {
                     themeColor = ThemeUtil.DARK_MODE;
                     ThemeUtil.applyTheme(themeColor);
                     ThemeUtil.modSave(getContext().getApplicationContext(), themeColor);
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.ly_home, new FragmentSetting())
+                            .commit();
                 }
             });
         }
