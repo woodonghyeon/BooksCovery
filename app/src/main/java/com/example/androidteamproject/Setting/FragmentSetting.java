@@ -1,6 +1,7 @@
 package com.example.androidteamproject.Setting;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.androidteamproject.Login.LoginActivity;
 import com.example.androidteamproject.R;
 import com.example.androidteamproject.ThemeUtil;
 
@@ -22,7 +24,7 @@ public class FragmentSetting extends Fragment {
     private String mParam2;
     private TextView tv_userid;
     private Button bt_logout, bt_white, bt_dark;
-    String themeColor;
+    String themeColor, userid;
 
     public FragmentSetting() {
     }
@@ -52,7 +54,7 @@ public class FragmentSetting extends Fragment {
         Context context = getActivity();
         if (context != null) {
             SharedPreferences sharedPreferences = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
-            String userid = sharedPreferences.getString("userid", null);
+            userid = sharedPreferences.getString("userid", null);
 
             tv_userid = view.findViewById(R.id.tv_userid);
             tv_userid.setText(userid);
@@ -64,7 +66,10 @@ public class FragmentSetting extends Fragment {
             bt_logout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    tv_userid = null;
+                    userid = null;
+                    tv_userid.setText(userid);
+                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intent);
                 }
             });
 
