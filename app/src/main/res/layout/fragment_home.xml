@@ -55,7 +55,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/suitebold"
-                android:text="전체 학과별 인기도서"
+                android:text=""
                 android:textColor="@color/brandcolor2"
                 android:textSize="30dp"
                 android:gravity="start"/>
@@ -64,7 +64,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:spinnerMode="dialog"
-                android:entries="@array/department_array"/>
+                android:entries="@array/department_array2"/>
         </LinearLayout>
 
         <com.google.android.material.divider.MaterialDivider
