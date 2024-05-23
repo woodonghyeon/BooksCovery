@@ -18,6 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
+            android:orientation="horizontal"
             android:background="@drawable/radius_current_event_title">
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_currentEvent"
@@ -44,6 +45,37 @@
             android:layout_marginBottom="10dp"
             app:dividerColor="@color/gray"/>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp">
+            <TextView
+                android:id="@+id/tv_department"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/suitebold"
+                android:text="전체 학과별 인기도서"
+                android:textColor="@color/brandcolor2"
+                android:textSize="30dp"
+                android:gravity="start"/>
+            <Spinner
+                android:id="@+id/department_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:spinnerMode="dialog"
+                android:entries="@array/department_array"/>
+        </LinearLayout>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            app:dividerColor="@color/gray"/>
+
         <TextView
             android:id="@+id/tv_popular_book_week"
             android:layout_width="match_parent"
@@ -51,7 +83,7 @@
             android:fontFamily="@font/suitebold"
             android:text="이번 주 인기도서"
             android:textColor="@color/brandcolor2"
-            android:textSize="30sp"
+            android:textSize="30dp"
             android:layout_marginTop="20dp"
             android:gravity="start">
         </TextView>
@@ -79,7 +111,6 @@
             android:textColor="@color/brandcolor2"
             android:textSize="30sp"
             android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
             android:gravity="start">
         </TextView>
 
@@ -87,6 +118,15 @@
             android:id="@+id/month_book_viewpager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            app:dividerColor="@color/gray"/>
 
         <TextView
             android:id="@+id/tv_hotTrend_book_title"

@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.os.Handler;
 
@@ -40,8 +42,9 @@ public class FragmentHome extends Fragment {
     public static SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd"); //딴 곳에도 쓸거라 public으로 바꿧음
     private ViewPager2 currentEventPager, weekBookPager, monthBookPager, hotTrendBookPager;
     private FragmentStateAdapter homePagerAdapter, weekBookAdapter, monthBookAdapter, hotTrendBookAdapter;
-    private TextView tv_department_title, tv_popular_book_week, tv_popular_book_month, tv_hotTrend_title;
+    private TextView tv_department_title, tv_popular_book_week, tv_popular_book_month, tv_hotTrend_title, tv_department;
     private Animation anime_left_to_right, anime_right_to_left;
+    private Spinner departmentSpinner;
 
     public FragmentHome() {
     }
@@ -68,6 +71,7 @@ public class FragmentHome extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+        setupSpinner(view); // 스피너 설정 메서드 호출
         startAnimation(view);
         CurrentEventSettingImg(view);
         getResponseApiWeekLoanItems();
@@ -451,13 +455,32 @@ public class FragmentHome extends Fragment {
         tv_popular_book_week = view.findViewById(R.id.tv_popular_book_week);
         tv_popular_book_month = view.findViewById(R.id.tv_popular_book_month);
         tv_hotTrend_title = view.findViewById(R.id.tv_hotTrend_book_title);
+        tv_department = view.findViewById(R.id.tv_department);
 
         anime_left_to_right = AnimationUtils.loadAnimation(getContext(), R.anim.anime_left_to_right);
         anime_right_to_left = AnimationUtils.loadAnimation(getContext(), R.anim.anime_right_to_left);
 
+        tv_department.startAnimation(anime_right_to_left);
         tv_department_title.startAnimation(anime_right_to_left);
         tv_popular_book_week.startAnimation(anime_right_to_left);
         tv_popular_book_month.startAnimation(anime_right_to_left);
         tv_hotTrend_title.startAnimation(anime_right_to_left);
+        departmentSpinner.startAnimation(anime_right_to_left);
     } // end of startAnimation
+
+    private void setupSpinner(View view) {
+        departmentSpinner = view.findViewById(R.id.department_spinner);
+        departmentSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedDepartment = parent.getItemAtPosition(position).toString();
+                tv_department.setText(selectedDepartment + " 인기도서");
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // 이거 없으면 selectedListener 안 먹힌다고 함
+                tv_department.setText("전체 학과 인기도서");
+            }
+        });
+    }
 }
