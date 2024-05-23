@@ -61,7 +61,6 @@ public class WeekBookImageFragment extends Fragment {
         weekBookTitle.setText(bookName);
         weekBookAuthor.setText(authors);
         weekBookClassNm.setText(class_nm);
-
         return view;
     }
 }
