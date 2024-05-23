@@ -78,7 +78,7 @@ public class LoginActivity extends Activity {
             Toast.makeText(getApplicationContext(), "로그인에 실패했습니다.", Toast.LENGTH_SHORT).show();
         } else if (resultCode == RESULT_OK) {
             String userid = data.getStringExtra("Id");
-
+            Toast.makeText(getApplicationContext(), "로그인에 성공하셨습니다.", Toast.LENGTH_SHORT).show();
             // SharedPreferences에 userid 저장
             SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();

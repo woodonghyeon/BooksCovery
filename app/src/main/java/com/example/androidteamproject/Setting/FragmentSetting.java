@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.androidteamproject.Login.LoginActivity;
 import com.example.androidteamproject.R;
@@ -67,9 +68,10 @@ public class FragmentSetting extends Fragment {
                 @Override
                 public void onClick(View view) {
                     userid = null;
-                    tv_userid.setText(userid);
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
                     startActivity(intent);
+                    tv_userid.setText(userid);
+                    Toast.makeText(getActivity(), "로그아웃에 성공하셨습니다.", Toast.LENGTH_SHORT).show();
                 }
             });
             // 화이트 테마
