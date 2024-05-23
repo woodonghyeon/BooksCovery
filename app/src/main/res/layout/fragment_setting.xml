@@ -146,7 +146,11 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="30dp"
+            app:dividerColor="@color/gray" />
 
         <!-- 메인 화면 섹션 -->
         <androidx.cardview.widget.CardView
