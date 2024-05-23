@@ -64,7 +64,7 @@ public class FragmentSetting extends Fragment {
             bt_logout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // 로그아웃 로직을 여기에 추가합니다.
+                    tv_userid = null;
                 }
             });
 
