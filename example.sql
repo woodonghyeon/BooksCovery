@@ -19,7 +19,7 @@ CREATE TABLE `search_history` (
 	`bookname`	varchar(100) NULL,
 	`authors`	varchar(30)	NULL,
 	`publisher`	varchar(30)	NULL,
-    `book_image_URL` varchar(50) NOT NULL,
+    `book_image_URL` varchar(500) NOT NULL,
     `search_date` DateTime NOT NULL,
     PRIMARY KEY (`search_history_id`)
 );
@@ -43,8 +43,11 @@ CREATE TABLE `department` (
 
 CREATE TABLE `recommand_book` (
 	`recommand_id`	int	NOT NULL AUTO_INCREMENT,
-	`member_id`	int	NOT NULL,
-	`Field2`	varchar(100) NULL,
+	`bookname`	varchar(100) NOT NULL,
+	`isbn`	int NULL,
+    `authors`	varchar(30)	NULL,
+	`publisher`	varchar(30)	NULL,
+    `book_image_URL` varchar(500) NOT NULL,
 	`update_date` DateTime	NULL,
     PRIMARY KEY (`recommand_id`)
 );
@@ -55,6 +58,15 @@ CREATE TABLE `book_count` (
 	`bookname`	varchar(100) NULL,
 	`book_count` int	NULL,
     PRIMARY KEY (`book_count_id`)
+);
+
+CREATE TABLE `recommand_book_members` (
+    `recommand_book_member_id` int NOT NULL AUTO_INCREMENT,
+    `recommand_id` int NOT NULL,
+    `member_id` int NOT NULL,
+    PRIMARY KEY (`recommand_book_member_id`),
+    FOREIGN KEY (`recommand_id`) REFERENCES `recommand_book` (`recommand_id`),
+    FOREIGN KEY (`member_id`) REFERENCES `member_info` (`member_id`)
 );
 
 ALTER TABLE `member_info` ADD CONSTRAINT `FK_department_TO_member_info_1` FOREIGN KEY (
@@ -72,13 +84,6 @@ REFERENCES `member_info` (
 );
 
 ALTER TABLE `favorite` ADD CONSTRAINT `FK_member_info_TO_favorite_1` FOREIGN KEY (
-	`member_id`
-)
-REFERENCES `member_info` (
-	`member_id`
-);
-
-ALTER TABLE `recommand_book` ADD CONSTRAINT `FK_member_info_TO_recommand_book_1` FOREIGN KEY (
 	`member_id`
 )
 REFERENCES `member_info` (
@@ -118,8 +123,7 @@ Insert into department values(23, '조리제과제빵과');
 Insert into department values(24, '콘텐츠디자인과');
 Insert into department values(25, '만화애니메이션과');
 
-
-
+insert into search_history values(null,'1','1234567890','엄','준','식','https://i.namu.wiki/i/NpoCw6SZ0849_mTrqUxIMyTCLRK65S6MxuroLk46j2IzNs7uwW_iuw0b2KQX-lqpX06XVOEwa3LbTKOTh600Cw.webp','2020-02-02');
 
 
 
