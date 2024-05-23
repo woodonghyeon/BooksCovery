@@ -159,7 +159,7 @@
     </LinearLayout>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/bt_modify"
+        android:id="@+id/bt_modify_dialog"
         android:layout_marginTop="20dp"
         android:layout_width="300dp"
         android:layout_height="wrap_content"

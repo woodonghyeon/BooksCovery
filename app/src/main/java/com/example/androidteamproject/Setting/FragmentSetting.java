@@ -111,8 +111,7 @@ public class FragmentSetting extends Fragment {
                 @Override
                 public void onClick(View view) {
                     final Dialog updateDialog = new Dialog(getActivity());
-                    updateDialog.setContentView(R.layout.update_dialog);
-                    updateDialog.setTitle("초기화 화면");
+                    updateDialog.setContentView(R.layout.dialog_update);
 
                     EditText et_input_name = updateDialog.findViewById(R.id.et_input_name);
                     Spinner spinner_gender = updateDialog.findViewById(R.id.spinner_gender);
@@ -120,10 +119,10 @@ public class FragmentSetting extends Fragment {
                     Spinner et_input_department = updateDialog.findViewById(R.id.spinner_department);
                     EditText et_input_email = updateDialog.findViewById(R.id.et_input_email);
                     EditText et_input_pwd = updateDialog.findViewById(R.id.et_input_pwd);
-                    Button bt_modify = updateDialog.findViewById(R.id.bt_modify);
+                    Button bt_modify_dialog = updateDialog.findViewById(R.id.bt_modify_dialog);
 
                     // 수정하기 버튼 클릭
-                    bt_modify.setOnClickListener(new View.OnClickListener() {
+                    bt_modify_dialog.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             updateDialog.dismiss();
@@ -142,32 +141,20 @@ public class FragmentSetting extends Fragment {
                 }
             });
 
+            // 회원 탈퇴 버튼 클릭시
             bt_member_withdrawal.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    final Dialog updateDialog = new Dialog(getActivity());
-                    updateDialog.setContentView(R.layout.update_dialog);
-                    updateDialog.setTitle("초기화 화면");
+                    final Dialog member_withdrawal_dialog = new Dialog(getActivity());
+                    member_withdrawal_dialog.setContentView(R.layout.dialog_member_withdrawal);
 
-                    EditText et_input_name = updateDialog.findViewById(R.id.et_input_name);
-                    Spinner spinner_gender = updateDialog.findViewById(R.id.spinner_gender);
-                    EditText et_input_age = updateDialog.findViewById(R.id.et_input_age);
-                    Spinner et_input_department = updateDialog.findViewById(R.id.spinner_department);
-                    EditText et_input_email = updateDialog.findViewById(R.id.et_input_email);
-                    EditText et_input_pwd = updateDialog.findViewById(R.id.et_input_pwd);
-                    Button bt_modify = updateDialog.findViewById(R.id.bt_modify);
-
-                    // 수정하기 버튼 클릭
-                    bt_modify.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            updateDialog.dismiss();
-                        }
-                    });
+                    TextView tv_userid = member_withdrawal_dialog.findViewById(R.id.tv_userid);
+                    tv_userid.setText(userid + "님 \n" +
+                            "정말 탈퇴하시겠어요?");
 
                     // 다이얼로그 크기 설정
-                    updateDialog.show();
-                    Window window = updateDialog.getWindow();
+                    member_withdrawal_dialog.show();
+                    Window window = member_withdrawal_dialog.getWindow();
                     if (window != null) {
                         // 1000dp를 픽셀로 변환
                         int heightInDp = 1000;
