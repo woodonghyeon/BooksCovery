@@ -1,6 +1,8 @@
 package com.example.androidteamproject.Search;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -62,13 +64,25 @@ public class FragmentSearch extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
-        if( timeCheck() ){ //keyword 요청 전에 언제 요청했는가 확인하기
-            getResponseApiKeyword(); // API 응답 데이터 가져오기
-        }
-        getResponseApiKeyword(); // API 응답 데이터 가져오기
-        getResponseApiLoanItems();
         return view;
     }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // SharedPreferences에서 keywords 불러오기
+        keywords = loadKeywordsFromSharedPreferences();
+
+        if (keywords.isEmpty() || timeCheck()) { // 키워드가 비어있거나 시간이 지난 경우에만 API 호출
+            getResponseApiKeyword(); // API 응답 데이터 가져오기
+        } else {
+            addChips(false); // SharedPreferences에서 불러온 키워드를 사용하여 칩 추가
+        }
+
+        getResponseApiLoanItems();
+    }
+
 
     private void getResponseApiKeyword() {
         HttpConnection.getInstance(getContext()).getKeyword("json", new HttpConnection.HttpResponseCallback() {
@@ -80,7 +94,7 @@ public class FragmentSearch extends Fragment {
                             JSONObject json = new JSONObject(responseData.toString());
                             JSONObject responseObject = json.getJSONObject("response");
                             JSONArray keywordsArray = responseObject.getJSONArray("keywords");
-                            keywords = new ArrayList<>(); //키워드 초기화
+                            keywords = new ArrayList<>(); // 키워드 초기화
 
                             for (int i = 0; i < keywordsArray.length(); i++) {
                                 JSONObject keywordObject = keywordsArray.getJSONObject(i);
@@ -88,6 +102,10 @@ public class FragmentSearch extends Fragment {
                                 String word = keyword.getString("word");
                                 keywords.add(word);
                             }
+
+                            // API 응답을 받아온 후 키워드를 SharedPreferences에 저장
+                            saveKeywordsToSharedPreferences(keywords);
+
                             // 키워드를 가져온 후 칩 추가
                             addChips(false); // 처음에는 제한된 수만큼의 칩 추가
                         } catch (JSONException e) {
@@ -107,6 +125,7 @@ public class FragmentSearch extends Fragment {
             }
         });
     }
+
 
     private void addChips(boolean showAll) {
         if (getContext() == null) return;
@@ -282,6 +301,39 @@ public class FragmentSearch extends Fragment {
             checkDate = mDate; //기록을 현재 시간으로 교체 => 왜냐하면 지금 요청 할꺼니까?
             return true;
         }
-
     }
+
+    private void saveKeywordsToSharedPreferences(List<String> keywords) {
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        // List<String>를 JSON 문자열로 변환
+        JSONArray jsonArray = new JSONArray(keywords);
+        String jsonString = jsonArray.toString();
+
+        editor.putString("keywords", jsonString);
+        editor.apply();
+    }
+
+    private List<String> loadKeywordsFromSharedPreferences() {
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        String jsonString = sharedPreferences.getString("keywords", null);
+
+        if (jsonString != null) {
+            try {
+                JSONArray jsonArray = new JSONArray(jsonString);
+                List<String> keywords = new ArrayList<>();
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    keywords.add(jsonArray.getString(i));
+                }
+                return keywords;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return new ArrayList<>(); // 저장된 키워드가 없으면 빈 리스트 반환
+    }
+
+
+
 }
