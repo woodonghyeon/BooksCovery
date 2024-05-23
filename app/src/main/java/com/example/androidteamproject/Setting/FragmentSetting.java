@@ -72,7 +72,6 @@ public class FragmentSetting extends Fragment {
                     startActivity(intent);
                 }
             });
-
             // 화이트 테마
             bt_white.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -85,7 +84,7 @@ public class FragmentSetting extends Fragment {
                             .commit();
                 }
             });
-
+            // 다크 테마
             bt_dark.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
