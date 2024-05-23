@@ -1,5 +1,6 @@
 package com.example.androidteamproject.Setting;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -7,10 +8,14 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,6 +67,8 @@ public class FragmentSetting extends Fragment {
             bt_logout = view.findViewById(R.id.bt_logout);
             bt_white = view.findViewById(R.id.bt_white);
             bt_dark = view.findViewById(R.id.bt_dark);
+            bt_update = view.findViewById(R.id.bt_update);  // 추가된 부분
+            bt_member_withdrawal = view.findViewById(R.id.bt_member_withdrawal);  // 추가된 부분
 
             // 로그아웃 버튼 클릭시
             bt_logout.setOnClickListener(new View.OnClickListener() {
@@ -96,6 +103,42 @@ public class FragmentSetting extends Fragment {
                     getActivity().getSupportFragmentManager().beginTransaction()
                             .replace(R.id.ly_home, new FragmentSetting())
                             .commit();
+                }
+            });
+
+            // 업데이트 버튼 클릭시
+            bt_update.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    final Dialog updateDialog = new Dialog(getActivity());
+                    updateDialog.setContentView(R.layout.update_dialog);
+                    updateDialog.setTitle("초기화 화면");
+
+                    EditText et_input_name = updateDialog.findViewById(R.id.et_input_name);
+                    Spinner spinner_gender = updateDialog.findViewById(R.id.spinner_gender);
+                    EditText et_input_age = updateDialog.findViewById(R.id.et_input_age);
+                    Spinner et_input_department = updateDialog.findViewById(R.id.spinner_department);
+                    EditText et_input_email = updateDialog.findViewById(R.id.et_input_email);
+                    EditText et_input_pwd = updateDialog.findViewById(R.id.et_input_pwd);
+                    Button bt_modify = updateDialog.findViewById(R.id.bt_modify);
+
+                    // 수정하기 버튼 클릭
+                    bt_modify.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            updateDialog.dismiss();
+                        }
+                    });
+
+                    // 다이얼로그 크기 설정
+                    updateDialog.show();
+                    Window window = updateDialog.getWindow();
+                    if (window != null) {
+                        // 1000dp를 픽셀로 변환
+                        int heightInDp = 1000;
+                        float heightInPx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, heightInDp, getResources().getDisplayMetrics());
+                        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, (int) heightInPx);
+                    }
                 }
             });
         }
