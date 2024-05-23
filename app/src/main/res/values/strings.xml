@@ -35,4 +35,32 @@
         <item>콘텐츠디자인과</item>
         <item>만화애니메이션과</item>
     </string-array>
+    <string-array name="department_array2">
+        <item>전체 학과</item>
+        <item>컴퓨터정보계열</item>
+        <item>IT온라인창업과</item>
+        <item>AI융합기계계열</item>
+        <item>반도체전자계열</item>
+        <item>무인항공드론과</item>
+        <item>신재생에너지전기계열</item>
+        <item>건축과</item>
+        <item>인테리어디자인과</item>
+        <item>DIY실내장식과</item>
+        <item>항공정비부사관과</item>
+        <item>국방정보통신과</item>
+        <item>의무/전투부사관과</item>
+        <item>글로벌시스템융합과</item>
+        <item>경영회계서비스계열</item>
+        <item>호텔항공관광과</item>
+        <item>사회복지과</item>
+        <item>유아교육과</item>
+        <item>간호학과</item>
+        <item>보건의료행정과</item>
+        <item>응급구조과</item>
+        <item>동물보건과</item>
+        <item>반려동물과</item>
+        <item>조리제과제빵과</item>
+        <item>콘텐츠디자인과</item>
+        <item>만화애니메이션과</item>
+    </string-array>
 </resources>

@@ -479,7 +479,6 @@ public class FragmentHome extends Fragment {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 // 이거 없으면 selectedListener 안 먹힌다고 함
-                tv_department.setText("전체 학과 인기도서");
             }
         });
     }
