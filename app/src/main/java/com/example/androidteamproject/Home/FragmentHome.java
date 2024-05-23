@@ -449,7 +449,7 @@ public class FragmentHome extends Fragment {
         });
     } // end of setupHotTrendViewPager
 
-    // 타이틀 애니메이션
+    // 애니메이션
     private void startAnimation(View view) {
         tv_department_title = view.findViewById(R.id.tv_currentEvent);
         tv_popular_book_week = view.findViewById(R.id.tv_popular_book_week);
@@ -481,5 +481,5 @@ public class FragmentHome extends Fragment {
                 // 이거 없으면 selectedListener 안 먹힌다고 함
             }
         });
-    }
+    } // end of setupSpinner
 }
