@@ -318,7 +318,4 @@ public class FragmentSearch extends Fragment {
         }
         return new ArrayList<>(); // 저장된 키워드가 없으면 빈 리스트 반환
     }
-
-
-
 }
