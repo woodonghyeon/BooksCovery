@@ -77,7 +77,7 @@ public class FragmentSearch extends Fragment {
         if (keywords.isEmpty() || timeCheck()) { // 키워드가 비어있거나 시간이 지난 경우에만 API 호출
             getResponseApiKeyword(); // API 응답 데이터 가져오기
         } else {
-            addChips(false); // SharedPreferences에서 불러온 키워드를 사용하여 칩 추가
+            addChips(); // SharedPreferences에서 불러온 키워드를 사용하여 칩 추가
         }
 
         getResponseApiLoanItems();
@@ -107,7 +107,7 @@ public class FragmentSearch extends Fragment {
                             saveKeywordsToSharedPreferences(keywords);
 
                             // 키워드를 가져온 후 칩 추가
-                            addChips(false); // 처음에는 제한된 수만큼의 칩 추가
+                            addChips();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -126,21 +126,17 @@ public class FragmentSearch extends Fragment {
         });
     }
 
-
-    private void addChips(boolean showAll) {
+    private void addChips() {
         if (getContext() == null) return;
         ChipGroup chipGroup1 = requireView().findViewById(R.id.chip_group1);
         ChipGroup chipGroup2 = requireView().findViewById(R.id.chip_group2);
 
-        // 다른 이벤트가 발생하면 중복적으로 chip이 발생하여 일부로 한번 지우고 다시 세팅하는걸로 넣은거임
+        // 다른 이벤트가 발생하면 중복적으로 chip이 발생하여 일부러 한번 지우고 다시 세팅하는걸로 넣은거임
         chipGroup1.removeAllViews();
         chipGroup2.removeAllViews();
 
         // 키워드를 이용하여 칩 추가
-        int keywordLimit = showAll ? keywords.size() : Math.min(20, keywords.size());
-
-        for (int i = 0; i < keywordLimit; i++) {
-            final String keyword = keywords.get(i); // i 값을 복사하여 final 변수에 저장
+        for (String keyword : keywords) {
             Chip chip = new Chip(requireContext());
             chip.setText(keyword);
             chip.setChipBackgroundColorResource(R.color.brandcolor1); // 칩 배경 색 설정
@@ -152,17 +148,6 @@ public class FragmentSearch extends Fragment {
             chip.setOnClickListener(v -> onChipClick(keyword));
 
             chipGroup1.addView(chip); // 칩을 ChipGroup에 추가
-        }
-
-        if (!showAll && keywords.size() > 20) {
-            Chip moreChip = new Chip(requireContext());
-            moreChip.setText("더보기...");
-            moreChip.setChipBackgroundColorResource(R.color.brandcolor1); // 칩 배경 색 설정
-            moreChip.setTextColor(getResources().getColor(R.color.primaryDarkColor)); // 텍스트 색상 설정
-            moreChip.setChipStrokeColorResource(R.color.primaryDarkColor); // 칩 테두리 색상 설정
-            moreChip.setChipStrokeWidth(1.0f); // 칩 테두리 두께 설정
-            moreChip.setOnClickListener(v -> addChips(true)); // "더보기" 클릭 시 모든 키워드 표시
-            chipGroup1.addView(moreChip); // "더보기" 칩 추가
         }
 
         // 검색어를 이용하여 칩 추가 (나중에 DB에서 검색어를 가져와야함)
