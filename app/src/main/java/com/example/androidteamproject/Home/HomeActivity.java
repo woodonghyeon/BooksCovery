@@ -19,15 +19,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class HomeActivity extends AppCompatActivity {
     private LinearLayout ly_home;
     private BottomNavigationView bottomNavigationView;
-    String themeColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        themeColor = ThemeUtil.modLoad(getApplicationContext());
-        ThemeUtil.applyTheme(themeColor);
-
         setContentView(R.layout.activity_home);
 
         ly_home = findViewById(R.id.ly_home);
