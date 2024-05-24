@@ -16,7 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.androidteamproject.Login.SessionManager;
+import com.example.androidteamproject.SessionManager;
 import com.example.androidteamproject.R;
 import com.squareup.picasso.Picasso;
 
