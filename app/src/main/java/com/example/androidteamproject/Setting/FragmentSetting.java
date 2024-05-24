@@ -4,15 +4,18 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -21,7 +24,21 @@ import android.widget.Toast;
 
 import com.example.androidteamproject.Login.LoginActivity;
 import com.example.androidteamproject.R;
+import com.example.androidteamproject.SessionManager;
 import com.example.androidteamproject.ThemeUtil;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.FutureTask;
 
 public class FragmentSetting extends Fragment {
     private static final String ARG_PARAM1 = "param1";
@@ -33,6 +50,11 @@ public class FragmentSetting extends Fragment {
     String themeColor, userid;
 
     private Dialog passwordDialog; // 비밀번호 입력 다이얼로그
+
+    //회원 정보 수정에 필요한 것
+    SessionManager sessionManager;
+    String gender = "", department = "";
+    Spinner spinner_gender, et_input_department;
 
     public FragmentSetting() {
     }
@@ -61,6 +83,7 @@ public class FragmentSetting extends Fragment {
 
         Context context = getActivity();
         if (context != null) {
+            sessionManager = new SessionManager(context);
             SharedPreferences sharedPreferences = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
             userid = sharedPreferences.getString("userid", null);
 
@@ -114,9 +137,7 @@ public class FragmentSetting extends Fragment {
                 public void onClick(View view) {
                     showPasswordDialog(new Runnable() {
                         @Override
-                        public void run() {
-                            showUpdateDialog();
-                        }
+                        public void run() { showUpdateDialog(); }
                     });
                 }
             });
@@ -133,6 +154,7 @@ public class FragmentSetting extends Fragment {
                     });
                 }
             });
+
         }
 
         return view;
@@ -165,17 +187,44 @@ public class FragmentSetting extends Fragment {
         updateDialog.setContentView(R.layout.dialog_update);
 
         EditText et_input_name = updateDialog.findViewById(R.id.et_input_name);
-        Spinner spinner_gender = updateDialog.findViewById(R.id.spinner_gender);
+        spinner_gender = updateDialog.findViewById(R.id.spinner_gender);
         EditText et_input_age = updateDialog.findViewById(R.id.et_input_age);
-        Spinner et_input_department = updateDialog.findViewById(R.id.spinner_department);
+        et_input_department = updateDialog.findViewById(R.id.spinner_department);
         EditText et_input_email = updateDialog.findViewById(R.id.et_input_email);
         EditText et_input_pwd = updateDialog.findViewById(R.id.et_input_pwd);
         Button bt_modify_dialog = updateDialog.findViewById(R.id.bt_modify_dialog);
 
+        et_input_name.setText(sessionManager.getName());
+        et_input_age.setText(String.valueOf(sessionManager.getAge()));
+        et_input_email.setText(sessionManager.getEmail());
+
         bt_modify_dialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                executeUpdateSync( et_input_name.getText().toString(), gender, et_input_age.getText().toString(), department, et_input_email.getText().toString(), et_input_pwd.getText().toString());
                 updateDialog.dismiss();
+            }
+        });
+
+        spinner_gender.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                gender = (String) parent.getItemAtPosition(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        et_input_department.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                department = String.valueOf(id+1);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
             }
         });
 
@@ -203,4 +252,78 @@ public class FragmentSetting extends Fragment {
             window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, (int) heightInPx);
         }
     }
+
+    private void executeUpdateSync(String... params) {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        FutureTask<Boolean> futureTask = new FutureTask<>(new UpdateCallable(params));
+        executor.execute(futureTask);
+
+        try {
+            Boolean result = futureTask.get(); // 동기적으로 결과를 기다림
+            onPostExecute(result);
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        executor.shutdown();
+    }
+
+    private class UpdateCallable implements Callable<Boolean> {
+        private String[] params;
+
+        public UpdateCallable(String... params) {
+            this.params = params;
+        }
+
+        @Override
+        public Boolean call() throws Exception {
+            String name = params[0];
+            String gender = params[1];
+            String age = params[2];
+            String department = params[3];
+            String email = params[4];
+            String password = params[5];
+
+            Connection conn = null;
+            PreparedStatement pstmt = null;
+            String sql = "";
+
+            try {
+                // JDBC 드라이버 로드
+                Class.forName("com.mysql.jdbc.Driver");
+                // 데이터베이스에 연결
+                conn = DriverManager.getConnection("jdbc:mysql://10.0.2.2:3306/test", "root", "root");
+
+                // 쿼리 실행
+                sql = "Update member_info set name = ?, gender = ?, age = ?, department_id = ?, email = ?, password = ? where id = ?";
+                pstmt = conn.prepareStatement(sql);
+                pstmt.setString(1, name);
+                pstmt.setString(2, gender);
+                pstmt.setInt(3, Integer.parseInt(age));
+                pstmt.setInt(4, Integer.parseInt(department));
+                pstmt.setString(5, email);
+                pstmt.setString(6, password);
+                pstmt.setString(7, sessionManager.getId());
+                int result = pstmt.executeUpdate();
+
+                conn.close();
+                pstmt.close();
+
+                // 결과 받기
+                return result > 0;
+
+            } catch (SQLException | ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private void onPostExecute(Boolean aBoolean) {
+        if (aBoolean) {
+            Toast.makeText(super.getContext(), "회원 정보가 수정되었습니다.", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(super.getContext(), "회원 정보 수정에 실패했습니다.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 }
