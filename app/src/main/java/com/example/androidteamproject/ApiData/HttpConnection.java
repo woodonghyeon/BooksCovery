@@ -150,7 +150,7 @@ public class HttpConnection {
                     JSONArray docs = responseBody.getJSONObject("response").getJSONArray("docs");
 
                     // SearchBookKeyword 객체를 저장할 리스트 초기화
-                    List<SearchBookKeyword> books = new ArrayList<>();
+                    List<SearchBookTitle> books = new ArrayList<>();
 
                     // docs 배열을 순회하며 각 문서에서 정보를 추출
                     for (int i = 0; i < docs.length(); i++) {
@@ -173,7 +173,7 @@ public class HttpConnection {
                         String publication_year = doc.getString("publication_year");
 
                         // 책 정보를 담은 SearchBookKeyword 객체 생성
-                        SearchBookKeyword book = new SearchBookKeyword(bookName, authors, bookImageUrl, publisher, publication_year);
+                        SearchBookTitle book = new SearchBookTitle(bookName, authors, bookImageUrl, publisher, publication_year);
 
                         // 생성한 SearchBookKeyword 객체를 리스트에 추가
                         books.add(book);
