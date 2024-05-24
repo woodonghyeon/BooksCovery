@@ -218,6 +218,9 @@ public class HttpConnection {
                     for (int i = 0; i < docs.length(); i++) {
                         // 각 문서(doc) 객체를 가져옴
                         JSONObject doc = docs.getJSONObject(i).getJSONObject("doc");
+                        
+                        // isbn13자리를 가져옴
+                        String isbn = doc.getString("isbn13");
 
                         // 책 이름(bookname)을 가져옴
                         String bookName = doc.getString("bookname");
@@ -234,10 +237,10 @@ public class HttpConnection {
                         // 출판년도를 가져옴
                         String publication_year = doc.getString("publication_year");
 
-                        // 책 정보를 담은 SearchBookKeyword 객체 생성
-                        SearchBookTitle book = new SearchBookTitle(bookName, authors, bookImageUrl, publisher, publication_year);
+                        // 책 정보를 담은 SearchBookTitle 객체 생성
+                        SearchBookTitle book = new SearchBookTitle(isbn ,bookName, authors, bookImageUrl, publisher, publication_year);
 
-                        // 생성한 SearchBookKeyword 객체를 리스트에 추가
+                        // 생성한 SearchBookTitle 객체를 리스트에 추가
                         books.add(book);
                     }
 
