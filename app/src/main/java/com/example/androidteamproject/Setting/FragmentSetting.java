@@ -320,22 +320,7 @@ public class FragmentSetting extends Fragment {
         }
     }
 
-    private void showMemberWithdrawalDialog() {
-        final Dialog memberWithdrawalDialog = new Dialog(getActivity());
-        memberWithdrawalDialog.setContentView(R.layout.dialog_member_withdrawal);
-
-        TextView tv_userid = memberWithdrawalDialog.findViewById(R.id.tv_userid);
-        tv_userid.setText(userid + "님 \n" + "정말 탈퇴하시겠어요?");
-
-        memberWithdrawalDialog.show();
-        Window window = memberWithdrawalDialog.getWindow();
-        if (window != null) {
-            int heightInDp = 1000;
-            float heightInPx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, heightInDp, getResources().getDisplayMetrics());
-            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, (int) heightInPx);
-        }
-    }
-
+    //회원 정보 수정 로직
     private void executeUpdateSync(String... params) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         FutureTask<Boolean> futureTask = new FutureTask<>(new UpdateCallable(params));
@@ -343,7 +328,7 @@ public class FragmentSetting extends Fragment {
 
         try {
             Boolean result = futureTask.get(); // 동기적으로 결과를 기다림
-            onPostExecute(result);
+            UpdateExecute(result);
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
@@ -408,12 +393,101 @@ public class FragmentSetting extends Fragment {
         }
     }
 
-    private void onPostExecute(Boolean aBoolean) {
+    //회원 삭제
+    private void showMemberWithdrawalDialog() {
+        final Dialog memberWithdrawalDialog = new Dialog(getActivity());
+        memberWithdrawalDialog.setContentView(R.layout.dialog_member_withdrawal);
+
+        TextView tv_userid = memberWithdrawalDialog.findViewById(R.id.tv_userid);
+        EditText et_input_text = memberWithdrawalDialog.findViewById(R.id.et_input_text);
+        Button bt_member_withdrawal = memberWithdrawalDialog.findViewById(R.id.bt_member_withdrawal);
+        tv_userid.setText(userid + "님 \n" + "정말 탈퇴하시겠어요?");
+
+        memberWithdrawalDialog.show();
+        Window window = memberWithdrawalDialog.getWindow();
+        if (window != null) {
+            int heightInDp = 1000;
+            float heightInPx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, heightInDp, getResources().getDisplayMetrics());
+            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, (int) heightInPx);
+        }
+
+        //삭제 진행
+        bt_member_withdrawal.setOnClickListener(view -> {
+            if(et_input_text.getText().toString().equals("회원 정보 탈퇴")){ executeDeleteSync(et_input_text.getText().toString()); executeDeleteSync(et_input_text.getText().toString()); }
+            else { Toast.makeText(getActivity(),"정확하게 입력해주세요.", Toast.LENGTH_SHORT).show(); }
+            });
+    }
+
+    private void executeDeleteSync(String... params) {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        FutureTask<Boolean> futureTask = new FutureTask<>(new DeleteCallable(params));
+        executor.execute(futureTask);
+
+        try {
+            Boolean result = futureTask.get(); // 동기적으로 결과를 기다림
+            DeleteExecute(result);
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        executor.shutdown();
+    }
+
+    private class DeleteCallable implements Callable<Boolean> {
+        private String[] params;
+
+        public DeleteCallable(String... params) {
+            this.params = params;
+        }
+
+        @Override
+        public Boolean call() throws Exception {
+            String check = params[0];
+
+            Connection conn = null;
+            PreparedStatement pstmt = null;
+            String sql = "";
+
+            try {
+                // JDBC 드라이버 로드
+                Class.forName("com.mysql.jdbc.Driver");
+                // 데이터베이스에 연결
+                conn = DriverManager.getConnection("jdbc:mysql://10.0.2.2:3306/test", "root", "root");
+
+                // 쿼리 실행
+                sql = "Delete member_info where id = ?";
+                pstmt = conn.prepareStatement(sql);
+                pstmt.setString(1, sessionManager.getId());
+                int result = pstmt.executeUpdate();
+
+                conn.close();
+                pstmt.close();
+
+                // 결과 받기
+                return result > 0;
+
+            } catch (SQLException | ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+    
+    //회원 정보 수정, 삭제 결과 출력하기
+    private void UpdateExecute(Boolean aBoolean) {
         if (aBoolean) {
             Toast.makeText(super.getContext(), "회원 정보가 수정되었습니다.", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(super.getContext(), "회원 정보 수정에 실패했습니다.", Toast.LENGTH_SHORT).show();
         }
     }
+
+    private void DeleteExecute(Boolean aBoolean) {
+        if (aBoolean) {
+            Toast.makeText(super.getContext(), "회원 정보가 삭제되었습니다.", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(super.getContext(), "회원 정보 삭제에 실패했습니다.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
 }
