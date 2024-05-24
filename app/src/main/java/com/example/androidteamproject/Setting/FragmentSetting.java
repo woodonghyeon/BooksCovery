@@ -491,6 +491,4 @@ public class FragmentSetting extends Fragment {
         }
     }
 
-
-
 }
