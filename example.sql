@@ -1,3 +1,9 @@
+CREATE TABLE `department` (
+	`department_id`	int	NOT NULL AUTO_INCREMENT,
+	`department`	varchar(30)	NOT NULL,
+    PRIMARY KEY (`department_id`)
+);
+
 CREATE TABLE `member_info` (
 	`member_id`	int	NOT NULL auto_increment ,
 	`name`	varchar(30)	NOT NULL,
@@ -9,93 +15,69 @@ CREATE TABLE `member_info` (
     `password_key` varchar(50) NOT NULL,
 	`email`	varchar(30)	NOT NULL,
 	`mode`	varchar(5)	NOT NULL,
-    PRIMARY KEY (`member_id`)
+    PRIMARY KEY (`member_id`),
+    FOREIGN KEY (`department_id`) REFERENCES `department` (`department_id`)
+);
+
+CREATE TABLE `book` (
+    `book_id` int NOT NULL auto_increment,
+    `bookname`	varchar(100) NOT NULL,
+	`isbn`	int NULL,
+    `authors`	varchar(30)	NULL,
+	`publisher`	varchar(30)	NULL,
+    `book_image_URL` varchar(500) NOT NULL,
+    PRIMARY KEY (`book_id`)
 );
 
 CREATE TABLE `search_history` (
 	`search_history_id`	int	NOT NULL AUTO_INCREMENT,
 	`member_id`	int	NOT NULL,
-	`isbn`	int	NOT NULL,
-	`bookname`	varchar(100) NULL,
-	`authors`	varchar(30)	NULL,
-	`publisher`	varchar(30)	NULL,
-    `book_image_URL` varchar(500) NOT NULL,
+	`book_id` int NOT NULL,
     `search_date` DateTime NOT NULL,
-    PRIMARY KEY (`search_history_id`)
+    PRIMARY KEY (`search_history_id`),
+    FOREIGN KEY (`member_id`) REFERENCES `member_info` (`member_id`),
+    FOREIGN KEY (`book_id`) REFERENCES `book` (`book_id`)
 );
 
 CREATE TABLE `favorite` (
 	`favorite_id`	int	NOT NULL AUTO_INCREMENT,
 	`member_id`	int	NOT NULL,
-	`isbn`	int	NOT NULL,
-    PRIMARY KEY (`favorite_id`)
+	`book_id` int NOT NULL,
+    `favorite_date` DateTime NOT NULL,
+    PRIMARY KEY (`favorite_id`),
+    FOREIGN KEY (`member_id`) REFERENCES `member_info` (`member_id`),
+    FOREIGN KEY (`book_id`) REFERENCES `book` (`book_id`)
 );
 
-CREATE TABLE `keyword` (
-	`keyword`	varchar(30)	NULL
-);
-
-CREATE TABLE `department` (
-	`department_id`	int	NOT NULL AUTO_INCREMENT,
-	`department`	varchar(30)	NOT NULL,
-    PRIMARY KEY (`department_id`)
-);
-
-CREATE TABLE `recommand_book` (
-	`recommand_id`	int	NOT NULL AUTO_INCREMENT,
-	`bookname`	varchar(100) NOT NULL,
-	`isbn`	int NULL,
-    `authors`	varchar(30)	NULL,
-	`publisher`	varchar(30)	NULL,
-    `book_image_URL` varchar(500) NOT NULL,
-	`update_date` DateTime	NULL,
-    PRIMARY KEY (`recommand_id`)
-);
 
 CREATE TABLE `book_count` (
 	`book_count_id`	int	NOT NULL AUTO_INCREMENT,
 	`department_id`	int	NOT NULL,
-	`bookname`	varchar(100) NULL,
+    `book_id` int NOT NULL,
+	`book_count_date` datetime NOT NULL,
 	`book_count` int	NULL,
-    PRIMARY KEY (`book_count_id`)
+    PRIMARY KEY (`book_count_id`),
+    FOREIGN KEY (`department_id`) REFERENCES `department` (`department_id`),
+    FOREIGN KEY (`book_id`) REFERENCES `book` (`book_id`)
 );
 
-CREATE TABLE `recommand_book_members` (
-    `recommand_book_member_id` int NOT NULL AUTO_INCREMENT,
-    `recommand_id` int NOT NULL,
+CREATE TABLE `popular_book` (
+	`popular_id`	int	NOT NULL AUTO_INCREMENT,
+	`book_id` int NOT NULL,
+	`popular_date` DateTime	NULL,
+    PRIMARY KEY (`popular_id`),
+    FOREIGN KEY (`book_id`) REFERENCES `book` (`book_id`)
+);
+
+CREATE TABLE `popular_book_members` (
+    `popular_book_member_id` int NOT NULL AUTO_INCREMENT,
+    `popular_id` int NOT NULL,
     `member_id` int NOT NULL,
-    PRIMARY KEY (`recommand_book_member_id`),
-    FOREIGN KEY (`recommand_id`) REFERENCES `recommand_book` (`recommand_id`),
+    PRIMARY KEY (`popular_book_member_id`),
+    FOREIGN KEY (`popular_id`) REFERENCES `popular_book` (`popular_id`),
     FOREIGN KEY (`member_id`) REFERENCES `member_info` (`member_id`)
 );
 
-ALTER TABLE `member_info` ADD CONSTRAINT `FK_department_TO_member_info_1` FOREIGN KEY (
-	`department_id`
-)
-REFERENCES `department` (
-	`department_id`
-);
-
-ALTER TABLE `search_history` ADD CONSTRAINT `FK_member_info_TO_search_history_1` FOREIGN KEY (
-	`member_id`
-)
-REFERENCES `member_info` (
-	`member_id`
-);
-
-ALTER TABLE `favorite` ADD CONSTRAINT `FK_member_info_TO_favorite_1` FOREIGN KEY (
-	`member_id`
-)
-REFERENCES `member_info` (
-	`member_id`
-);
-
-ALTER TABLE `book_count` ADD CONSTRAINT `FK_department_TO_book_count_1` FOREIGN KEY (
-	`department_id`
-)
-REFERENCES `department` (
-	`department_id`
-);
 
 Insert into department values(1, '컴퓨터정보계열');
 Insert into department values(2, 'IT온라인창업과');
