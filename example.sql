@@ -16,7 +16,7 @@ CREATE TABLE `member_info` (
 	`email`	varchar(30)	NOT NULL,
 	`mode`	varchar(5)	NOT NULL,
     PRIMARY KEY (`member_id`),
-    FOREIGN KEY (`department_id`) REFERENCES `department` (`department_id`) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (`department_id`) REFERENCES `department` (`department_id`) ON DELETE SET NULL ON UPDATE CASCADE
 );
 
 CREATE TABLE `book` (
