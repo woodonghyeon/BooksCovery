@@ -1,13 +1,12 @@
 package com.example.androidteamproject.ApiData;
 
-public class SearchBookTitle {
-    private String isbn ,bookName, bookImageUrl, authors, publisher, publication_year;
+public class SearchBookAuthor {
+    private String bookName, bookImageUrl, authors, publisher, publication_year;
 
-    public SearchBookTitle() {
+    public SearchBookAuthor() {
     }
 
-    public SearchBookTitle(String isbn, String bookName, String authors, String bookImageUrl, String publisher, String publication_year) {
-        this.isbn = isbn;
+    public SearchBookAuthor(String bookName, String authors, String bookImageUrl, String publisher, String publication_year) {
         this.bookName = bookName;
         this.bookImageUrl = bookImageUrl;
         this.authors = authors;
@@ -15,10 +14,6 @@ public class SearchBookTitle {
         this.publication_year = publication_year;
     }
 
-    public String getIsbn() { return isbn; }
-    public void setIsbn(String isbn) {
-        this.isbn = isbn;
-    }
     public String getBookName() {
         return bookName;
     }
