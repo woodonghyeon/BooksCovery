@@ -36,7 +36,7 @@ public class FragmentSearch extends Fragment {
     @SuppressLint("SimpleDateFormat")
     private static LocalDate mDate = LocalDate.now();
     private static LocalDate checkDate;
-    private SearchView sv_keyword, sv_title;
+    private SearchView sv_keyword, sv_title, sv_author;
 
     public FragmentSearch() {
     }
@@ -66,12 +66,26 @@ public class FragmentSearch extends Fragment {
 
         // sv_keyword SearchView를 초기화하고 리스너 설정
         sv_title = view.findViewById(R.id.sv_title);
+        sv_author = view.findViewById(R.id.sv_author);
         sv_keyword = view.findViewById(R.id.sv_keyword);
 
         sv_title.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 searchByTitle(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        sv_author.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchByAuthor(query);
                 return false;
             }
 
@@ -342,6 +356,24 @@ public class FragmentSearch extends Fragment {
     // 타이틀 검색
     private void searchByTitle(String title) {
         FragmentTitleSearch fragment = FragmentTitleSearch.newInstance(title, "");
+
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+
+        // 현재 프래그먼트를 가져와서 숨김
+        Fragment currentFragment = getParentFragmentManager().findFragmentById(R.id.ly_home);
+        if (currentFragment != null) {
+            transaction.hide(currentFragment);
+        }
+
+        // 새 프래그먼트를 추가
+        transaction.add(R.id.ly_home, fragment);
+        transaction.addToBackStack(null); // 백스택에 추가하여 뒤로가기 버튼을 눌렀을 때 이전 프래그먼트로 돌아갈 수 있음
+        transaction.commit();
+    }
+
+    // 저자 검색
+    private void searchByAuthor(String author) {
+        FragmentAuthorSearch fragment = FragmentAuthorSearch.newInstance(author, "");
 
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
 
