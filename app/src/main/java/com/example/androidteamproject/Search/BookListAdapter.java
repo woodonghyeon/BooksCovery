@@ -58,8 +58,14 @@ public class BookListAdapter extends BaseAdapter {
         bookPublicationYear.setText(book.getPublication_year());
 
         // 이미지를 로드할 때 Picasso 라이브러리를 사용
-        Picasso.get().load(book.getBookImageUrl()).into(bookImage);
+        String imageUrl = book.getBookImageUrl();
+        if (imageUrl == null || imageUrl.isEmpty()) {
+            // 기본 이미지 로드
+            Picasso.get().load(R.drawable.ic_warring).into(bookImage);
+        } else {
+            // 이미지 로드
+            Picasso.get().load(imageUrl).into(bookImage);
+        }
 
-        return convertView;
     }
 }
