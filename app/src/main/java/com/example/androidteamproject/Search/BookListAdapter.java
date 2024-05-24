@@ -66,6 +66,6 @@ public class BookListAdapter extends BaseAdapter {
             // 이미지 로드
             Picasso.get().load(imageUrl).into(bookImage);
         }
-
+        return convertView;
     }
 }
