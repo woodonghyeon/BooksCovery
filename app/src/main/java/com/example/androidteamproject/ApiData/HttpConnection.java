@@ -127,6 +127,68 @@ public class HttpConnection {
         });
     } // end of booksearchKeyword
 
+    public void bookSearchAuthor(String author, int pageNo, int pageSize, boolean tf, String format, final HttpResponseCallback callback) {
+        String url = BASE_URL + "srchBooks?authKey=" + API_KEY + "&author=" + author + "&pageNo=" + pageNo + "&pageSize=" + pageSize + "&exactMatch=" + tf + "&format=" + format;
+        Request request = new Request.Builder().url(url).build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+                callback.onFailure(e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                try {
+                    // 응답이 성공적이지 않은 경우 예외를 던짐
+                    if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+                    // 응답 본문을 JSON 객체로 변환
+                    JSONObject responseBody = new JSONObject(response.body().string());
+
+                    // JSON 객체에서 "response" 객체를 가져와서 "docs" 배열을 추출
+                    JSONArray docs = responseBody.getJSONObject("response").getJSONArray("docs");
+
+                    // SearchBookTitle 객체를 저장할 리스트 초기화
+                    List<SearchBookAuthor> books = new ArrayList<>();
+
+                    // docs 배열을 순회하며 각 문서에서 정보를 추출
+                    for (int i = 0; i < docs.length(); i++) {
+                        // 각 문서(doc) 객체를 가져옴
+                        JSONObject doc = docs.getJSONObject(i).getJSONObject("doc");
+
+                        // 책 이름(bookname)을 가져옴
+                        String bookName = doc.getString("bookname");
+
+                        // 책 이미지 URL(bookImageURL)을 가져옴
+                        String bookImageUrl = doc.getString("bookImageURL");
+
+                        // 저자(authors)를 가져옴
+                        String authors = doc.getString("authors");
+
+                        // 출판사를 가져옴
+                        String publisher = doc.getString("publisher");
+
+                        // 출판년도를 가져옴
+                        String publication_year = doc.getString("publication_year");
+
+                        // 책 정보를 담은 SearchBookKeyword 객체 생성
+                        SearchBookAuthor book = new SearchBookAuthor(bookName, authors, bookImageUrl, publisher, publication_year);
+
+                        // 생성한 SearchBookKeyword 객체를 리스트에 추가
+                        books.add(book);
+                    }
+
+                    // 콜백을 통해 성공적인 응답 처리 (책 리스트 전달)
+                    callback.onSuccess(books);
+                } catch (JSONException e) {
+                    // JSON 파싱 중 예외가 발생한 경우 콜백을 통해 실패 처리
+                    callback.onFailure(e);
+                }
+            }
+        });
+    } // end of booksearchAuthor
+
     public void bookSearchTitle(String title, int pageNo, int pageSize, boolean tf, String format, final HttpResponseCallback callback) {
         String url = BASE_URL + "srchBooks?authKey=" + API_KEY + "&title=" + title + "&pageNo=" + pageNo + "&pageSize=" + pageSize + "&exactMatch=" + tf + "&format=" + format;
         Request request = new Request.Builder().url(url).build();
@@ -156,6 +218,9 @@ public class HttpConnection {
                     for (int i = 0; i < docs.length(); i++) {
                         // 각 문서(doc) 객체를 가져옴
                         JSONObject doc = docs.getJSONObject(i).getJSONObject("doc");
+                        
+                        // isbn13자리를 가져옴
+                        String isbn = doc.getString("isbn13");
 
                         // 책 이름(bookname)을 가져옴
                         String bookName = doc.getString("bookname");
@@ -172,10 +237,10 @@ public class HttpConnection {
                         // 출판년도를 가져옴
                         String publication_year = doc.getString("publication_year");
 
-                        // 책 정보를 담은 SearchBookKeyword 객체 생성
-                        SearchBookTitle book = new SearchBookTitle(bookName, authors, bookImageUrl, publisher, publication_year);
+                        // 책 정보를 담은 SearchBookTitle 객체 생성
+                        SearchBookTitle book = new SearchBookTitle(isbn ,bookName, authors, bookImageUrl, publisher, publication_year);
 
-                        // 생성한 SearchBookKeyword 객체를 리스트에 추가
+                        // 생성한 SearchBookTitle 객체를 리스트에 추가
                         books.add(book);
                     }
 
