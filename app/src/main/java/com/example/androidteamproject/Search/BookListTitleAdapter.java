@@ -8,17 +8,17 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.androidteamproject.ApiData.SearchBookKeyword;
+import com.example.androidteamproject.ApiData.SearchBookTitle;
 import com.example.androidteamproject.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class BookListAdapter extends BaseAdapter {
+public class BookListTitleAdapter extends BaseAdapter {
     private Context context;
-    private List<SearchBookKeyword> books;
+    private List<SearchBookTitle> books;
 
-    public BookListAdapter(Context context, List<SearchBookKeyword> books) {
+    public BookListTitleAdapter(Context context, List<SearchBookTitle> books) {
         this.context = context;
         this.books = books;
     }
@@ -44,7 +44,7 @@ public class BookListAdapter extends BaseAdapter {
             convertView = LayoutInflater.from(context).inflate(R.layout.list_item_book, parent, false);
         }
 
-        SearchBookKeyword book = books.get(position);
+        SearchBookTitle book = books.get(position);
 
         TextView bookName = convertView.findViewById(R.id.book_name);
         TextView bookAuthor = convertView.findViewById(R.id.book_author);
@@ -66,6 +66,7 @@ public class BookListAdapter extends BaseAdapter {
             // 이미지 로드
             Picasso.get().load(imageUrl).into(bookImage);
         }
+
         return convertView;
     }
 }
