@@ -27,6 +27,8 @@ import com.example.androidteamproject.R;
 import com.example.androidteamproject.SessionManager;
 import com.example.androidteamproject.ThemeUtil;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -52,9 +54,10 @@ public class FragmentSetting extends Fragment {
     private Dialog passwordDialog; // 비밀번호 입력 다이얼로그
 
     //회원 정보 수정에 필요한 것
-    SessionManager sessionManager;
-    String gender = "", department = "";
-    Spinner spinner_gender, et_input_department;
+    private SessionManager sessionManager;
+    private String gender = "", department = "", pwd = null;
+    private Spinner spinner_gender, et_input_department;
+    private static Boolean check;
 
     public FragmentSetting() {
     }
@@ -164,12 +167,24 @@ public class FragmentSetting extends Fragment {
         passwordDialog = new Dialog(getActivity());
         passwordDialog.setContentView(R.layout.dialog_input_password);
 
+        EditText et_input_password = passwordDialog.findViewById(R.id.et_input_password);
         Button bt_submit = passwordDialog.findViewById(R.id.bt_submit);
+
         bt_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                passwordDialog.dismiss();
-                onSuccess.run();
+                pwd = String.valueOf(et_input_password.getText());
+                new checkPassword(new PasswordCheckCallback() { //비밀번호 검사 메서드
+                    @Override
+                    public void onPasswordCheckCompleted(boolean isValid) {
+                        if (isValid) {
+                            passwordDialog.dismiss();
+                            onSuccess.run();
+                        } else {
+                            Toast.makeText(getActivity(), "비밀번호가 맞지 않습니다.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }).execute();
             }
         });
 
@@ -179,6 +194,74 @@ public class FragmentSetting extends Fragment {
             int heightInDp = 500;
             float heightInPx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, heightInDp, getResources().getDisplayMetrics());
             window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, (int) heightInPx);
+        }
+    }
+
+    private interface PasswordCheckCallback {
+        void onPasswordCheckCompleted(boolean isValid);
+    }
+
+    //비밀번호 검사하기
+    private class checkPassword extends AsyncTask<Void, Void, Boolean> {
+        private PasswordCheckCallback callback;
+
+        checkPassword(PasswordCheckCallback callback) {
+            this.callback = callback;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            PreparedStatement statement = null;
+            ResultSet resultSet = null;
+            String DBpwd = null;
+            Connection connection = null;
+
+            try {
+                connection = DriverManager.getConnection("jdbc:mysql://10.0.2.2:3306/test", "root", "root");
+
+                // PreparedStatement 생성
+                String query = "SELECT password FROM member_info WHERE id = ?";
+                statement = connection.prepareStatement(query);
+                statement.setString(1, sessionManager.getId());
+
+                // 쿼리 실행 및 결과 가져오기
+                resultSet = statement.executeQuery();
+
+                if (resultSet.next()) {
+                    DBpwd = resultSet.getString("password");
+                }
+
+                if (pwd != null && DBpwd != null) {
+                    // 입력된 비밀번호를 가져온 솔트와 함께 해싱
+                    MessageDigest md = MessageDigest.getInstance("SHA-256");
+                    md.update(sessionManager.getPasswordKey().getBytes());
+                    md.update(pwd.getBytes());
+                    String hashedEnteredPassword = String.format("%064x", new BigInteger(1, md.digest()));
+
+                    return DBpwd.equals(hashedEnteredPassword);
+                }
+
+            } catch (Exception e) {
+                Log.e("ConnectToDatabaseTask", "Error connecting to database", e);
+                // 오류 처리
+            } finally {
+                try {
+                    if (statement != null) statement.close();
+                    if (connection != null) connection.close();
+                    if (resultSet != null) resultSet.close();
+                } catch (Exception e) {
+                    Log.e("ConnectToDatabaseTask", "Error closing connection", e);
+                }
+            }
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            if (callback != null) {
+                callback.onPasswordCheckCompleted(aBoolean);
+            }
         }
     }
 
@@ -287,6 +370,13 @@ public class FragmentSetting extends Fragment {
             Connection conn = null;
             PreparedStatement pstmt = null;
             String sql = "";
+
+            //비밀번호 암호화
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            md.update(sessionManager.getPasswordKey().getBytes());
+            md.update(password.getBytes());
+            password = String.format("%064x", new BigInteger(1, md.digest()));
+            Log.v("sadfsadf",password);
 
             try {
                 // JDBC 드라이버 로드
