@@ -381,6 +381,8 @@ public class FragmentSetting extends Fragment {
                 pstmt.setString(7, sessionManager.getId());
                 int result = pstmt.executeUpdate();
 
+                sessionManager.UpdateLoginSession(name, gender, Integer.parseInt(age), Integer.parseInt(department), email);
+
                 conn.close();
                 pstmt.close();
 
