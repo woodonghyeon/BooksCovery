@@ -100,4 +100,6 @@ public class FragmentKeywordSearch extends Fragment {
             }
         });
     }
+
+
 }
