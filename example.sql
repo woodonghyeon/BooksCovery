@@ -16,13 +16,13 @@ CREATE TABLE `member_info` (
 	`email`	varchar(30)	NOT NULL,
 	`mode`	varchar(5)	NOT NULL,
     PRIMARY KEY (`member_id`),
-    FOREIGN KEY (`department_id`) REFERENCES `department` (`department_id`)
+    FOREIGN KEY (`department_id`) REFERENCES `department` (`department_id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE `book` (
     `book_id` int NOT NULL auto_increment,
     `bookname`	varchar(100) NOT NULL,
-	`isbn`	int NULL,
+	`isbn`	bigint(13) NULL,
     `authors`	varchar(30)	NULL,
 	`publisher`	varchar(30)	NULL,
     `book_image_URL` varchar(500) NOT NULL,
@@ -38,8 +38,8 @@ CREATE TABLE `search_history` (
 	`book_id` int NOT NULL,
     `search_date` DateTime NOT NULL,
     PRIMARY KEY (`search_history_id`),
-    FOREIGN KEY (`member_id`) REFERENCES `member_info` (`member_id`),
-    FOREIGN KEY (`book_id`) REFERENCES `book` (`book_id`)
+    FOREIGN KEY (`member_id`) REFERENCES `member_info` (`member_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (`book_id`) REFERENCES `book` (`book_id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE `favorite` (
@@ -48,8 +48,8 @@ CREATE TABLE `favorite` (
 	`book_id` int NOT NULL,
     `favorite_date` DateTime NOT NULL,
     PRIMARY KEY (`favorite_id`),
-    FOREIGN KEY (`member_id`) REFERENCES `member_info` (`member_id`),
-    FOREIGN KEY (`book_id`) REFERENCES `book` (`book_id`)
+    FOREIGN KEY (`member_id`) REFERENCES `member_info` (`member_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (`book_id`) REFERENCES `book` (`book_id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 
@@ -60,8 +60,8 @@ CREATE TABLE `book_count` (
 	`book_count_date` datetime NOT NULL,
 	`book_count` int	NULL,
     PRIMARY KEY (`book_count_id`),
-    FOREIGN KEY (`department_id`) REFERENCES `department` (`department_id`),
-    FOREIGN KEY (`book_id`) REFERENCES `book` (`book_id`)
+    FOREIGN KEY (`department_id`) REFERENCES `department` (`department_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (`book_id`) REFERENCES `book` (`book_id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE `popular_book` (
@@ -69,7 +69,7 @@ CREATE TABLE `popular_book` (
 	`book_id` int NOT NULL,
 	`popular_date` DateTime	NULL,
     PRIMARY KEY (`popular_id`),
-    FOREIGN KEY (`book_id`) REFERENCES `book` (`book_id`)
+    FOREIGN KEY (`book_id`) REFERENCES `book` (`book_id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE `popular_book_members` (
@@ -77,8 +77,8 @@ CREATE TABLE `popular_book_members` (
     `popular_id` int NOT NULL,
     `member_id` int NOT NULL,
     PRIMARY KEY (`popular_book_member_id`),
-    FOREIGN KEY (`popular_id`) REFERENCES `popular_book` (`popular_id`),
-    FOREIGN KEY (`member_id`) REFERENCES `member_info` (`member_id`)
+    FOREIGN KEY (`popular_id`) REFERENCES `popular_book` (`popular_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (`member_id`) REFERENCES `member_info` (`member_id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 
@@ -108,20 +108,6 @@ Insert into department values(23, '조리제과제빵과');
 Insert into department values(24, '콘텐츠디자인과');
 Insert into department values(25, '만화애니메이션과');
 
-insert into search_history values(null,'1','1234567890','엄','준','식','https://i.namu.wiki/i/NpoCw6SZ0849_mTrqUxIMyTCLRK65S6MxuroLk46j2IzNs7uwW_iuw0b2KQX-lqpX06XVOEwa3LbTKOTh600Cw.webp','2020-02-02');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+insert into book values (null, 'genshin impact', 123412314123, '엄준식', '이홍준','https://i.namu.wiki/i/NpoCw6SZ0849_mTrqUxIMyTCLRK65S6MxuroLk46j2IzNs7uwW_iuw0b2KQX-lqpX06XVOEwa3LbTKOTh600Cw.webp', 2024, 'go', 1 );
+insert into search_history values(null, 1, 1, '2024-05-24');
 
