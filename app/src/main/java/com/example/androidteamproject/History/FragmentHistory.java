@@ -67,7 +67,6 @@ public class FragmentHistory extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         adapter = new CustomList(this, bookname, bookImageURL, authors, publisher, searchDate);
-
     }
 
     @Nullable
