@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.androidteamproject.ApiData.SearchBookTitle;
 import com.example.androidteamproject.R;
 import com.squareup.picasso.Picasso;
@@ -58,7 +59,7 @@ public class BookListTitleAdapter extends BaseAdapter {
         bookPublicationYear.setText(book.getPublication_year());
 
         // 이미지를 로드할 때 Picasso 라이브러리를 사용
-        Picasso.get().load(book.getBookImageUrl()).into(bookImage);
+        Glide.with(context).load(book.getBookImageUrl()).into(bookImage);
 
         return convertView;
     }
