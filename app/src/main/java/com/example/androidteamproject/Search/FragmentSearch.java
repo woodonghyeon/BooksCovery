@@ -240,7 +240,31 @@ public class FragmentSearch extends Fragment {
         mPager.setCurrentItem(1000);
         mPager.setOffscreenPageLimit(3);
         mPager.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
-    }
+
+        // viewpager2 간격 변환을 위함 -> res.values.dimes.xml에서 확인
+        int pageMarginPx = getResources().getDimensionPixelOffset(R.dimen.searchPageMargin);
+        int pagerWidth = getResources().getDimensionPixelOffset(R.dimen.searchPageWidth);
+        int screenWidth = getResources().getDisplayMetrics().widthPixels;
+        int offsetPx = screenWidth - pageMarginPx - pagerWidth;
+
+        // viewpager2 간격 변환
+        mPager.setPageTransformer((page, position) -> page.setTranslationX(position * -offsetPx));
+
+        mPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+                if (positionOffsetPixels == 0) {
+                    mPager.setCurrentItem(position);
+                }
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+            }
+        });
+    } // end of setupMonthViewPager
 
     // SharedPreferences에서 키워드를 불러오는 메서드
     private List<String> loadKeywordsFromSharedPreferences() {
