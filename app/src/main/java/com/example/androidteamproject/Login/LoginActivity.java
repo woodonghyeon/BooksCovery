@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -18,7 +17,7 @@ import com.example.androidteamproject.Home.HomeActivity;
 import com.example.androidteamproject.LoginCheck.LoginCheckActivity;
 import com.example.androidteamproject.Join.JoinActivity;
 import com.example.androidteamproject.R;
-import com.example.androidteamproject.Setting.FragmentSetting;
+import com.example.androidteamproject.SessionManager;
 
 public class LoginActivity extends Activity {
     ProgressDialog dialog;
@@ -93,6 +92,7 @@ public class LoginActivity extends Activity {
                     data.getIntExtra("Age", 0),
                     data.getIntExtra("Department_id", 0),
                     data.getStringExtra("Id"),
+                    data.getStringExtra("Password_Key"),
                     data.getStringExtra("Email"),
                     data.getStringExtra("Mode"),
                     data.getStringExtra("UpdateDate")
