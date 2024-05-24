@@ -56,7 +56,7 @@ public class FragmentTitleSearch extends Fragment {
         tv_booksearch = view.findViewById(R.id.tv_booksearch);
         listView = view.findViewById(R.id.listView);
 
-        // 전달된 키워드를 TextView에 설정
+        // 전달된 검색어를 TextView에 설정
         if (mParam1 != null) {
             tv_booksearch.setText("'" + mParam1 + "' 으로 검색한 도서");
         }
