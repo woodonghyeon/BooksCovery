@@ -36,7 +36,7 @@ public class FragmentSearch extends Fragment {
     @SuppressLint("SimpleDateFormat")
     private static LocalDate mDate = LocalDate.now();
     private static LocalDate checkDate;
-    private SearchView svKeyword;
+    private SearchView sv_keyword, sv_title;
 
     public FragmentSearch() {
     }
@@ -65,8 +65,10 @@ public class FragmentSearch extends Fragment {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
 
         // sv_keyword SearchView를 초기화하고 리스너 설정
-        svKeyword = view.findViewById(R.id.sv_keyword);
-        svKeyword.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        sv_title = view.findViewById(R.id.sv_title);
+        sv_keyword = view.findViewById(R.id.sv_keyword);
+
+        sv_keyword.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 // 키워드 입력 후 검색 버튼을 누르면 searchByKeyword 메서드 호출
@@ -76,7 +78,6 @@ public class FragmentSearch extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                // 텍스트가 변경될 때마다 호출됨 (여기서는 처리하지 않음)
                 return false;
             }
         });
@@ -237,80 +238,57 @@ public class FragmentSearch extends Fragment {
         searchPagerAdapter = new SearchPageAdapter(requireActivity(), bookName, imageUrls);
         mPager.setAdapter(searchPagerAdapter);
         mPager.setCurrentItem(1000);
-        mPager.setOffscreenPageLimit(10);
-
-        int startPos = imageUrls.size() / 2;
-        mPager.setCurrentItem(startPos);
-
-        int pageMarginPx = getResources().getDimensionPixelOffset(R.dimen.searchPageMargin);
-        int pagerWidth = getResources().getDimensionPixelOffset(R.dimen.searchPageWidth);
-        int screenWidth = getResources().getDisplayMetrics().widthPixels;
-        int offsetPx = screenWidth - pageMarginPx - pagerWidth;
-
-        mPager.setPageTransformer((page, position) -> page.setTranslationX(position * -offsetPx));
-        mPager.setCurrentItem(mPager.getAdapter().getItemCount() / 2);
+        mPager.setOffscreenPageLimit(3);
+        mPager.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
     }
 
     // SharedPreferences에서 키워드를 불러오는 메서드
     private List<String> loadKeywordsFromSharedPreferences() {
-        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("keywords", Context.MODE_PRIVATE);
-        String keywordsString = sharedPreferences.getString("keywords", "");
-        List<String> keywordsList = new ArrayList<>();
+        SharedPreferences preferences = requireActivity().getSharedPreferences("keywords", Context.MODE_PRIVATE);
+        String keywordString = preferences.getString("keywords", "");
+        List<String> keywords = new ArrayList<>();
 
-        if (!keywordsString.isEmpty()) {
-            String[] keywordsArray = keywordsString.split(",");
-            for (String keyword : keywordsArray) {
-                keywordsList.add(keyword);
+        if (!keywordString.isEmpty()) {
+            String[] keywordArray = keywordString.split(",");
+            for (String keyword : keywordArray) {
+                keywords.add(keyword);
             }
         }
-        return keywordsList;
+
+        return keywords;
     }
 
     // SharedPreferences에 키워드를 저장하는 메서드
     private void saveKeywordsToSharedPreferences(List<String> keywords) {
-        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("keywords", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        StringBuilder keywordsString = new StringBuilder();
+        SharedPreferences preferences = requireActivity().getSharedPreferences("keywords", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        StringBuilder keywordString = new StringBuilder();
 
-        for (int i = 0; i < keywords.size(); i++) {
-            keywordsString.append(keywords.get(i));
-            if (i < keywords.size() - 1) {
-                keywordsString.append(",");
-            }
+        for (String keyword : keywords) {
+            keywordString.append(keyword).append(",");
         }
 
-        editor.putString("keywords", keywordsString.toString());
+        if (keywordString.length() > 0) {
+            keywordString.setLength(keywordString.length() - 1); // 마지막 쉼표 제거
+        }
+
+        editor.putString("keywords", keywordString.toString());
         editor.apply();
     }
 
-    // 시간을 체크하여 일정 시간이 지났는지 확인하는 메서드
+    // 날짜 차이를 확인하여 시간이 지난 경우 true를 반환하는 메서드
     private boolean timeCheck() {
-        // 간단 설명: 기록된 시간, 현재 시간을 비교해서 기록된 시간보다 현재 시간이 하루 이상 많을 때 API 요청
-        // 만약 아니라면 아직 하루가 안 지났기 때문에 최신 데이터임
-        // mDate가 현재 시각, checkDate가 기록된 시간
-        try {
-            int check = mDate.compareTo(checkDate); // 시간 비교
-
-            // 현재 시간이 기록된 시간보다 높다 => 기록된 키워드는 예전 데이터이다. => API 요청해야 한다.
-            if (check > 0) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-        // 만약에 checkDate가 비어있다 => 처음 들어왔다 => API 요청해야 한다.
-        catch (NullPointerException ignored) {
-            checkDate = mDate; // 기록을 현재 시간으로 교체
+        if (checkDate == null || mDate.minusDays(7).isAfter(checkDate)) {
+            checkDate = mDate;
             return true;
         }
+        return false;
     }
 
-    // 키워드 검색 기능을 위한 메서드 추가
+    // 키워드 검색 메서드
     private void searchByKeyword(String keyword) {
-        // FragmentKeywordSearch를 생성하고 키워드를 전달
         FragmentKeywordSearch fragment = FragmentKeywordSearch.newInstance(keyword, "");
 
-        // FragmentTransaction을 사용하여 프래그먼트를 추가 또는 교체
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
 
         // 현재 프래그먼트를 가져와서 숨김
