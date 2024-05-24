@@ -65,7 +65,7 @@ public class HttpConnection {
         });
     }
 
-    public void bookSearch(String word, int pageNo, int pageSize, boolean tf, String format, final HttpResponseCallback callback) {
+    public void bookSearchKeyword(String word, int pageNo, int pageSize, boolean tf, String format, final HttpResponseCallback callback) {
         String url = BASE_URL + "srchBooks?authKey=" + API_KEY + "&keyword=" + word + "&pageNo=" + pageNo + "&pageSize=" + pageSize + "&exactMatch=" + tf + "&format=" + format;
         Request request = new Request.Builder().url(url).build();
         client.newCall(request).enqueue(new Callback() {
