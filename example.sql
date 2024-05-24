@@ -26,6 +26,9 @@ CREATE TABLE `book` (
     `authors`	varchar(30)	NULL,
 	`publisher`	varchar(30)	NULL,
     `book_image_URL` varchar(500) NOT NULL,
+    `publication_year` int null,
+    `class_no` varchar(20) null,
+    `loan_count` int null,
     PRIMARY KEY (`book_id`)
 );
 
