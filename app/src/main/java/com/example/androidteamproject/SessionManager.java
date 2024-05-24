@@ -1,4 +1,4 @@
-package com.example.androidteamproject.Login;
+package com.example.androidteamproject;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -11,6 +11,7 @@ public class SessionManager {
     private static final String KEY_AGE = "Age";
     private static final String KEY_DEPARTMENT_ID = "Department_id";
     private static final String KEY_ID = "Id";
+    private static final String KEY_PASSWORD_KEY = "Password_Key";
     private static final String KEY_EMAIL = "Email";
     private static final String KEY_MODE = "Mode";
     private static final String KEY_UPDATE_DATE = "UpdateDate";
@@ -27,12 +28,13 @@ public class SessionManager {
         editor = pref.edit();
     }
 
-    public void createLoginSession(String name, String gender, int age, int departmentId, String id, String email, String mode, String updateDate) {
+    public void createLoginSession(String name, String gender, int age, int departmentId, String id, String password_key, String email, String mode, String updateDate) {
         editor.putString(KEY_NAME, name);
         editor.putString(KEY_GENDER, gender);
         editor.putInt(KEY_AGE, age);
         editor.putInt(KEY_DEPARTMENT_ID, departmentId);
         editor.putString(KEY_ID, id);
+        editor.putString(KEY_PASSWORD_KEY, password_key);
         editor.putString(KEY_EMAIL, email);
         editor.putString(KEY_MODE, mode);
         editor.putString(KEY_UPDATE_DATE, updateDate);
@@ -57,6 +59,10 @@ public class SessionManager {
 
     public String getId() {
         return pref.getString(KEY_ID, null);
+    }
+
+    public String getPasswordKey() {
+        return pref.getString(KEY_PASSWORD_KEY, null);
     }
 
     public String getEmail() {
