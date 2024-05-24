@@ -6,6 +6,27 @@
     android:orientation="vertical"
     android:background="@android:color/transparent">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <android.widget.Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/favorite"
+            android:layout_weight="1"
+            android:text="즐겨찾기 목록"/>
+
+        <android.widget.Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/search"
+            android:layout_weight="1"
+            android:text="검색 기록"/>
+
+    </LinearLayout>
+
     <ListView
         android:id="@+id/List"
         android:layout_width="wrap_content"
