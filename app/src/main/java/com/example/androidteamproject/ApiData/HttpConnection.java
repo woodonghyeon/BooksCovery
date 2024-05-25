@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -26,7 +27,11 @@ public class HttpConnection {
     private OkHttpClient client;
 
     private HttpConnection(Context context) {
-        client = new OkHttpClient();
+        client = new OkHttpClient.Builder()
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS)
+                .build();
         API_KEY = context.getString(R.string.api_key);
     }
 
@@ -395,7 +400,7 @@ public class HttpConnection {
         });
     } // end of hotTrend
 
-    public void getDetailBook(String url, final HttpResponseCallback<String> callback) {
+    public void getDetailBook(String url, final HttpResponseCallback<SearchBookDetail> callback) {
         Request request = new Request.Builder().url(url).build();
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -406,11 +411,39 @@ public class HttpConnection {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    String responseData = response.body().string();
-                    callback.onSuccess(responseData);
-                } else {
-                    callback.onFailure(new IOException("Unexpected code " + response));
+                try {
+                    if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+                    // JSON 응답을 파싱
+                    JSONObject responseBody = new JSONObject(response.body().string());
+                    JSONObject book = responseBody.getJSONObject("response").getJSONObject("book");
+
+                    // 주제분류명(class_nm)을 가져옴
+                    String class_nm = book.getString("class_nm");
+
+                    // 책 이름(bookname)을 가져옴
+                    String bookName = book.getString("bookname");
+
+                    // 책 이미지 URL(bookImageURL)을 가져옴
+                    String bookImageUrl = book.getString("bookImageURL");
+
+                    // 저자(authors)를 가져옴
+                    String authors = book.getString("authors");
+
+                    // ISBN13
+                    String isbn13 = book.getString("isbn13");
+
+                    // 설명(description)
+                    String description = book.getString("description");
+
+                    // 책 정보를 담은 SearchBook 객체 생성
+                    SearchBookDetail bookDetail = new SearchBookDetail(class_nm, bookName, authors, bookImageUrl, isbn13, description);
+
+                    // 콜백을 통해 성공적인 응답 처리 (BookDetail 객체 전달)
+                    callback.onSuccess(bookDetail);
+                } catch (JSONException e) {
+                    // JSON 파싱 중 예외가 발생한 경우 콜백을 통해 실패 처리
+                    callback.onFailure(e);
                 }
             }
         });
