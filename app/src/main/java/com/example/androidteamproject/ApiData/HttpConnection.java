@@ -433,39 +433,38 @@ public class HttpConnection {
 
                     // 대출 기록 정보 추출
                     JSONArray loanHistoryArray = responseBody.getJSONObject("response").getJSONArray("loanHistory");
-                    String month = null;
-                    String loanHistoryCnt = null;
-                    String ranking = null;
-                    if (loanHistoryArray.length() > 0) {
-                        JSONObject loan = loanHistoryArray.getJSONObject(0).getJSONObject("loan"); // 첫 번째 항목만 사용
-                        month = loan.getString("month");
-                        loanHistoryCnt = loan.getString("loanCnt");
-                        ranking = loan.getString("ranking");
+                    List<String> month = new ArrayList<>();
+                    List<String> loanHistoryCnt = new ArrayList<>();
+                    List<String> ranking = new ArrayList<>();
+                    for (int i = 0; i < loanHistoryArray.length(); i++) {
+                        JSONObject loan = loanHistoryArray.getJSONObject(i).getJSONObject("loan"); // 첫 번째 항목만 사용
+                        month.add(loan.getString("month"));
+                        loanHistoryCnt.add(loan.getString("loanCnt"));
+                        ranking.add(loan.getString("ranking"));
                     }
-
 
                     // 대출 그룹 정보 추출
                     JSONArray loanGrps = responseBody.getJSONObject("response").getJSONArray("loanGrps");
-                    String age = null;
-                    String gender = null;
-                    String loanGrpsCnt = null;
-                    String loanGrpsRanking = null;
-                    if (loanGrps.length() > 0) {
-                        JSONObject loanGrp = loanGrps.getJSONObject(0).getJSONObject("loanGrp");
-                        age = loanGrp.getString("age");
-                        gender = loanGrp.getString("gender");
-                        loanGrpsCnt = loanGrp.getString("loanCnt");
-                        loanGrpsRanking = loanGrp.getString("ranking");
+                    List<String> age = new ArrayList<>();
+                    List<String> gender = new ArrayList<>();
+                    List<String> loanGrpsCnt = new ArrayList<>();
+                    List<String> loanGrpsRanking = new ArrayList<>();
+                    for (int i = 0; i < loanGrps.length(); i++) {
+                        JSONObject loanGrp = loanGrps.getJSONObject(i).getJSONObject("loanGrp");
+                        age.add(loanGrp.getString("age"));
+                        gender.add(loanGrp.getString("gender"));
+                        loanGrpsCnt.add(loanGrp.getString("loanCnt"));
+                        loanGrpsRanking.add(loanGrp.getString("ranking"));
                     }
 
                     // 키워드 정보 추출
                     JSONArray keywords = responseBody.getJSONObject("response").getJSONArray("keywords");
-                    String word = null;
-                    String weight = null;
-                    if (keywords.length() > 0) {
-                        JSONObject keyword = keywords.getJSONObject(0).getJSONObject("keyword");
-                        word = keyword.getString("word");
-                        weight = keyword.getString("weight");
+                    List<String> word = new ArrayList<>();
+                    List<String> weight = new ArrayList<>();
+                    for (int i = 0; i < keywords.length(); i++) {
+                        JSONObject keyword = keywords.getJSONObject(i).getJSONObject("keyword");
+                        word.add(keyword.getString("word"));
+                        weight.add(keyword.getString("weight"));
                     }
 
                     // 책 정보를 담은 SearchBookDetail 객체 생성
