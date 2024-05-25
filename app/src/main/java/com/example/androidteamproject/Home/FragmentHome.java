@@ -164,14 +164,16 @@ public class FragmentHome extends Fragment {
                         List<String> bookName = new ArrayList<>();
                         List<String> authors = new ArrayList<>();
                         List<String> class_nm = new ArrayList<>();
+                        List<String> isbn13 = new ArrayList<>();
                         for (SearchBook book : books) {
                             imageUrls.add(book.getBookImageUrl());
                             bookName.add(book.getBookName());
                             authors.add(book.getAuthors());
                             class_nm.add(book.getClass_nm());
+                            isbn13.add(book.getIsbn13());
                         }
                         // ViewPager2에 이미지 추가
-                        setupWeekViewPager(class_nm, bookName, authors, imageUrls);
+                        setupWeekViewPager(class_nm, bookName, authors, imageUrls, isbn13);
                         Log.d("API Response(Week)", "Image URLs: " + imageUrls.toString() + ", BookName: " + bookName.toString());
                     });
                 }
@@ -190,7 +192,7 @@ public class FragmentHome extends Fragment {
     } // end of getResponseApiWeekLoanItems
 
     // 주간 인기 도서 ViewPager2 setup
-    private void setupWeekViewPager(List<String> class_nm, List<String> bookName, List<String> authors, List<String> imageUrls) {
+    private void setupWeekViewPager(List<String> class_nm, List<String> bookName, List<String> authors, List<String> imageUrls, List<String> isbn13) {
         if (imageUrls == null || imageUrls.isEmpty()) {
             // 이미지 URL이 없는 경우 처리
             return;
@@ -200,7 +202,7 @@ public class FragmentHome extends Fragment {
             return;
         }
         weekBookPager = getView().findViewById(R.id.week_book_viewpager);
-        weekBookAdapter = new WeekBookAdapter(requireActivity(), class_nm, bookName, authors, imageUrls);
+        weekBookAdapter = new WeekBookAdapter(requireActivity(), class_nm, bookName, authors, imageUrls, isbn13, this::showBookDetail);
         weekBookPager.setAdapter(weekBookAdapter);
         weekBookPager.setCurrentItem(1000);
         weekBookPager.setOffscreenPageLimit(10);
@@ -269,6 +271,12 @@ public class FragmentHome extends Fragment {
             }
         });
     } // end of setupWeekViewPager
+
+    // showBookDetail
+    private void showBookDetail(String isbn13, String bookName, String authors, String imageUrl) {
+        BookDetailBottomSheet detailBottomSheet = BookDetailBottomSheet.newInstance(isbn13, bookName, authors, imageUrl);
+        detailBottomSheet.show(getChildFragmentManager(), detailBottomSheet.getTag());
+    }
 
     // 최근 많이 검색된 도서 출력 (월간)
     private void getResponseApiMonthLoanItems() {

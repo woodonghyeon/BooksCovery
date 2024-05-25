@@ -308,9 +308,10 @@ public class HttpConnection {
 
                         // 저자(authors)를 가져옴
                         String authors = doc.getString("authors");
+                        String isbn13 = doc.getString("isbn13");
 
                         // 책 정보를 담은 SearchBook 객체 생성
-                        SearchBook book = new SearchBook(class_nm, bookName, authors, bookImageUrl);
+                        SearchBook book = new SearchBook(class_nm, bookName, authors, bookImageUrl, isbn13);
 
                         // 생성한 SearchBook 객체를 리스트에 추가
                         books.add(book);
@@ -375,9 +376,10 @@ public class HttpConnection {
 
                         // 저자(authors)를 가져옴
                         String authors = doc.getString("authors");
+                        String isbn13 = doc.getString("isbn13");
 
                         // 책 정보를 담은 SearchBook 객체 생성
-                        SearchBook book = new SearchBook(class_nm, bookName, authors, bookImageUrl);
+                        SearchBook book = new SearchBook(class_nm, bookName, authors, bookImageUrl, isbn13);
 
                         // 생성한 SearchBook 객체를 리스트에 추가
                         books.add(book);

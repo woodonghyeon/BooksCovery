@@ -5,15 +5,17 @@ public class SearchBook {
     private String bookImageUrl;
     private String authors;
     private String class_nm;
+    private String isbn13;
 
     public SearchBook() {
     }
 
-    public SearchBook(String class_nm, String bookName, String authors, String bookImageUrl) {
+    public SearchBook(String class_nm, String bookName, String authors, String bookImageUrl, String isbn13) {
         this.bookName = bookName;
         this.bookImageUrl = bookImageUrl;
         this.authors = authors;
         this.class_nm = class_nm;
+        this.isbn13 = isbn13;
     }
     public String getClass_nm() {
         return class_nm;
@@ -45,6 +47,14 @@ public class SearchBook {
 
     public void setAuthors(String authors) {
         this.authors = authors;
+    }
+
+    public String getIsbn13() {
+        return isbn13;
+    }
+
+    public void setIsbn13(String isbn13) {
+        this.isbn13 = isbn13;
     }
 }
 
