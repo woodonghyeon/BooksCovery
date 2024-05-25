@@ -17,6 +17,8 @@ import com.example.androidteamproject.R;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 public class FragmentBookDetail extends Fragment {
     private static final String ARG_ISBN13 = "isbn13";
     private static final String ARG_BOOKNAME = "bookName";
@@ -134,32 +136,53 @@ public class FragmentBookDetail extends Fragment {
                         System.out.println("Setting loanCnt: " + bookDetail.getLoanCnt());
                         loanCntTextView.setText(bookDetail.getLoanCnt());
 
-                        System.out.println("Setting month: " + bookDetail.getMonth());
-                        monthTextView.setText(bookDetail.getMonth());
+                        // 월별 대출 정보 출력
+                        List<String> month = bookDetail.getMonth();
+                        List<String> loanHistoryCnt = bookDetail.getLoanHistoryCnt();
+                        List<String> ranking = bookDetail.getRankings();
+                        StringBuilder monthBuilder = new StringBuilder();
+                        StringBuilder loanHistoryCntBuilder = new StringBuilder();
+                        StringBuilder rankingBuilder = new StringBuilder();
+                        for (int i = 0; i < month.size(); i++) {
+                            monthBuilder.append(month.get(i)).append("\n");
+                            loanHistoryCntBuilder.append(loanHistoryCnt.get(i)).append("\n");
+                            rankingBuilder.append(ranking.get(i)).append("\n");
+                        }
+                        monthTextView.setText(monthBuilder.toString());
+                        loanHistoryCntTextView.setText(loanHistoryCntBuilder.toString());
+                        rankingTextView.setText(rankingBuilder.toString());
 
-                        System.out.println("Setting loanHistoryCnt: " + bookDetail.getLoanHistoryCnt());
-                        loanHistoryCntTextView.setText(bookDetail.getLoanHistoryCnt());
+                        // 대출 그룹 정보 출력
+                        List<String> age = bookDetail.getAge();
+                        List<String> gender = bookDetail.getGender();
+                        List<String> loanGrpsCnt = bookDetail.getLoanGrpsCnt();
+                        List<String> loanGrpsRanking = bookDetail.getLoanGrpsRanking();
+                        StringBuilder ageBuilder = new StringBuilder();
+                        StringBuilder genderBuilder = new StringBuilder();
+                        StringBuilder loanGrpsCntBuilder = new StringBuilder();
+                        StringBuilder loanGrpsRankingBuilder = new StringBuilder();
+                        for (int i = 0; i < age.size(); i++) {
+                            ageBuilder.append(age.get(i)).append("\n");
+                            genderBuilder.append(gender.get(i)).append("\n");
+                            loanGrpsCntBuilder.append(loanGrpsCnt.get(i)).append("\n");
+                            loanGrpsRankingBuilder.append(loanGrpsRanking.get(i)).append("\n");
+                        }
+                        ageTextView.setText(ageBuilder.toString());
+                        genderTextView.setText(genderBuilder.toString());
+                        loanGrpsCntTextView.setText(loanGrpsCntBuilder.toString());
+                        loanGrpsRankingTextView.setText(loanGrpsRankingBuilder.toString());
 
-                        System.out.println("Setting ranking: " + bookDetail.getRanking());
-                        rankingTextView.setText(bookDetail.getRanking());
-
-                        System.out.println("Setting age: " + bookDetail.getAge());
-                        ageTextView.setText(bookDetail.getAge());
-
-                        System.out.println("Setting gender: " + bookDetail.getGender());
-                        genderTextView.setText(bookDetail.getGender());
-
-                        System.out.println("Setting loanGrpsCnt: " + bookDetail.getLoanGrpsCnt());
-                        loanGrpsCntTextView.setText(bookDetail.getLoanGrpsCnt());
-
-                        System.out.println("Setting loanGrpsRanking: " + bookDetail.getLoanGrpsRanking());
-                        loanGrpsRankingTextView.setText(bookDetail.getLoanGrpsRanking());
-
-                        System.out.println("Setting word: " + bookDetail.getWord());
-                        wordTextView.setText(bookDetail.getWord());
-
-                        System.out.println("Setting weight: " + bookDetail.getWeight());
-                        weightTextView.setText(bookDetail.getWeight());
+                        // 키워드 정보 출력
+                        List<String> word = bookDetail.getWord();
+                        List<String> weight = bookDetail.getWeight();
+                        StringBuilder wordBuilder = new StringBuilder();
+                        StringBuilder weightBuilder = new StringBuilder();
+                        for (int i = 0; i < word.size(); i++) {
+                            wordBuilder.append(word.get(i)).append("\n");
+                            weightBuilder.append(weight.get(i)).append("\n");
+                        }
+                        wordTextView.setText(wordBuilder.toString());
+                        weightTextView.setText(weightBuilder.toString());
 
                         // 수정: 추가된 이미지 로딩 로직
                         if (bookDetail.getBookImageUrl() != null && !bookDetail.getBookImageUrl().isEmpty()) {
