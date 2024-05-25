@@ -220,7 +220,7 @@ public class HttpConnection {
                         JSONObject doc = docs.getJSONObject(i).getJSONObject("doc");
                         
                         // isbn13자리를 가져옴
-                        String isbn = doc.getString("isbn13");
+                        String isbn13 = doc.getString("isbn13");
 
                         // 책 이름(bookname)을 가져옴
                         String bookName = doc.getString("bookname");
@@ -238,7 +238,7 @@ public class HttpConnection {
                         String publication_year = doc.getString("publication_year");
 
                         // 책 정보를 담은 SearchBookTitle 객체 생성
-                        SearchBookTitle book = new SearchBookTitle(isbn ,bookName, authors, bookImageUrl, publisher, publication_year);
+                        SearchBookTitle book = new SearchBookTitle(isbn13 ,bookName, authors, bookImageUrl, publisher, publication_year);
 
                         // 생성한 SearchBookTitle 객체를 리스트에 추가
                         books.add(book);

@@ -1,18 +1,15 @@
 package com.example.androidteamproject.ApiData;
 
-import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+import java.io.Serializable;
 
-import android.util.Log;
-
-public class SearchBookTitle {
-    private String isbn, bookName, bookImageUrl, authors, publisher, publication_year;
+public class SearchBookTitle implements Serializable {
+    private String isbn13, bookName, bookImageUrl, authors, publisher, publication_year;
 
     public SearchBookTitle() {
     }
 
-    public SearchBookTitle(String isbn, String bookName, String authors, String bookImageUrl, String publisher, String publication_year) {
-        this.isbn = isbn;
-        Log.d(TAG, "ISBN: " + isbn); // 테스트 중 나중에 지우면 됨
+    public SearchBookTitle(String isbn13, String bookName, String authors, String bookImageUrl, String publisher, String publication_year) {
+        this.isbn13 = isbn13;
         this.bookName = bookName;
         this.bookImageUrl = bookImageUrl;
         this.authors = authors;
@@ -20,9 +17,9 @@ public class SearchBookTitle {
         this.publication_year = publication_year;
     }
 
-    public String getIsbn() { return isbn; }
-    public void setIsbn(String isbn) {
-        this.isbn = isbn;
+    public String getIsbn() { return isbn13; }
+    public void setIsbn(String isbn13) {
+        this.isbn13 = isbn13;
     }
     public String getBookName() {
         return bookName;
@@ -53,4 +50,3 @@ public class SearchBookTitle {
     }
     public void setPublication_year(String publication_year) { this.publication_year = publication_year; }
 }
-
