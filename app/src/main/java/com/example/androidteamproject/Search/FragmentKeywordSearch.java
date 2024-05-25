@@ -23,7 +23,7 @@ public class FragmentKeywordSearch extends Fragment {
     private String mParam2;
     private TextView tv_booksearch;
     private ListView listView;
-    private BookListAdapter adapter;
+    private BookListKeywordAdapter adapter;
     private List<SearchBookKeyword> bookList;
 
     public FragmentKeywordSearch() {
@@ -61,7 +61,7 @@ public class FragmentKeywordSearch extends Fragment {
 
         // 리스트뷰를 위한 어댑터 설정
         bookList = new ArrayList<>();
-        adapter = new BookListAdapter(getContext(), bookList);
+        adapter = new BookListKeywordAdapter(getContext(), bookList);
         listView.setAdapter(adapter);
 
         // API 데이터 가져오기

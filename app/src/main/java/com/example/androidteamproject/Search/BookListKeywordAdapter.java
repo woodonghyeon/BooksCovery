@@ -14,11 +14,11 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class BookListAdapter extends BaseAdapter {
+public class BookListKeywordAdapter extends BaseAdapter {
     private Context context;
     private List<SearchBookKeyword> books;
 
-    public BookListAdapter(Context context, List<SearchBookKeyword> books) {
+    public BookListKeywordAdapter(Context context, List<SearchBookKeyword> books) {
         this.context = context;
         this.books = books;
     }
