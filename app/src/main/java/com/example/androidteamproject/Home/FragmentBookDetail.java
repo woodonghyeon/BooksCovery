@@ -184,9 +184,8 @@ public class FragmentBookDetail extends Fragment {
                         wordTextView.setText(wordBuilder.toString());
                         weightTextView.setText(weightBuilder.toString());
 
-                        // 수정: 추가된 이미지 로딩 로직
-                        if (bookDetail.getBookImageUrl() != null && !bookDetail.getBookImageUrl().isEmpty()) {
-                            Picasso.get().load(bookDetail.getBookImageUrl()).into(bookImageView, new Callback() {
+                        if (imageUrl != null && !imageUrl.isEmpty()) {
+                            Picasso.get().load(imageUrl).placeholder(R.drawable.ic_warring).error(R.drawable.ic_error).into(bookImageView, new Callback() {
                                 @Override
                                 public void onSuccess() {
                                     System.out.println("Picasso: Image loaded successfully.");
@@ -197,6 +196,8 @@ public class FragmentBookDetail extends Fragment {
                                     System.err.println("Picasso: Failed to load image. " + e.getMessage());
                                 }
                             });
+                        } else {
+                            bookImageView.setImageResource(R.drawable.ic_error);
                         }
                     });
                 }
