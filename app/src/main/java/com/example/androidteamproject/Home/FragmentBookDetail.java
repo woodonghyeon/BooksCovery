@@ -60,6 +60,20 @@ public class FragmentBookDetail extends Fragment {
         TextView bookNameTextView = view.findViewById(R.id.tv_detail_book_name);
         TextView authorsTextView = view.findViewById(R.id.tv_detail_authors);
         TextView descriptionTextView = view.findViewById(R.id.tv_detail_description);
+        TextView publisherTextView = view.findViewById(R.id.tv_detail_publisher);
+        TextView publicationYearTextView = view.findViewById(R.id.tv_detail_publication_year);
+        TextView classNoTextView = view.findViewById(R.id.tv_detail_class_no);
+        TextView classNmTextView = view.findViewById(R.id.tv_detail_class_nm);
+        TextView loanCntTextView = view.findViewById(R.id.tv_detail_loan_cnt);
+        TextView monthTextView = view.findViewById(R.id.tv_detail_month);
+        TextView loanHistoryCntTextView = view.findViewById(R.id.tv_detail_loan_history_cnt);
+        TextView rankingTextView = view.findViewById(R.id.tv_detail_ranking);
+        TextView ageTextView = view.findViewById(R.id.tv_detail_age);
+        TextView genderTextView = view.findViewById(R.id.tv_detail_gender);
+        TextView loanGrpsCntTextView = view.findViewById(R.id.tv_detail_loan_grps_cnt);
+        TextView loanGrpsRankingTextView = view.findViewById(R.id.tv_detail_loan_grps_ranking);
+        TextView wordTextView = view.findViewById(R.id.tv_detail_word);
+        TextView weightTextView = view.findViewById(R.id.tv_detail_weight);
 
         // 로깅 추가
         System.out.println("FragmentBookDetail onCreateView: " + bookName + ", " + authors + ", " + imageUrl);
@@ -75,15 +89,16 @@ public class FragmentBookDetail extends Fragment {
                 System.err.println("Picasso: Failed to load image. " + e.getMessage());
             }
         });
+
         bookNameTextView.setText(bookName);
         authorsTextView.setText(authors);
 
-        fetchBookDetail(isbn13, bookNameTextView, authorsTextView, descriptionTextView, bookImageView);
+        fetchBookDetail(isbn13, bookNameTextView, authorsTextView, descriptionTextView, bookImageView, publisherTextView, publicationYearTextView, classNoTextView, classNmTextView, loanCntTextView, monthTextView, loanHistoryCntTextView, rankingTextView, ageTextView, genderTextView, loanGrpsCntTextView, loanGrpsRankingTextView, wordTextView, weightTextView);
 
         return view;
     }
 
-    private void fetchBookDetail(String isbn13, TextView bookNameTextView, TextView authorsTextView, TextView descriptionTextView, ImageView bookImageView) {
+    private void fetchBookDetail(String isbn13, TextView bookNameTextView, TextView authorsTextView, TextView descriptionTextView, ImageView bookImageView, TextView publisherTextView, TextView publicationYearTextView, TextView classNoTextView, TextView classNmTextView, TextView loanCntTextView, TextView monthTextView, TextView loanHistoryCntTextView, TextView rankingTextView, TextView ageTextView, TextView genderTextView, TextView loanGrpsCntTextView, TextView loanGrpsRankingTextView, TextView wordTextView, TextView weightTextView) {
         String url = "http://data4library.kr/api/usageAnalysisList?authKey=" + API_KEY + "&isbn13=" + isbn13 + "&format=json";
 
         HttpConnection.getInstance(getContext()).getDetailBook(url, new HttpConnection.HttpResponseCallback<SearchBookDetail>() {
@@ -97,17 +112,35 @@ public class FragmentBookDetail extends Fragment {
                         bookNameTextView.setText(bookDetail.getBookName());
                         authorsTextView.setText(bookDetail.getAuthors());
                         descriptionTextView.setText(bookDetail.getDescription());
-                        Picasso.get().load(bookDetail.getBookImageUrl()).into(bookImageView, new Callback() {
-                            @Override
-                            public void onSuccess() {
-                                System.out.println("Picasso: Image loaded successfully.");
-                            }
+                        publisherTextView.setText(bookDetail.getPublisher());
+                        publicationYearTextView.setText(bookDetail.getPublication_year());
+                        classNoTextView.setText(bookDetail.getClass_no());
+                        classNmTextView.setText(bookDetail.getClass_nm());
+                        loanCntTextView.setText(bookDetail.getLoanCnt());
+                        monthTextView.setText(bookDetail.getMonth());
+                        loanHistoryCntTextView.setText(bookDetail.getLoanHistoryCnt());
+                        rankingTextView.setText(bookDetail.getRanking());
+                        ageTextView.setText(bookDetail.getAge());
+                        genderTextView.setText(bookDetail.getGender());
+                        loanGrpsCntTextView.setText(bookDetail.getLoanGrpsCnt());
+                        loanGrpsRankingTextView.setText(bookDetail.getLoanGrpsRanking());
+                        wordTextView.setText(bookDetail.getWord());
+                        weightTextView.setText(bookDetail.getWeight());
 
-                            @Override
-                            public void onError(Exception e) {
-                                System.err.println("Picasso: Failed to load image. " + e.getMessage());
-                            }
-                        });
+                        // 수정: 추가된 이미지 로딩 로직
+                        if (bookDetail.getBookImageUrl() != null && !bookDetail.getBookImageUrl().isEmpty()) {
+                            Picasso.get().load(bookDetail.getBookImageUrl()).into(bookImageView, new Callback() {
+                                @Override
+                                public void onSuccess() {
+                                    System.out.println("Picasso: Image loaded successfully.");
+                                }
+
+                                @Override
+                                public void onError(Exception e) {
+                                    System.err.println("Picasso: Failed to load image. " + e.getMessage());
+                                }
+                            });
+                        }
                     });
                 }
             }
@@ -117,7 +150,7 @@ public class FragmentBookDetail extends Fragment {
                 e.printStackTrace();
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
-                        descriptionTextView.setText("도서 상세 정보를 불러오지 못했습니다.");
+                        descriptionTextView.setText("도서 상세 정보를 불러오지 못했습니다. 오류: " + e.getMessage());
                     });
                 }
             }
