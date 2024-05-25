@@ -14,6 +14,7 @@ import android.os.Handler;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -274,8 +275,10 @@ public class FragmentHome extends Fragment {
 
     // showBookDetail
     private void showBookDetail(String isbn13, String bookName, String authors, String imageUrl) {
-        BookDetailBottomSheet detailBottomSheet = BookDetailBottomSheet.newInstance(isbn13, bookName, authors, imageUrl);
-        detailBottomSheet.show(getChildFragmentManager(), detailBottomSheet.getTag());
+        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_detail_book, FragmentBookDetail.newInstance(isbn13, bookName, authors, imageUrl));
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     // 최근 많이 검색된 도서 출력 (월간)
