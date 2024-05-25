@@ -129,49 +129,49 @@ public class FragmentSearch extends Fragment {
         getResponseApiLoanItems();
     }
 
-//    // 키워드 검색 API 호출 메서드
-//    private void getResponseApiKeyword() {
-//        HttpConnection.getInstance(getContext()).getKeyword("json", new HttpConnection.HttpResponseCallback() {
-//            @Override
-//            public void onSuccess(Object responseData) {
-//                if (getActivity() != null) {
-//                    getActivity().runOnUiThread(() -> {
-//                        try {
-//                            JSONObject json = new JSONObject(responseData.toString());
-//                            JSONObject responseObject = json.getJSONObject("response");
-//                            JSONArray keywordsArray = responseObject.getJSONArray("keywords");
-//                            keywords = new ArrayList<>();
-//
-//                            // API 응답에서 키워드를 추출하여 리스트에 추가
-//                            for (int i = 0; i < keywordsArray.length(); i++) {
-//                                JSONObject keywordObject = keywordsArray.getJSONObject(i);
-//                                JSONObject keyword = keywordObject.getJSONObject("keyword");
-//                                String word = keyword.getString("word");
-//                                keywords.add(word);
-//                            }
-//
-//                            // 추출한 키워드를 SharedPreferences에 저장
-//                            saveKeywordsToSharedPreferences(keywords);
-//
-//                            // 키워드를 사용하여 칩 추가
-//                            addChips();
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//                    });
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Exception e) {
-//                if (getActivity() != null) {
-//                    getActivity().runOnUiThread(() -> {
-//                        // 에러 처리 로직 추가
-//                    });
-//                }
-//            }
-//        });
-//    }
+    // 키워드 검색 API 호출 메서드
+    private void getResponseApiKeyword() {
+        HttpConnection.getInstance(getContext()).getKeyword("json", new HttpConnection.HttpResponseCallback() {
+            @Override
+            public void onSuccess(Object responseData) {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        try {
+                            JSONObject json = new JSONObject(responseData.toString());
+                            JSONObject responseObject = json.getJSONObject("response");
+                            JSONArray keywordsArray = responseObject.getJSONArray("keywords");
+                            keywords = new ArrayList<>();
+
+                            // API 응답에서 키워드를 추출하여 리스트에 추가
+                            for (int i = 0; i < keywordsArray.length(); i++) {
+                                JSONObject keywordObject = keywordsArray.getJSONObject(i);
+                                JSONObject keyword = keywordObject.getJSONObject("keyword");
+                                String word = keyword.getString("word");
+                                keywords.add(word);
+                            }
+
+                            // 추출한 키워드를 SharedPreferences에 저장
+                            saveKeywordsToSharedPreferences(keywords);
+
+                            // 키워드를 사용하여 칩 추가
+                            addChips();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        // 에러 처리 로직 추가
+                    });
+                }
+            }
+        });
+    }
 
     // 키워드를 사용하여 칩을 추가하는 메서드
     private void addChips() {
@@ -329,7 +329,6 @@ public class FragmentSearch extends Fragment {
                 keywords.add(keyword);
             }
         }
-
         return keywords;
     }
 
