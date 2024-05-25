@@ -141,7 +141,7 @@ public class FragmentHome extends Fragment {
         });
     }
 
-//     최근 많이 검색된 도서 출력 (주간)
+    //     최근 많이 검색된 도서 출력 (주간)
     private void getResponseApiWeekLoanItems() {
         String getTime = mFormat.format(mDate); // 현재 날짜 가져오기
         Calendar calendar = Calendar.getInstance(); // 1주일 전 날짜 가져오기
