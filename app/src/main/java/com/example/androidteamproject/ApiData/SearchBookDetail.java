@@ -1,11 +1,15 @@
 package com.example.androidteamproject.ApiData;
 
+import java.util.List;
+
 public class SearchBookDetail {
-    private String bookName, authors, publisher, bookImageUrl, description, publication_year, isbn13, vol, class_no, class_nm, loanCnt,
-            month, loanHistoryCnt, ranking, age, gender, loanGrpsCnt, loanGrpsRanking, word, weight;
+    private String bookName, authors, publisher, bookImageUrl, description, publication_year, isbn13, vol, class_no, class_nm, loanCnt;
+    private List<String> month, loanHistoryCnt, ranking;
+    private List<String> age, gender, loanGrpsCnt, loanGrpsRanking;
+    private List<String> word, weight;
 
     public SearchBookDetail(String bookName, String authors, String publisher, String bookImageUrl, String description, String publication_year, String isbn13, String vol, String class_no, String class_nm, String loanCnt,
-                            String month, String loanHistoryCnt, String ranking, String age, String gender, String loanGrpsCnt, String loanGrpsRanking, String word, String weight) {
+                            List<String> month, List<String> loanHistoryCnt, List<String> ranking, List<String> age, List<String> gender, List<String> loanGrpsCnt, List<String> loanGrpsRanking, List<String> word, List<String> weight) {
         this.bookName = bookName;
         this.authors = authors;
         this.publisher = publisher;
@@ -117,75 +121,58 @@ public class SearchBookDetail {
         this.loanCnt = loanCnt;
     }
 
-    public String getMonth() {
+    public List<String> getMonth() {
         return month;
     }
-
-    public void setMonth(String month) {
+    public void setMonths(List<String> month) {
         this.month = month;
     }
-
-    public String getLoanHistoryCnt() {
+    public List<String> getLoanHistoryCnt() {
         return loanHistoryCnt;
     }
-
-    public void setLoanHistoryCnt(String loanHistoryCnt) {
+    public void setLoanHistoryCnt(List<String> loanHistoryCnt) {
         this.loanHistoryCnt = loanHistoryCnt;
     }
-
-    public String getRanking() {
+    public List<String> getRankings() {
         return ranking;
     }
-
-    public void setRanking(String ranking) {
+    public void setRanking(List<String> ranking) {
         this.ranking = ranking;
     }
-
-    public String getAge() {
+    public List<String> getAge() {
         return age;
     }
-
-    public void setAge(String age) {
+    public void setAge(List<String> age) {
         this.age = age;
     }
-
-    public String getGender() {
+    public List<String> getGender() {
         return gender;
     }
-
-    public void setGender(String gender) {
+    public void setGender(List<String> gender) {
         this.gender = gender;
     }
-
-    public String getLoanGrpsCnt() {
+    public List<String> getLoanGrpsCnt() {
         return loanGrpsCnt;
     }
-
-    public void setLoanGrpsCnt(String loanGrpsCnt) {
+    public void setLoanGrpsCnt(List<String> loanGrpsCnt) {
         this.loanGrpsCnt = loanGrpsCnt;
     }
-
-    public String getLoanGrpsRanking() {
+    public List<String> getLoanGrpsRanking() {
         return loanGrpsRanking;
     }
-
-    public void setLoanGrpsRanking(String loanGrpsRanking) {
+    public void setLoanGrpsRanking(List<String> loanGrpsRanking) {
         this.loanGrpsRanking = loanGrpsRanking;
     }
-
-    public String getWord() {
+    public List<String> getWord() {
         return word;
     }
-
-    public void setWord(String word) {
+    public void setWord(List<String> word) {
         this.word = word;
     }
-
-    public String getWeight() {
+    public List<String> getWeight() {
         return weight;
     }
-
-    public void setWeight(String weight) {
+    public void setWeight(List<String> weight) {
         this.weight = weight;
     }
 
