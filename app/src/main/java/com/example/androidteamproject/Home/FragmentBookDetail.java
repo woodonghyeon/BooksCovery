@@ -80,17 +80,21 @@ public class FragmentBookDetail extends Fragment {
         // 로깅 추가
         System.out.println("FragmentBookDetail onCreateView: " + bookName + ", " + authors + ", " + imageUrl);
 
-        Picasso.get().load(imageUrl).into(bookImageView, new Callback() {
-            @Override
-            public void onSuccess() {
-                System.out.println("Picasso: Image loaded successfully.");
-            }
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            Picasso.get().load(imageUrl).placeholder(R.drawable.ic_warring).error(R.drawable.ic_error).into(bookImageView, new Callback() {
+                @Override
+                public void onSuccess() {
+                    System.out.println("Picasso: Image loaded successfully.");
+                }
 
-            @Override
-            public void onError(Exception e) {
-                System.err.println("Picasso: Failed to load image. " + e.getMessage());
-            }
-        });
+                @Override
+                public void onError(Exception e) {
+                    System.err.println("Picasso: Failed to load image. " + e.getMessage());
+                }
+            });
+        } else {
+            bookImageView.setImageResource(R.drawable.ic_error);
+        }
 
         bookNameTextView.setText(bookName);
         authorsTextView.setText(authors);
