@@ -1,14 +1,9 @@
 package com.example.androidteamproject.ApiData;
 
 public class SearchBookDetail {
-    private String class_nm;
-    private String bookName;
-    private String authors;
-    private String bookImageUrl;
-    private String isbn13;
-    private String description;
+    private String bookName, authors, publisher, bookImageUrl, description, publication_year, isbn13, vol, class_no, class_nm, loanCnt;
 
-    public SearchBookDetail(String class_nm, String bookName, String authors, String bookImageUrl, String isbn13, String description) {
+    public SearchBookDetail(String bookName, String authors, String publisher, String bookImageUrl, String description, String publication_year, String isbn13, String vol, String class_no, String class_nm, String loanCnt) {
         this.class_nm = class_nm;
         this.bookName = bookName;
         this.authors = authors;
@@ -67,7 +62,7 @@ public class SearchBookDetail {
     }
 
     @Override
-    public String toString() {
+    public String toString() { // 로그 후에 삭제
         return "SearchBookDetail{" +
                 "class_nm='" + class_nm + '\'' +
                 ", bookName='" + bookName + '\'' +
