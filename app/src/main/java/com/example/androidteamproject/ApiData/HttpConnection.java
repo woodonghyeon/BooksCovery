@@ -433,24 +433,21 @@ public class HttpConnection {
 
                     // 대출 기록 정보 추출
                     JSONObject loanHistory = responseBody.getJSONObject("response").getJSONObject("loanHistory");
-                    JSONObject loan = loanHistory.getJSONObject("loan");
-                    String month = loan.getString("month");
-                    String loanHistoryCnt = loan.getString("loanCnt");
-                    String ranking = loan.getString("ranking");
+                    String month = loanHistory.getString("month");
+                    String loanHistoryCnt = loanHistory.getString("loanCnt");
+                    String ranking = loanHistory.getString("ranking");
 
                     // 대출 그룹 정보 추출
                     JSONObject loanGrps = responseBody.getJSONObject("response").getJSONObject("loanGrps");
-                    JSONObject loanGrp = loanGrps.getJSONObject("loanGrp");
-                    String age = loanGrp.getString("age");
-                    String gender = loanGrp.getString("gender");
-                    String loanGrpsCnt = loanGrp.getString("loanCnt");
-                    String loanGrpsRanking = loanGrp.getString("ranking");
+                    String age = loanGrps.getString("age");
+                    String gender = loanGrps.getString("gender");
+                    String loanGrpsCnt = loanGrps.getString("loanCnt");
+                    String loanGrpsRanking = loanGrps.getString("ranking");
 
                     // 키워드 정보 추출
                     JSONObject keywords = responseBody.getJSONObject("response").getJSONObject("keywords");
-                    JSONObject keyword = keywords.getJSONObject("keyword");
-                    String word = keyword.getString("word");
-                    String weight = keyword.getString("weight");
+                    String word = keywords.getString("word");
+                    String weight = keywords.getString("weight");
 
                     // 책 정보를 담은 SearchBookDetail 객체 생성
                     SearchBookDetail bookDetail = new SearchBookDetail(
