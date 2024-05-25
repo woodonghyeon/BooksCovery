@@ -119,58 +119,58 @@ public class FragmentSearch extends Fragment {
 
         // 키워드가 비어있거나 시간이 지난 경우 API 호출
         if (keywords.isEmpty() || timeCheck()) {
-            getResponseApiKeyword();
+//            getResponseApiKeyword();
         } else {
             // SharedPreferences에서 불러온 키워드를 사용하여 칩 추가
             addChips();
         }
         // 최근 많이 대출된 도서 이미지 출력
-        getResponseApiLoanItems();
+//        getResponseApiLoanItems();
     }
 
-    // 키워드 검색 API 호출 메서드
-    private void getResponseApiKeyword() {
-        HttpConnection.getInstance(getContext()).getKeyword("json", new HttpConnection.HttpResponseCallback() {
-            @Override
-            public void onSuccess(Object responseData) {
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> {
-                        try {
-                            JSONObject json = new JSONObject(responseData.toString());
-                            JSONObject responseObject = json.getJSONObject("response");
-                            JSONArray keywordsArray = responseObject.getJSONArray("keywords");
-                            keywords = new ArrayList<>();
-
-                            // API 응답에서 키워드를 추출하여 리스트에 추가
-                            for (int i = 0; i < keywordsArray.length(); i++) {
-                                JSONObject keywordObject = keywordsArray.getJSONObject(i);
-                                JSONObject keyword = keywordObject.getJSONObject("keyword");
-                                String word = keyword.getString("word");
-                                keywords.add(word);
-                            }
-
-                            // 추출한 키워드를 SharedPreferences에 저장
-                            saveKeywordsToSharedPreferences(keywords);
-
-                            // 키워드를 사용하여 칩 추가
-                            addChips();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> {
-                        // 에러 처리 로직 추가
-                    });
-                }
-            }
-        });
-    }
+//    // 키워드 검색 API 호출 메서드
+//    private void getResponseApiKeyword() {
+//        HttpConnection.getInstance(getContext()).getKeyword("json", new HttpConnection.HttpResponseCallback() {
+//            @Override
+//            public void onSuccess(Object responseData) {
+//                if (getActivity() != null) {
+//                    getActivity().runOnUiThread(() -> {
+//                        try {
+//                            JSONObject json = new JSONObject(responseData.toString());
+//                            JSONObject responseObject = json.getJSONObject("response");
+//                            JSONArray keywordsArray = responseObject.getJSONArray("keywords");
+//                            keywords = new ArrayList<>();
+//
+//                            // API 응답에서 키워드를 추출하여 리스트에 추가
+//                            for (int i = 0; i < keywordsArray.length(); i++) {
+//                                JSONObject keywordObject = keywordsArray.getJSONObject(i);
+//                                JSONObject keyword = keywordObject.getJSONObject("keyword");
+//                                String word = keyword.getString("word");
+//                                keywords.add(word);
+//                            }
+//
+//                            // 추출한 키워드를 SharedPreferences에 저장
+//                            saveKeywordsToSharedPreferences(keywords);
+//
+//                            // 키워드를 사용하여 칩 추가
+//                            addChips();
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//                    });
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Exception e) {
+//                if (getActivity() != null) {
+//                    getActivity().runOnUiThread(() -> {
+//                        // 에러 처리 로직 추가
+//                    });
+//                }
+//            }
+//        });
+//    }
 
     // 키워드를 사용하여 칩을 추가하는 메서드
     private void addChips() {
@@ -215,42 +215,42 @@ public class FragmentSearch extends Fragment {
     }
 
     // 최근 많이 대출된 도서 이미지 출력
-    private void getResponseApiLoanItems() {
-        String startDt = "2023-01-01";
-        String endDt = "2024-05-01";
-        String from_age = "20";
-        String to_age = "40";
-        int pageNo = 1;
-        int pageSize = 10;
-        String format = "json";
-
-        HttpConnection.getInstance(getContext()).getLoanItems(startDt, endDt, from_age, to_age, pageNo, pageSize, format, new HttpConnection.HttpResponseCallback<List<SearchBook>>() {
-            @Override
-            public void onSuccess(List<SearchBook> books) {
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> {
-                        List<String> imageUrls = new ArrayList<>();
-                        List<String> bookName = new ArrayList<>();
-                        for (SearchBook book : books) {
-                            imageUrls.add(book.getBookImageUrl());
-                            bookName.add(book.getBookName());
-                        }
-                        setupViewPager(bookName, imageUrls);
-                        Log.d("API Response", "Image URLs: " + imageUrls.toString() + ", BookName: " + bookName.toString());
-                    });
-                }
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> {
-                        Log.e("API Failure", "Error: " + e.getMessage());
-                    });
-                }
-            }
-        });
-    }
+//    private void getResponseApiLoanItems() {
+//        String startDt = "2023-01-01";
+//        String endDt = "2024-05-01";
+//        String from_age = "20";
+//        String to_age = "40";
+//        int pageNo = 1;
+//        int pageSize = 10;
+//        String format = "json";
+//
+//        HttpConnection.getInstance(getContext()).getLoanItems(startDt, endDt, from_age, to_age, pageNo, pageSize, format, new HttpConnection.HttpResponseCallback<List<SearchBook>>() {
+//            @Override
+//            public void onSuccess(List<SearchBook> books) {
+//                if (getActivity() != null) {
+//                    getActivity().runOnUiThread(() -> {
+//                        List<String> imageUrls = new ArrayList<>();
+//                        List<String> bookName = new ArrayList<>();
+//                        for (SearchBook book : books) {
+//                            imageUrls.add(book.getBookImageUrl());
+//                            bookName.add(book.getBookName());
+//                        }
+//                        setupViewPager(bookName, imageUrls);
+//                        Log.d("API Response", "Image URLs: " + imageUrls.toString() + ", BookName: " + bookName.toString());
+//                    });
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Exception e) {
+//                if (getActivity() != null) {
+//                    getActivity().runOnUiThread(() -> {
+//                        Log.e("API Failure", "Error: " + e.getMessage());
+//                    });
+//                }
+//            }
+//        });
+//    }
 
     // ViewPager2 설정 메서드
     private void setupViewPager(List<String> bookName, List<String> imageUrls) {
