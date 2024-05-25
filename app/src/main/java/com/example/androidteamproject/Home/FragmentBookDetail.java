@@ -12,11 +12,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.androidteamproject.ApiData.HttpConnection;
+import com.example.androidteamproject.ApiData.SearchBookDetail;
 import com.example.androidteamproject.R;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class FragmentBookDetail extends Fragment {
     private static final String ARG_ISBN13 = "isbn13";
@@ -62,53 +61,65 @@ public class FragmentBookDetail extends Fragment {
         TextView authorsTextView = view.findViewById(R.id.tv_detail_authors);
         TextView descriptionTextView = view.findViewById(R.id.tv_detail_description);
 
-        Picasso.get().load(imageUrl).into(bookImageView);
+        // 로깅 추가
+        System.out.println("FragmentBookDetail onCreateView: " + bookName + ", " + authors + ", " + imageUrl);
+
+        Picasso.get().load(imageUrl).into(bookImageView, new Callback() {
+            @Override
+            public void onSuccess() {
+                System.out.println("Picasso: Image loaded successfully.");
+            }
+
+            @Override
+            public void onError(Exception e) {
+                System.err.println("Picasso: Failed to load image. " + e.getMessage());
+            }
+        });
         bookNameTextView.setText(bookName);
         authorsTextView.setText(authors);
 
-        fetchBookDetail(isbn13, descriptionTextView);
+        fetchBookDetail(isbn13, bookNameTextView, authorsTextView, descriptionTextView, bookImageView);
 
         return view;
     }
 
-    private void fetchBookDetail(String isbn13, TextView descriptionTextView) {
+    private void fetchBookDetail(String isbn13, TextView bookNameTextView, TextView authorsTextView, TextView descriptionTextView, ImageView bookImageView) {
         String url = "http://data4library.kr/api/usageAnalysisList?authKey=" + API_KEY + "&isbn13=" + isbn13 + "&format=json";
 
-        HttpConnection.getInstance(getContext()).getDetailBook(url, new HttpConnection.HttpResponseCallback<String>() {
+        HttpConnection.getInstance(getContext()).getDetailBook(url, new HttpConnection.HttpResponseCallback<SearchBookDetail>() {
             @Override
-            public void onSuccess(String responseData) {
-                // 백그라운드 스레드에서 메인 스레드로 UI 업데이트
-                getActivity().runOnUiThread(() -> {
-                    try {
-                        // 응답 데이터 로그로 출력
-                        System.out.println("Response Data: " + responseData);
-                        JSONObject jsonObject = new JSONObject(responseData);
-
-                        if (jsonObject.has("response")) {
-                            JSONObject responseObject = jsonObject.getJSONObject("response");
-                            if (responseObject.has("book")) {
-                                JSONObject bookObject = responseObject.getJSONObject("book");
-                                String description = bookObject.getString("description");
-                                descriptionTextView.setText(description);
-                            } else {
-                                descriptionTextView.setText("도서 상세 정보를 불러오지 못했습니다.");
+            public void onSuccess(SearchBookDetail bookDetail) {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        // 로그 추가하여 데이터 확인
+                        System.out.println("Book Detail: " + bookDetail.toString());
+                        // 모든 데이터를 설정
+                        bookNameTextView.setText(bookDetail.getBookName());
+                        authorsTextView.setText(bookDetail.getAuthors());
+                        descriptionTextView.setText(bookDetail.getDescription());
+                        Picasso.get().load(bookDetail.getBookImageUrl()).into(bookImageView, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                System.out.println("Picasso: Image loaded successfully.");
                             }
-                        } else {
-                            descriptionTextView.setText("도서 상세 정보를 불러오지 못했습니다.");
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        descriptionTextView.setText("도서 상세 정보를 불러오지 못했습니다.");
-                    }
-                });
+
+                            @Override
+                            public void onError(Exception e) {
+                                System.err.println("Picasso: Failed to load image. " + e.getMessage());
+                            }
+                        });
+                    });
+                }
             }
 
             @Override
             public void onFailure(Exception e) {
-                getActivity().runOnUiThread(() -> {
-                    e.printStackTrace();
-                    descriptionTextView.setText("도서 상세 정보를 불러오지 못했습니다.");
-                });
+                e.printStackTrace();
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        descriptionTextView.setText("도서 상세 정보를 불러오지 못했습니다.");
+                    });
+                }
             }
         });
     }

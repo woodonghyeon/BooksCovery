@@ -42,19 +42,14 @@ public class FragmentBookDetail extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_book_detail, container, false);
 
-        TextView tvIsbn = view.findViewById(R.id.tv_isbn);
-        TextView tvBookName = view.findViewById(R.id.tv_book_name);
-        TextView tvAuthors = view.findViewById(R.id.tv_authors);
-        TextView tvPublisher = view.findViewById(R.id.tv_publisher);
-        TextView tvPublicationYear = view.findViewById(R.id.tv_publication_year);
-        ImageView ivBookImage = view.findViewById(R.id.iv_book_image);
+        TextView tvBookName = view.findViewById(R.id.tv_detail_book_name);
+        TextView tvAuthors = view.findViewById(R.id.tv_detail_authors);
+        TextView tvPublisher = view.findViewById(R.id.tv_detail_authors);
+        ImageView ivBookImage = view.findViewById(R.id.iv_detail_book_image);
 
         if (book != null) {
-            tvIsbn.setText(book.getIsbn());
             tvBookName.setText(book.getBookName());
             tvAuthors.setText(book.getAuthors());
-            tvPublisher.setText(book.getPublisher());
-            tvPublicationYear.setText(book.getPublication_year());
 
             String imageUrl = book.getBookImageUrl();
             if (imageUrl == null || imageUrl.isEmpty()) {

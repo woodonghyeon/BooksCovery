@@ -1,5 +1,6 @@
 package com.example.androidteamproject.Home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -275,9 +276,21 @@ public class FragmentHome extends Fragment {
 
     // showBookDetail
     private void showBookDetail(String isbn13, String bookName, String authors, String imageUrl) {
-        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_detail_book, FragmentBookDetail.newInstance(isbn13, bookName, authors, imageUrl));
-        transaction.addToBackStack(null);
+        // 새로운 FragmentBookDetail 인스턴스를 생성하고 필요한 데이터를 전달
+        FragmentBookDetail fragment = FragmentBookDetail.newInstance(isbn13, bookName, authors, imageUrl);
+
+        // FragmentTransaction을 통해 프래그먼트를 관리
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+
+        // 현재 프래그먼트를 가져와서 숨김
+        Fragment currentFragment = getParentFragmentManager().findFragmentById(R.id.ly_home);
+        if (currentFragment != null) {
+            transaction.hide(currentFragment);
+        }
+
+        // 새로운 프래그먼트를 추가
+        transaction.add(R.id.ly_home, fragment);
+        transaction.addToBackStack(null); // 백스택에 추가하여 뒤로가기 버튼을 눌렀을 때 이전 프래그먼트로 돌아갈 수 있음
         transaction.commit();
     }
 

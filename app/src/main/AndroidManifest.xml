@@ -29,6 +29,7 @@
         <activity android:name=".Home.HomeActivity" android:label="HomeActivity"></activity>
         <activity android:name=".Join.JoinActivity" android:label="JoinActivity"></activity>
         <activity android:name=".LoginCheck.LoginCheckActivity" android:label="LoginCheckActivity"></activity>
+        <activity android:name=".Home.BookDetailActivity" android:label="BookDetailActivity"></activity>
     </application>
 
 </manifest>
