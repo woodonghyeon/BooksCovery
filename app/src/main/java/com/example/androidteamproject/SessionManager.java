@@ -41,6 +41,15 @@ public class SessionManager {
         editor.commit();
     }
 
+    public void UpdateLoginSession(String name, String gender, int age, int departmentId, String email) {
+        editor.putString(KEY_NAME, name);
+        editor.putString(KEY_GENDER, gender);
+        editor.putInt(KEY_AGE, age);
+        editor.putInt(KEY_DEPARTMENT_ID, departmentId);
+        editor.putString(KEY_EMAIL, email);
+        editor.commit();
+    }
+
     public String getName() {
         return pref.getString(KEY_NAME, null);
     }
@@ -77,8 +86,12 @@ public class SessionManager {
         return pref.getString(KEY_UPDATE_DATE, null);
     }
 
+
+
     public void clearSession() {
         editor.clear();
         editor.commit();
     }
+
+
 }
