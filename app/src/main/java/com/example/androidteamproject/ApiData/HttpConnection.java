@@ -114,9 +114,10 @@ public class HttpConnection {
 
                         // 출판년도를 가져옴
                         String publication_year = doc.getString("publication_year");
+                        String isbn13 = doc.getString("isbn13");
 
                         // 책 정보를 담은 SearchBookKeyword 객체 생성
-                        SearchBookKeyword book = new SearchBookKeyword(bookName, authors, bookImageUrl, publisher, publication_year);
+                        SearchBookKeyword book = new SearchBookKeyword(isbn13, bookName, authors, bookImageUrl, publisher, publication_year);
 
                         // 생성한 SearchBookKeyword 객체를 리스트에 추가
                         books.add(book);
@@ -176,9 +177,10 @@ public class HttpConnection {
 
                         // 출판년도를 가져옴
                         String publication_year = doc.getString("publication_year");
+                        String isbn13 = doc.getString("isbn13");
 
                         // 책 정보를 담은 SearchBookKeyword 객체 생성
-                        SearchBookAuthor book = new SearchBookAuthor(bookName, authors, bookImageUrl, publisher, publication_year);
+                        SearchBookAuthor book = new SearchBookAuthor(isbn13, bookName, authors, bookImageUrl, publisher, publication_year);
 
                         // 생성한 SearchBookKeyword 객체를 리스트에 추가
                         books.add(book);
