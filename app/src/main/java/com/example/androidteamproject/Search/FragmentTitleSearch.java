@@ -73,7 +73,7 @@ public class FragmentTitleSearch extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                SearchBookTitle selectedBook = bookList.get(position);
+                SearchBookTitle selectedBook = bookList.get(position); // 클릭시 프래그먼트 체인지
                 showBookDetail(selectedBook);
             }
         });
