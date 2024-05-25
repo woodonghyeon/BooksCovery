@@ -81,16 +81,20 @@
             android:id="@+id/tv_popular_book_week"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:fontFamily="@font/suitebold"
+            android:gravity="start"
             android:text="이번 주 인기도서"
             android:textColor="@color/brandcolor2"
-            android:textSize="30dp"
-            android:layout_marginTop="20dp"
-            android:gravity="start">
-        </TextView>
+            android:textSize="30dp"></TextView>
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/week_book_viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <FrameLayout
+            android:id="@+id/fragment_detail_book"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
