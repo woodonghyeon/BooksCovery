@@ -28,7 +28,7 @@ public class BookDetailActivity extends AppCompatActivity {
             FragmentBookDetail fragment = FragmentBookDetail.newInstance(isbn13, bookName, authors, imageUrl);
 
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id., fragment);
+            transaction.replace(R.id.ly_detail_book, fragment);
             transaction.commit();
         }
     }
