@@ -218,7 +218,7 @@ public class HttpConnection {
                     for (int i = 0; i < docs.length(); i++) {
                         // 각 문서(doc) 객체를 가져옴
                         JSONObject doc = docs.getJSONObject(i).getJSONObject("doc");
-                        
+
                         // isbn13자리를 가져옴
                         String isbn = doc.getString("isbn13");
 
