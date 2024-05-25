@@ -109,7 +109,9 @@ public class DepartmentCount {
             // 쿼리 실행
             String sql = "select b.bookname, b.authors, b.publisher, b.book_image_URL, b.publication_year, b.class_no, b.loan_count, c.book_count" +
                     " from book b, book_count c" +
-                    " where b.book_id = c.book_id and department_id = ?";
+                    " where b.book_id = c.book_id and department_id = ?" +
+                    " order by c.book_count desc" +
+                    " limit 10";
             pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, department_id);
 
