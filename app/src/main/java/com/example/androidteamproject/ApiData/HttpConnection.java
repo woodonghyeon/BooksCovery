@@ -418,26 +418,35 @@ public class HttpConnection {
                     JSONObject responseBody = new JSONObject(response.body().string());
                     JSONObject book = responseBody.getJSONObject("response").getJSONObject("book");
 
-                    // 주제분류명(class_nm)을 가져옴
-                    String class_nm = book.getString("class_nm");
-
                     // 책 이름(bookname)을 가져옴
                     String bookName = book.getString("bookname");
-
-                    // 책 이미지 URL(bookImageURL)을 가져옴
-                    String bookImageUrl = book.getString("bookImageURL");
-
                     // 저자(authors)를 가져옴
                     String authors = book.getString("authors");
-
+                    // 출판사
+                    String publisher = book.getString("publisher");
+                    // 책 이미지 URL(bookImageURL)을 가져옴
+                    String bookImageUrl = book.getString("bookImageURL");
+                    // 책소개(description)
+                    String description = book.getString("description");
+                    // 출판년도
+                    String publication_year = book.getString("publication_year");
                     // ISBN13
                     String isbn13 = book.getString("isbn13");
+                    // 주제분류
+                    String class_no = book.getString("class_no");
+                    // 주제분류명(class_nm)을 가져옴
+                    String class_nm = book.getString("class_nm");
+                    // 대출 권수
+                    String loanCnt = book.getString("loanCnt");
+                    // 권
+                    String vol = book.getString("vol");
 
-                    // 설명(description)
-                    String description = book.getString("description");
+//                    JSONObject loanHistory = responseBody.getJSONObject("response").getJSONObject("loanHistory");
+//                    JSONObject loan = loanHistory.getJSONObject("loan");
+//                    loan.getString("m")
 
                     // 책 정보를 담은 SearchBook 객체 생성
-                    SearchBookDetail bookDetail = new SearchBookDetail(class_nm, bookName, authors, bookImageUrl, isbn13, description);
+                    SearchBookDetail bookDetail = new SearchBookDetail(bookName, authors, publisher, bookImageUrl, description, publication_year, isbn13, vol, class_no, class_nm, loanCnt);
 
                     // 콜백을 통해 성공적인 응답 처리 (BookDetail 객체 전달)
                     callback.onSuccess(bookDetail);
