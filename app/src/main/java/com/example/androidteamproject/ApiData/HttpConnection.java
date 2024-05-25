@@ -394,4 +394,25 @@ public class HttpConnection {
             }
         });
     } // end of hotTrend
+
+    public void getDetailBook(String url, final HttpResponseCallback<String> callback) {
+        Request request = new Request.Builder().url(url).build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+                callback.onFailure(e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String responseData = response.body().string();
+                    callback.onSuccess(responseData);
+                } else {
+                    callback.onFailure(new IOException("Unexpected code " + response));
+                }
+            }
+        });
+    }
 }
