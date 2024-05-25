@@ -76,9 +76,9 @@ public class FragmentHome extends Fragment {
         setupSpinner(view); // 스피너 설정 메서드 호출
         startAnimation(view);
         CurrentEventSettingImg(view);
-        getResponseApiWeekLoanItems();
-        getResponseApiMonthLoanItems();
-        getResponseApiHotTrend();
+//        getResponseApiWeekLoanItems();
+//        getResponseApiMonthLoanItems();
+//        getResponseApiHotTrend();
 
         return view;
     } // end of onCreateView
@@ -143,55 +143,55 @@ public class FragmentHome extends Fragment {
     }
 
     //     최근 많이 검색된 도서 출력 (주간)
-    private void getResponseApiWeekLoanItems() {
-        String getTime = mFormat.format(mDate); // 현재 날짜 가져오기
-        Calendar calendar = Calendar.getInstance(); // 1주일 전 날짜 가져오기
-        calendar.setTime(mDate);
-        calendar.add(Calendar.DAY_OF_YEAR, -7);
-
-        String startDt = mFormat.format(calendar.getTime()); // 시작 날짜
-        String endDt = getTime; // 종료 날짜
-        String from_age = "20"; // 최소 나이
-        String to_age = "40"; // 최대 나이
-        int pageNo = 1; // 페이지 번호
-        int pageSize = 10; // 페이지 크기
-        String format = "json"; // 응답 형식
-
-        HttpConnection.getInstance(getContext()).getLoanItems(startDt, endDt, from_age, to_age, pageNo, pageSize, format, new HttpConnection.HttpResponseCallback<List<SearchBook>>() {
-            @Override
-            public void onSuccess(List<SearchBook> books) {
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> {
-                        List<String> imageUrls = new ArrayList<>();
-                        List<String> bookName = new ArrayList<>();
-                        List<String> authors = new ArrayList<>();
-                        List<String> class_nm = new ArrayList<>();
-                        List<String> isbn13 = new ArrayList<>();
-                        for (SearchBook book : books) {
-                            imageUrls.add(book.getBookImageUrl());
-                            bookName.add(book.getBookName());
-                            authors.add(book.getAuthors());
-                            class_nm.add(book.getClass_nm());
-                            isbn13.add(book.getIsbn13());
-                        }
-                        // ViewPager2에 이미지 추가
-                        setupWeekViewPager(class_nm, bookName, authors, imageUrls, isbn13);
-                        Log.d("API Response(Week)", "Image URLs: " + imageUrls.toString() + ", BookName: " + bookName.toString());
-                    });
-                }
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> {
-                        // 에러 처리 로직 추가
-                        Log.e("API Failure(Week)", "Error: " + e.getMessage());
-                    });
-                }
-            }
-        });
-    } // end of getResponseApiWeekLoanItems
+//    private void getResponseApiWeekLoanItems() {
+//        String getTime = mFormat.format(mDate); // 현재 날짜 가져오기
+//        Calendar calendar = Calendar.getInstance(); // 1주일 전 날짜 가져오기
+//        calendar.setTime(mDate);
+//        calendar.add(Calendar.DAY_OF_YEAR, -7);
+//
+//        String startDt = mFormat.format(calendar.getTime()); // 시작 날짜
+//        String endDt = getTime; // 종료 날짜
+//        String from_age = "20"; // 최소 나이
+//        String to_age = "40"; // 최대 나이
+//        int pageNo = 1; // 페이지 번호
+//        int pageSize = 10; // 페이지 크기
+//        String format = "json"; // 응답 형식
+//
+//        HttpConnection.getInstance(getContext()).getLoanItems(startDt, endDt, from_age, to_age, pageNo, pageSize, format, new HttpConnection.HttpResponseCallback<List<SearchBook>>() {
+//            @Override
+//            public void onSuccess(List<SearchBook> books) {
+//                if (getActivity() != null) {
+//                    getActivity().runOnUiThread(() -> {
+//                        List<String> imageUrls = new ArrayList<>();
+//                        List<String> bookName = new ArrayList<>();
+//                        List<String> authors = new ArrayList<>();
+//                        List<String> class_nm = new ArrayList<>();
+//                        List<String> isbn13 = new ArrayList<>();
+//                        for (SearchBook book : books) {
+//                            imageUrls.add(book.getBookImageUrl());
+//                            bookName.add(book.getBookName());
+//                            authors.add(book.getAuthors());
+//                            class_nm.add(book.getClass_nm());
+//                            isbn13.add(book.getIsbn13());
+//                        }
+//                        // ViewPager2에 이미지 추가
+//                        setupWeekViewPager(class_nm, bookName, authors, imageUrls, isbn13);
+//                        Log.d("API Response(Week)", "Image URLs: " + imageUrls.toString() + ", BookName: " + bookName.toString());
+//                    });
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Exception e) {
+//                if (getActivity() != null) {
+//                    getActivity().runOnUiThread(() -> {
+//                        // 에러 처리 로직 추가
+//                        Log.e("API Failure(Week)", "Error: " + e.getMessage());
+//                    });
+//                }
+//            }
+//        });
+//    } // end of getResponseApiWeekLoanItems
 
     // 주간 인기 도서 ViewPager2 setup
     private void setupWeekViewPager(List<String> class_nm, List<String> bookName, List<String> authors, List<String> imageUrls, List<String> isbn13) {
@@ -294,54 +294,54 @@ public class FragmentHome extends Fragment {
         transaction.commit();
     }
 
-    // 최근 많이 검색된 도서 출력 (월간)
-    private void getResponseApiMonthLoanItems() {
-        String getTime = mFormat.format(mDate); // 현재 날짜 가져오기
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(mDate);
-        calendar.set(Calendar.DAY_OF_MONTH, 1); // 1일을 의미
-
-        String startDt = mFormat.format(calendar.getTime()); // 시작 날짜
-        String endDt = getTime; // 종료 날짜 (예시)
-        String from_age = "20"; // 최소 나이
-        String to_age = "40"; // 최대 나이
-        int pageNo = 1; // 페이지 번호 (예시)
-        int pageSize = 10; // 페이지 크기 (예시)
-        String format = "json"; // 응답 형식 (예시)
-
-        HttpConnection.getInstance(getContext()).getLoanItems(startDt, endDt, from_age, to_age, pageNo, pageSize, format, new HttpConnection.HttpResponseCallback<List<SearchBook>>() {
-            @Override
-            public void onSuccess(List<SearchBook> books) {
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> {
-                        List<String> imageUrls = new ArrayList<>();
-                        List<String> bookName = new ArrayList<>();
-                        List<String> authors = new ArrayList<>();
-                        List<String> class_nm = new ArrayList<>();
-                        for (SearchBook book : books) {
-                            imageUrls.add(book.getBookImageUrl());
-                            bookName.add(book.getBookName());
-                            authors.add(book.getAuthors());
-                            class_nm.add(book.getClass_nm());
-                        }
-                        // ViewPager2에 이미지 추가
-                        setupMonthViewPager(class_nm, bookName, authors, imageUrls);
-                        Log.d("API Response(Month)", "Image URLs: " + imageUrls.toString() + ", BookName: " + bookName.toString());
-                    });
-                }
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> {
-                        // 에러 처리 로직 추가
-                        Log.e("API Failure(Month)", "Error: " + e.getMessage());
-                    });
-                }
-            }
-        });
-    } // end of getResponseApiMonthLoanItems
+//    // 최근 많이 검색된 도서 출력 (월간)
+//    private void getResponseApiMonthLoanItems() {
+//        String getTime = mFormat.format(mDate); // 현재 날짜 가져오기
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.setTime(mDate);
+//        calendar.set(Calendar.DAY_OF_MONTH, 1); // 1일을 의미
+//
+//        String startDt = mFormat.format(calendar.getTime()); // 시작 날짜
+//        String endDt = getTime; // 종료 날짜 (예시)
+//        String from_age = "20"; // 최소 나이
+//        String to_age = "40"; // 최대 나이
+//        int pageNo = 1; // 페이지 번호 (예시)
+//        int pageSize = 10; // 페이지 크기 (예시)
+//        String format = "json"; // 응답 형식 (예시)
+//
+//        HttpConnection.getInstance(getContext()).getLoanItems(startDt, endDt, from_age, to_age, pageNo, pageSize, format, new HttpConnection.HttpResponseCallback<List<SearchBook>>() {
+//            @Override
+//            public void onSuccess(List<SearchBook> books) {
+//                if (getActivity() != null) {
+//                    getActivity().runOnUiThread(() -> {
+//                        List<String> imageUrls = new ArrayList<>();
+//                        List<String> bookName = new ArrayList<>();
+//                        List<String> authors = new ArrayList<>();
+//                        List<String> class_nm = new ArrayList<>();
+//                        for (SearchBook book : books) {
+//                            imageUrls.add(book.getBookImageUrl());
+//                            bookName.add(book.getBookName());
+//                            authors.add(book.getAuthors());
+//                            class_nm.add(book.getClass_nm());
+//                        }
+//                        // ViewPager2에 이미지 추가
+//                        setupMonthViewPager(class_nm, bookName, authors, imageUrls);
+//                        Log.d("API Response(Month)", "Image URLs: " + imageUrls.toString() + ", BookName: " + bookName.toString());
+//                    });
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Exception e) {
+//                if (getActivity() != null) {
+//                    getActivity().runOnUiThread(() -> {
+//                        // 에러 처리 로직 추가
+//                        Log.e("API Failure(Month)", "Error: " + e.getMessage());
+//                    });
+//                }
+//            }
+//        });
+//    } // end of getResponseApiMonthLoanItems
 
     // 월간 인기 도서 ViewPager2 setup
     private void setupMonthViewPager(List<String> class_nm, List<String> bookName, List<String> authors, List<String> imageUrls) {
@@ -387,46 +387,46 @@ public class FragmentHome extends Fragment {
         });
     } // end of setupMonthViewPager
 
-    // 대출 급상승(hotTrend) 도서 (최근 3일)
-    private void getResponseApiHotTrend() {
-        String getTime = mFormat.format(mDate); // 현재 날짜 가져오기
-
-        String searchDt = getTime; // 시작 날짜
-        String format = "json"; // 응답 형식 (예시)
-
-        HttpConnection.getInstance(getContext()).getHotTrend(searchDt, format, new HttpConnection.HttpResponseCallback<List<SearchBook>>() {
-            @Override
-            public void onSuccess(List<SearchBook> books) {
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> {
-                        List<String> imageUrls = new ArrayList<>();
-                        List<String> bookName = new ArrayList<>();
-                        List<String> authors = new ArrayList<>();
-                        List<String> class_nm = new ArrayList<>();
-                        for (SearchBook book : books) {
-                            imageUrls.add(book.getBookImageUrl());
-                            bookName.add(book.getBookName());
-                            authors.add(book.getAuthors());
-                            class_nm.add(book.getClass_nm());
-                        }
-                        // ViewPager2에 이미지 추가
-                        setupHotTrendViewPager(class_nm, bookName, authors, imageUrls);
-                        Log.d("API Response(HotTrend)", "Image URLs: " + imageUrls.toString() + ", BookName: " + bookName.toString());
-                    });
-                }
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> {
-                        // 에러 처리 로직 추가
-                        Log.e("API Failure(HotTrend)", "Error: " + e.getMessage());
-                    });
-                }
-            }
-        });
-    } // end of getResponseApiHotTrend
+//    // 대출 급상승(hotTrend) 도서 (최근 3일)
+//    private void getResponseApiHotTrend() {
+//        String getTime = mFormat.format(mDate); // 현재 날짜 가져오기
+//
+//        String searchDt = getTime; // 시작 날짜
+//        String format = "json"; // 응답 형식 (예시)
+//
+//        HttpConnection.getInstance(getContext()).getHotTrend(searchDt, format, new HttpConnection.HttpResponseCallback<List<SearchBook>>() {
+//            @Override
+//            public void onSuccess(List<SearchBook> books) {
+//                if (getActivity() != null) {
+//                    getActivity().runOnUiThread(() -> {
+//                        List<String> imageUrls = new ArrayList<>();
+//                        List<String> bookName = new ArrayList<>();
+//                        List<String> authors = new ArrayList<>();
+//                        List<String> class_nm = new ArrayList<>();
+//                        for (SearchBook book : books) {
+//                            imageUrls.add(book.getBookImageUrl());
+//                            bookName.add(book.getBookName());
+//                            authors.add(book.getAuthors());
+//                            class_nm.add(book.getClass_nm());
+//                        }
+//                        // ViewPager2에 이미지 추가
+//                        setupHotTrendViewPager(class_nm, bookName, authors, imageUrls);
+//                        Log.d("API Response(HotTrend)", "Image URLs: " + imageUrls.toString() + ", BookName: " + bookName.toString());
+//                    });
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Exception e) {
+//                if (getActivity() != null) {
+//                    getActivity().runOnUiThread(() -> {
+//                        // 에러 처리 로직 추가
+//                        Log.e("API Failure(HotTrend)", "Error: " + e.getMessage());
+//                    });
+//                }
+//            }
+//        });
+//    } // end of getResponseApiHotTrend
 
     // 대출 급상승(hotTrend) 도서 ViewPager2 setup
     private void setupHotTrendViewPager(List<String> class_nm, List<String> bookName, List<String> authors, List<String> imageUrls) {
