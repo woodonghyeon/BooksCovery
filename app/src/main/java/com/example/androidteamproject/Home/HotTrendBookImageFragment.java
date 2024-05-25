@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
 import com.example.androidteamproject.R;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 public class HotTrendBookImageFragment extends Fragment {
@@ -71,7 +72,23 @@ public class HotTrendBookImageFragment extends Fragment {
             isbn13 = getArguments().getString(ARG_ISBN13);
         }
 
-        Picasso.get().load(imageUrl).into(hotTrendBookImg);
+        if (imageUrl == null || imageUrl.isEmpty()) {
+            hotTrendBookImg.setImageResource(R.drawable.ic_error); // 기본 이미지 설정
+        } else {
+            Picasso.get().load(imageUrl)
+                    .error(R.drawable.ic_error) // 로드 실패 시 기본 이미지 설정
+                    .into(hotTrendBookImg, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            System.out.println("Picasso: Image loaded successfully.");
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+                            System.err.println("Picasso: Failed to load image. " + e.getMessage());
+                        }
+                    });
+        }
 
         hotTrendBookImg.setOnClickListener(v -> {
             if (onItemClickListener != null) {

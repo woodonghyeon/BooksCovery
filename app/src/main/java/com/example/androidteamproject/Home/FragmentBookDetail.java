@@ -188,8 +188,8 @@ public class FragmentBookDetail extends Fragment {
                         wordTextView.setText(wordBuilder.toString());
                         weightTextView.setText(weightBuilder.toString());
 
-                        if (imageUrl != null && !imageUrl.isEmpty()) {
-                            Picasso.get().load(imageUrl).placeholder(R.drawable.ic_warring).error(R.drawable.ic_error).into(bookImageView, new Callback() {
+                        if (bookDetail.getBookImageUrl() != null && !bookDetail.getBookImageUrl().isEmpty()) {
+                            Picasso.get().load(bookDetail.getBookImageUrl()).into(bookImageView, new Callback() {
                                 @Override
                                 public void onSuccess() {
                                     System.out.println("Picasso: Image loaded successfully.");
@@ -198,10 +198,11 @@ public class FragmentBookDetail extends Fragment {
                                 @Override
                                 public void onError(Exception e) {
                                     System.err.println("Picasso: Failed to load image. " + e.getMessage());
+                                    bookImageView.setImageResource(R.drawable.ic_error); // Placeholder 이미지 설정
                                 }
                             });
                         } else {
-                            bookImageView.setImageResource(R.drawable.ic_error);
+                            bookImageView.setImageResource(R.drawable.ic_error); // Placeholder 이미지 설정
                         }
                     });
                 }
