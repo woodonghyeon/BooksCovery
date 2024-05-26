@@ -171,12 +171,11 @@ public class DataBase {
             if (rs.next()) {
                 return rs.getInt("book_count_id");
             }
-
-            return 1;
+            return 0;
         } catch (Exception e) {
             Log.e("InsertDataTask", "Error inserting data", e);
 //            return "데이터 삽입 중 오류 발생";
-            return 0; // 이거 어떻게 리턴할 지 ,..?
+            return -1; // 이거 어떻게 리턴할 지 ,..?
 
         } finally {
             try {
