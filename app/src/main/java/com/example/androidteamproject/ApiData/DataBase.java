@@ -24,7 +24,7 @@ public class DataBase {
         conn = DriverManager.getConnection("jdbc:mysql://10.0.2.2:3306/test", "root", "root");
     }
 
-    public void checkDuplicate(SearchBookDetail sbd){ //상세보기에 들어가면 체크
+    public void checkDuplicate(SearchBookDetail sbd ){ //상세보기에 들어가면 체크
         ResultSet rs = null;
         try {
             dbConn();
