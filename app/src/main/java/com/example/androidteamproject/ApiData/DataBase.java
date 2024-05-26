@@ -155,9 +155,6 @@ public class DataBase {
         }
     }
 
-
-
-
     public List<SearchBookKeyword> selectBookCount(Integer department_id) throws SQLException { //학과별 도서검색 탑10
         //기간 안지났으면 가져오고
         Connection conn = null;
@@ -229,5 +226,33 @@ public class DataBase {
             books.add(book);    // 수정필요
         }
         return books;
+    }
+
+    // 검색 기록 DB 삽입
+    public String insertHistory(int member_id, int book_id) {
+        try {
+            dbConn();
+
+            String sql = "insert into search_history (member_id, book_id, search_date) values(?, ?, now()) ";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, member_id);
+            pstmt.setInt(2, book_id);
+
+            // 쿼리 실행
+            int rowsInserted = pstmt.executeUpdate();
+            return rowsInserted > 0 ? "데이터 삽입 성공" : "데이터 삽입 실패";
+
+        } catch (Exception e) {
+            Log.e("History Insert Error" , e.toString());
+            return e.toString();
+        } finally {
+            // DB 연결 끊기
+            try {
+                if (pstmt != null) pstmt.close();
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                Log.e("InsertDataTask", "Error closing connection", e);
+            }
+        }
     }
 }
