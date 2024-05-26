@@ -1,42 +1,74 @@
-package com.example.androidteamproject.Home;
+package com.example.androidteamproject.ApiData;
 
-import android.content.Context;
 import android.util.Log;
 
-import com.example.androidteamproject.ApiData.SearchBookKeyword;
-import com.example.androidteamproject.SessionManager;
-
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.SecureRandom;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 
-import javax.xml.transform.Result;
+public class DataBase {
+    // 도서 중복 확인 중복시 안하고 없을시 추가
+    // 검색 기록 도서pk확인 있으면 삭제하고 추가 없으면 추가
+    //// 즐겨찾기 온클릭시 즐겨찾기 추가
+    // 학과별 검색횟수 있으면 업데이트 없으면 추가
+    Connection conn = null;
+    PreparedStatement pstmt = null;
+    public void dbConn() throws ClassNotFoundException, SQLException {
+        // JDBC 드라이버 로드
+        Class.forName("com.mysql.jdbc.Driver");
+        // 데이터베이스에 연결 (url : "jdbc:mysql://10.0.2.2 (에뮬레이터 로컬 호스트 주소) :3306/your-database-name", user : DB 아이디, password : DB 비밀번호)
+        conn = DriverManager.getConnection("jdbc:mysql://10.0.2.2:3306/test", "root", "root");
+    }
 
-public class DepartmentCount {
-
-    public String insertBookCount(Integer department_id, Integer book_id){
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-
+    public void checkDuplicate(SearchBookDetail sbd){ //상세보기에 들어가면 체크
+        ResultSet rs = null;
         try {
-            // JDBC 드라이버 로드
-            Class.forName("com.mysql.jdbc.Driver");
-            // 데이터베이스에 연결 (url : "jdbc:mysql://10.0.2.2 (에뮬레이터 로컬 호스트 주소) :3306/your-database-name", user : DB 아이디, password : DB 비밀번호)
-            conn = DriverManager.getConnection("jdbc:mysql://10.0.2.2:3306/test", "root", "root");
+            dbConn();
+            // 쿼리 실행
+            String sql = "select isbn from book where isbn = ?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, sbd.getIsbn13());  //String 저장 어떻게 할건지 수정필요
 
             // 쿼리 실행
-            String sql = "Insert into book_count (department_id, book_id) Values (?, ?)";
+            rs = pstmt.executeQuery(sql);
+            if (!rs.next()) {
+                insertBook(sbd);
+            }
+        } catch (Exception e) {
+            Log.e("InsertDataTask", "Error inserting data", e);
+//            return "데이터 삽입 중 오류 발생";
+
+        } finally {
+            try {
+                if (pstmt != null) pstmt.close();
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                Log.e("InsertDataTask", "Error closing connection", e);
+            }
+        }
+    }
+
+    public String insertBook(SearchBookDetail sbd){
+        try {
+            dbConn();
+
+            // 쿼리 실행
+            String sql = "Insert into book (bookname, isbn, authors, publisher, book_image_URL, publication_year, class_no, loan_count) Values (?, ?, ?, ?, ?, ?, ?, ?)";
             pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, department_id);
-            pstmt.setInt(2, book_id);
+            pstmt.setString(1, sbd.getBookName());
+            pstmt.setString(2, sbd.getIsbn13()); //String 저장 어떻게 할건지 수정필요
+            pstmt.setString(3, sbd.getAuthors());
+            pstmt.setString(4, sbd.getPublisher());
+            pstmt.setString(5, sbd.getBookImageUrl());
+            pstmt.setString(6, sbd.getPublication_year()); //String 저장 어떻게 할건지 수정필요
+            pstmt.setString(7, sbd.getClass_no()); //String 저장 어떻게 할건지 수정필요
+            pstmt.setString(8, sbd.getLoanCnt()); //String 저장 어떻게 할건지 수정필요
+
+
 
             //pstmt.setString(10, currentTime);  //지금 사용 X (회원가입 한 시간)
 
@@ -58,7 +90,35 @@ public class DepartmentCount {
         }
     }
 
-    public String updateBookCount(Integer book_count_id){
+    public String insertBookCount(Integer department_id, Integer book_id){ //학과별 도서 검색횟수
+        try {
+            dbConn();
+
+            // 쿼리 실행
+            String sql = "Insert into book_count (department_id, book_id) Values (?, ?)";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, department_id);
+            pstmt.setInt(2, book_id);
+
+            // 쿼리 실행
+            int rowsInserted = pstmt.executeUpdate();
+            return rowsInserted > 0 ? "데이터 삽입 성공" : "데이터 삽입 실패";
+
+        } catch (Exception e) {
+            Log.e("InsertDataTask", "Error inserting data", e);
+            return "데이터 삽입 중 오류 발생";
+
+        } finally {
+            try {
+                if (pstmt != null) pstmt.close();
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                Log.e("InsertDataTask", "Error closing connection", e);
+            }
+        }
+    }
+
+    public String updateBookCount(Integer book_count_id){ //학과별 도서검색 카운트 증가
         Connection conn = null;
         PreparedStatement pstmt = null;
 
@@ -94,7 +154,7 @@ public class DepartmentCount {
 
 
 
-    public void selectBookCount(Integer department_id) throws SQLException {
+    public List<SearchBookKeyword> selectBookCount(Integer department_id) throws SQLException { //학과별 도서검색 탑10
         //기간 안지났으면 가져오고
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -114,8 +174,6 @@ public class DepartmentCount {
                     " limit 10";
             pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, department_id);
-
-            //pstmt.setString(10, currentTime);  //지금 사용 X (회원가입 한 시간)
 
             // 쿼리 실행
             rs = pstmt.executeQuery(sql);
@@ -166,6 +224,6 @@ public class DepartmentCount {
             // 생성한 SearchBookKeyword 객체를 리스트에 추가
             books.add(book);    // 수정필요
         }
+        return books;
     }
-
 }
