@@ -11,9 +11,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.androidteamproject.ApiData.DataBase;
 import com.example.androidteamproject.ApiData.HttpConnection;
 import com.example.androidteamproject.ApiData.SearchBookDetail;
 import com.example.androidteamproject.R;
+import com.example.androidteamproject.SessionManager;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -30,6 +32,9 @@ public class FragmentBookDetail extends Fragment {
     private String authors;
     private String imageUrl;
     private static String API_KEY = "***REMOVED***";
+
+    DataBase dataBase = new DataBase();
+    SessionManager sessionManager = new SessionManager(getContext());
 
     public static FragmentBookDetail newInstance(String isbn13, String bookName, String authors, String imageUrl) {
         FragmentBookDetail fragment = new FragmentBookDetail();
@@ -189,9 +194,12 @@ public class FragmentBookDetail extends Fragment {
                         weightTextView.setText(weightBuilder.toString());
 
                         // 도서 중복 확인 중복시 안하고 없을시 추가
-
+                        SearchBookDetail searchBookDetail = new SearchBookDetail(bookDetail.getBookName(),bookDetail.getAuthors(),bookDetail.getPublisher(),bookDetail.getBookImageUrl(),bookDetail.getDescription(),bookDetail.getPublication_year(),bookDetail.getIsbn13(),bookDetail.getVol(),bookDetail.getClass_no(),bookDetail.getClass_nm(),bookDetail.getLoanCnt(),bookDetail.getMonth(),bookDetail.getLoanHistoryCnt(),bookDetail.getRankings(),bookDetail.getAge(),bookDetail.getGender(),bookDetail.getLoanGrpsCnt(),bookDetail.getLoanGrpsRanking(),bookDetail.getWord(),bookDetail.getWeight());
+                        dataBase.insertBook(searchBookDetail);
                         // 검색 기록 도서pk확인 있으면 삭제하고 추가 없으면 추가
+
                         //// 즐겨찾기 온클릭시 즐겨찾기 추가
+
                         // 학과별 검색횟수 있으면 업데이트 없으면 추가
                         
                         
