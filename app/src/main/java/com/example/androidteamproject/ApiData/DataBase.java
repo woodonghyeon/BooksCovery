@@ -24,23 +24,25 @@ public class DataBase {
         conn = DriverManager.getConnection("jdbc:mysql://10.0.2.2:3306/test", "root", "root");
     }
 
-    public void checkDuplicate(SearchBookDetail sbd){ //상세보기에 들어가면 체크
+    public int checkDuplicate(SearchBookDetail sbd, String sql) { //상세보기에 들어가면 체크
         ResultSet rs = null;
         try {
             dbConn();
             // 쿼리 실행
-            String sql = "select isbn from book where isbn = ?";
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, sbd.getIsbn13());  //String 저장 어떻게 할건지 수정필요
 
             // 쿼리 실행
             rs = pstmt.executeQuery(sql);
             if (!rs.next()) {
-                insertBook(sbd);
+                return 0;
             }
+
+            return 1;
         } catch (Exception e) {
             Log.e("InsertDataTask", "Error inserting data", e);
 //            return "데이터 삽입 중 오류 발생";
+            return 2; // 이거 어떻게 리턴할 지 ,..?
 
         } finally {
             try {
@@ -53,41 +55,43 @@ public class DataBase {
     }
 
     public String insertBook(SearchBookDetail sbd){
-        try {
-            dbConn();
-
-            // 쿼리 실행
-            String sql = "Insert into book (bookname, isbn, authors, publisher, book_image_URL, publication_year, class_no, loan_count) Values (?, ?, ?, ?, ?, ?, ?, ?)";
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, sbd.getBookName());
-            pstmt.setString(2, sbd.getIsbn13()); //String 저장 어떻게 할건지 수정필요
-            pstmt.setString(3, sbd.getAuthors());
-            pstmt.setString(4, sbd.getPublisher());
-            pstmt.setString(5, sbd.getBookImageUrl());
-            pstmt.setString(6, sbd.getPublication_year()); //String 저장 어떻게 할건지 수정필요
-            pstmt.setString(7, sbd.getClass_no()); //String 저장 어떻게 할건지 수정필요
-            pstmt.setString(8, sbd.getLoanCnt()); //String 저장 어떻게 할건지 수정필요
-
-
-
-            //pstmt.setString(10, currentTime);  //지금 사용 X (회원가입 한 시간)
-
-            // 쿼리 실행
-            int rowsInserted = pstmt.executeUpdate();
-            return rowsInserted > 0 ? "데이터 삽입 성공" : "데이터 삽입 실패";
-
-        } catch (Exception e) {
-            Log.e("InsertDataTask", "Error inserting data", e);
-            return "데이터 삽입 중 오류 발생";
-
-        } finally {
+        String sql1 = "select isbn from book where isbn = ?";
+        if (checkDuplicate(sbd, sql1) == 0) {
             try {
-                if (pstmt != null) pstmt.close();
-                if (conn != null) conn.close();
+                dbConn();
+
+                // 쿼리 실행
+                String sql = "Insert into book (bookname, isbn, authors, publisher, book_image_URL, publication_year, class_no, loan_count) Values (?, ?, ?, ?, ?, ?, ?, ?)";
+                pstmt = conn.prepareStatement(sql);
+                pstmt.setString(1, sbd.getBookName());
+                pstmt.setString(2, sbd.getIsbn13()); //String 저장 어떻게 할건지 수정필요
+                pstmt.setString(3, sbd.getAuthors());
+                pstmt.setString(4, sbd.getPublisher());
+                pstmt.setString(5, sbd.getBookImageUrl());
+                pstmt.setString(6, sbd.getPublication_year()); //String 저장 어떻게 할건지 수정필요
+                pstmt.setString(7, sbd.getClass_no()); //String 저장 어떻게 할건지 수정필요
+                pstmt.setString(8, sbd.getLoanCnt()); //String 저장 어떻게 할건지 수정필요
+
+                //pstmt.setString(10, currentTime);  //지금 사용 X (회원가입 한 시간)
+
+                // 쿼리 실행
+                int rowsInserted = pstmt.executeUpdate();
+                return rowsInserted > 0 ? "데이터 삽입 성공" : "데이터 삽입 실패";
+
             } catch (Exception e) {
-                Log.e("InsertDataTask", "Error closing connection", e);
+                Log.e("InsertDataTask", "Error inserting data", e);
+                return "데이터 삽입 중 오류 발생";
+
+            } finally {
+                try {
+                    if (pstmt != null) pstmt.close();
+                    if (conn != null) conn.close();
+                } catch (Exception e) {
+                    Log.e("InsertDataTask", "Error closing connection", e);
+                }
             }
         }
+        return "중복 있음.";
     }
 
     public String insertBookCount(Integer department_id, Integer book_id){ //학과별 도서 검색횟수
