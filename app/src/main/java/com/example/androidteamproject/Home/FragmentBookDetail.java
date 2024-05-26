@@ -35,8 +35,7 @@ public class FragmentBookDetail extends Fragment {
     private static String API_KEY = "***REMOVED***";
 
     DataBase dataBase = new DataBase();
-    Context context = getContext();
-    SessionManager sessionManager = new SessionManager(context);
+    SessionManager sessionManager;
 
     public static FragmentBookDetail newInstance(String isbn13, String bookName, String authors, String imageUrl) {
         FragmentBookDetail fragment = new FragmentBookDetail();
@@ -64,6 +63,8 @@ public class FragmentBookDetail extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_book_detail, container, false);
+        Context context = getContext();
+        sessionManager = new SessionManager(context);
 
         ImageView bookImageView = view.findViewById(R.id.iv_detail_book_image);
         TextView bookNameTextView = view.findViewById(R.id.tv_detail_book_name);
