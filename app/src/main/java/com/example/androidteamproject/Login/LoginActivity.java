@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -18,6 +19,8 @@ import com.example.androidteamproject.LoginCheck.LoginCheckActivity;
 import com.example.androidteamproject.Join.JoinActivity;
 import com.example.androidteamproject.R;
 import com.example.androidteamproject.SessionManager;
+
+import java.sql.Timestamp;
 
 public class LoginActivity extends Activity {
     ProgressDialog dialog;
