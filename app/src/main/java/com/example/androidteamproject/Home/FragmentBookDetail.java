@@ -9,6 +9,7 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -200,11 +201,21 @@ public class FragmentBookDetail extends Fragment {
                         // 도서 중복 확인 중복시 안하고 없을시 추가
                         SearchBookDetail searchBookDetail = new SearchBookDetail(bookDetail.getBookName(),bookDetail.getAuthors(),bookDetail.getPublisher(),bookDetail.getBookImageUrl(),bookDetail.getDescription(),bookDetail.getPublication_year(),bookDetail.getIsbn13(),bookDetail.getVol(),bookDetail.getClass_no(),bookDetail.getClass_nm(),bookDetail.getLoanCnt(),bookDetail.getMonth(),bookDetail.getLoanHistoryCnt(),bookDetail.getRankings(),bookDetail.getAge(),bookDetail.getGender(),bookDetail.getLoanGrpsCnt(),bookDetail.getLoanGrpsRanking(),bookDetail.getWord(),bookDetail.getWeight());
                         dataBase.insertBook(searchBookDetail);
+                        // 도서 아디 찾
+                        int book_id = dataBase.selectBookId(searchBookDetail);
+                        Log.e("cha",""+book_id);
                         // 검색 기록 도서pk확인 있으면 삭제하고 추가 없으면 추가
-
+                        dataBase.insertHistory(sessionManager.getMember(),book_id);
                         //// 즐겨찾기 온클릭시 즐겨찾기 추가
 
                         // 학과별 검색횟수 있으면 업데이트 없으면 추가
+                        int book_count_id = dataBase.findBookCount(book_id, sessionManager.getDepartmentId());
+                        Log.e("check","book_count_id"+book_count_id);
+                        if(book_count_id != 0){
+                            dataBase.updateBookCount(book_count_id);
+                        }else{
+                            dataBase.insertBookCount(sessionManager.getDepartmentId(),book_id);
+                        }
 
 
                         if (bookDetail.getBookImageUrl() != null && !bookDetail.getBookImageUrl().isEmpty()) {
