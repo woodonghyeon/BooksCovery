@@ -14,19 +14,27 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.androidteamproject.ApiData.SearchBookKeyword;
 import com.example.androidteamproject.Home.HomeActivity;
 import com.example.androidteamproject.LoginCheck.LoginCheckActivity;
 import com.example.androidteamproject.Join.JoinActivity;
 import com.example.androidteamproject.R;
 import com.example.androidteamproject.SessionManager;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoginActivity extends Activity {
     ProgressDialog dialog;
     private EditText et_input_id;
     private EditText et_input_pwd;
     private SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +88,40 @@ public class LoginActivity extends Activity {
             Toast.makeText(getApplicationContext(), "로그인에 실패했습니다.", Toast.LENGTH_SHORT).show();
         } else if (resultCode == RESULT_OK) {
             String userid = data.getStringExtra("Id");
+            int member_id ;
+            Connection conn = null;
+            PreparedStatement pstmt = null;
+            ResultSet rs = null;
+            List<SearchBookKeyword> books = new ArrayList<>();
+            try {
+                // JDBC 드라이버 로드
+                Class.forName("com.mysql.jdbc.Driver");
+                // 데이터베이스에 연결 (url : "jdbc:mysql://10.0.2.2 (에뮬레이터 로컬 호스트 주소) :3306/your-database-name", user : DB 아이디, password : DB 비밀번호)
+                conn = DriverManager.getConnection("jdbc:mysql://10.0.2.2:3306/test", "root", "root");
+
+                // 쿼리 실행
+                String sql = "select member_id from member_info where id = ?";
+                pstmt = conn.prepareStatement(sql);
+                pstmt.setString(1, userid);
+
+                // 쿼리 실행
+                rs = pstmt.executeQuery(sql);
+                if(rs.next()) {
+                    member_id = rs.getInt("member_id");
+                }
+            } catch (Exception e) {
+                Log.e("InsertDataTask", "Error inserting data", e);
+//            return "데이터 삽입 중 오류 발생";
+
+            } finally {
+                try {
+                    if (pstmt != null) pstmt.close();
+                    if (conn != null) conn.close();
+                } catch (Exception e) {
+                    Log.e("InsertDataTask", "Error closing connection", e);
+                }
+            }
+
             Toast.makeText(getApplicationContext(), "로그인에 성공하셨습니다.", Toast.LENGTH_SHORT).show();
             // SharedPreferences에 userid 저장
             SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
@@ -90,6 +132,7 @@ public class LoginActivity extends Activity {
             //세션 매니저 만들었는데 위에꺼 필요할까?
             SessionManager sessionManager = new SessionManager(getApplicationContext());
             sessionManager.createLoginSession(
+                    data.getIntExtra("Member",1),
                     data.getStringExtra("Name"),
                     data.getStringExtra("Gender"),
                     data.getIntExtra("Age", 0),

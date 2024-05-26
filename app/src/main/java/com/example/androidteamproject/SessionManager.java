@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 public class SessionManager {
 
     private static final String PREF_NAME = "UserSession";
+    private static final String KEY_MEMBER = "Member";
     private static final String KEY_NAME = "Name";
     private static final String KEY_GENDER = "Gender";
     private static final String KEY_AGE = "Age";
@@ -28,7 +29,8 @@ public class SessionManager {
         editor = pref.edit();
     }
 
-    public void createLoginSession(String name, String gender, int age, int departmentId, String id, String password_key, String email, String mode, String updateDate) {
+    public void createLoginSession(int member_id, String name, String gender, int age, int departmentId, String id, String password_key, String email, String mode, String updateDate) {
+        editor.putInt(KEY_MEMBER, member_id);
         editor.putString(KEY_NAME, name);
         editor.putString(KEY_GENDER, gender);
         editor.putInt(KEY_AGE, age);
@@ -49,7 +51,9 @@ public class SessionManager {
         editor.putString(KEY_EMAIL, email);
         editor.commit();
     }
-
+    public int getMember() {
+        return pref.getInt(KEY_MEMBER,1);
+    }
     public String getName() {
         return pref.getString(KEY_NAME, null);
     }
