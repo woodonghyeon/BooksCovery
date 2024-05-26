@@ -1,7 +1,14 @@
 package com.example.androidteamproject.Home;
 
-import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +27,10 @@ import com.example.androidteamproject.SessionManager;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 public class FragmentBookDetail extends Fragment {
     private static final String ARG_ISBN13 = "isbn13";
@@ -35,8 +45,8 @@ public class FragmentBookDetail extends Fragment {
     private static String API_KEY = "cc355482ccb755beacd4ba6f7134c20c6b59a237e1ee656a155a6ed3a2003941";
 
     DataBase dataBase = new DataBase();
-    Context context = getContext();
-    SessionManager sessionManager = new SessionManager(context);
+
+    private SessionManager sessionManager;
 
     public static FragmentBookDetail newInstance(String isbn13, String bookName, String authors, String imageUrl) {
         FragmentBookDetail fragment = new FragmentBookDetail();
@@ -58,6 +68,7 @@ public class FragmentBookDetail extends Fragment {
             authors = getArguments().getString(ARG_AUTHORS);
             imageUrl = getArguments().getString(ARG_IMAGE_URL);
         }
+        sessionManager = new SessionManager(getContext());
     }
 
     @Nullable
@@ -75,14 +86,8 @@ public class FragmentBookDetail extends Fragment {
         TextView classNmTextView = view.findViewById(R.id.tv_detail_class_nm);
         TextView loanCntTextView = view.findViewById(R.id.tv_detail_loan_cnt);
         TextView monthTextView = view.findViewById(R.id.tv_detail_month);
-        TextView loanHistoryCntTextView = view.findViewById(R.id.tv_detail_loan_history_cnt);
-        TextView rankingTextView = view.findViewById(R.id.tv_detail_ranking);
         TextView ageTextView = view.findViewById(R.id.tv_detail_age);
-        TextView genderTextView = view.findViewById(R.id.tv_detail_gender);
-        TextView loanGrpsCntTextView = view.findViewById(R.id.tv_detail_loan_grps_cnt);
-        TextView loanGrpsRankingTextView = view.findViewById(R.id.tv_detail_loan_grps_ranking);
         TextView wordTextView = view.findViewById(R.id.tv_detail_word);
-        TextView weightTextView = view.findViewById(R.id.tv_detail_weight);
 
         // 로깅 추가
         System.out.println("FragmentBookDetail onCreateView: " + bookName + ", " + authors + ", " + imageUrl);
@@ -106,12 +111,12 @@ public class FragmentBookDetail extends Fragment {
         bookNameTextView.setText(bookName);
         authorsTextView.setText(authors);
 
-        fetchBookDetail(isbn13, bookNameTextView, authorsTextView, descriptionTextView, bookImageView, publisherTextView, publicationYearTextView, classNoTextView, classNmTextView, loanCntTextView, monthTextView, loanHistoryCntTextView, rankingTextView, ageTextView, genderTextView, loanGrpsCntTextView, loanGrpsRankingTextView, wordTextView, weightTextView);
+        fetchBookDetail(isbn13, bookNameTextView, authorsTextView, descriptionTextView, bookImageView, publisherTextView, publicationYearTextView, classNoTextView, classNmTextView, loanCntTextView, monthTextView, ageTextView, wordTextView);
 
         return view;
     }
 
-    private void fetchBookDetail(String isbn13, TextView bookNameTextView, TextView authorsTextView, TextView descriptionTextView, ImageView bookImageView, TextView publisherTextView, TextView publicationYearTextView, TextView classNoTextView, TextView classNmTextView, TextView loanCntTextView, TextView monthTextView, TextView loanHistoryCntTextView, TextView rankingTextView, TextView ageTextView, TextView genderTextView, TextView loanGrpsCntTextView, TextView loanGrpsRankingTextView, TextView wordTextView, TextView weightTextView) {
+    private void fetchBookDetail(String isbn13, TextView bookNameTextView, TextView authorsTextView, TextView descriptionTextView, ImageView bookImageView, TextView publisherTextView, TextView publicationYearTextView, TextView classNoTextView, TextView classNmTextView, TextView loanCntTextView, TextView monthTextView, TextView ageTextView, TextView wordTextView) {
         String url = "http://data4library.kr/api/usageAnalysisList?authKey=" + API_KEY + "&isbn13=" + isbn13 + "&format=json";
 
         HttpConnection.getInstance(getContext()).getDetailBook(url, new HttpConnection.HttpResponseCallback<SearchBookDetail>() {
@@ -130,7 +135,7 @@ public class FragmentBookDetail extends Fragment {
                         authorsTextView.setText(bookDetail.getAuthors());
 
                         System.out.println("Setting description: " + bookDetail.getDescription());
-                        descriptionTextView.setText(bookDetail.getDescription());
+                        descriptionTextView.setText(Html.fromHtml(bookDetail.getDescription(), Html.FROM_HTML_MODE_LEGACY)); // &lt; 와 같은 특수문자 변환을 위해 수정함
 
                         System.out.println("Setting publisher: " + bookDetail.getPublisher());
                         publisherTextView.setText(bookDetail.getPublisher());
@@ -152,16 +157,11 @@ public class FragmentBookDetail extends Fragment {
                         List<String> loanHistoryCnt = bookDetail.getLoanHistoryCnt();
                         List<String> ranking = bookDetail.getRankings();
                         StringBuilder monthBuilder = new StringBuilder();
-                        StringBuilder loanHistoryCntBuilder = new StringBuilder();
-                        StringBuilder rankingBuilder = new StringBuilder();
                         for (int i = 0; i < month.size(); i++) {
-                            monthBuilder.append(month.get(i)).append("\n");
-                            loanHistoryCntBuilder.append(loanHistoryCnt.get(i)).append("\n");
-                            rankingBuilder.append(ranking.get(i)).append("\n");
+                            // ranking은 일단 생략함
+                            monthBuilder.append(month.get(i)).append(" : ").append(loanHistoryCnt.get(i)).append("권\n");
                         }
                         monthTextView.setText(monthBuilder.toString());
-                        loanHistoryCntTextView.setText(loanHistoryCntBuilder.toString());
-                        rankingTextView.setText(rankingBuilder.toString());
 
                         // 대출 그룹 정보 출력
                         List<String> age = bookDetail.getAge();
@@ -169,48 +169,42 @@ public class FragmentBookDetail extends Fragment {
                         List<String> loanGrpsCnt = bookDetail.getLoanGrpsCnt();
                         List<String> loanGrpsRanking = bookDetail.getLoanGrpsRanking();
                         StringBuilder ageBuilder = new StringBuilder();
-                        StringBuilder genderBuilder = new StringBuilder();
-                        StringBuilder loanGrpsCntBuilder = new StringBuilder();
-                        StringBuilder loanGrpsRankingBuilder = new StringBuilder();
                         for (int i = 0; i < age.size(); i++) {
-                            ageBuilder.append(age.get(i)).append("\n");
-                            genderBuilder.append(gender.get(i)).append("\n");
-                            loanGrpsCntBuilder.append(loanGrpsCnt.get(i)).append("\n");
-                            loanGrpsRankingBuilder.append(loanGrpsRanking.get(i)).append("\n");
+                            // ranking은 일단 생략함
+                            ageBuilder.append(i+1 + "위 - " + age.get(i)).append(" ").append(gender.get(i)).append(" : ").append(loanGrpsCnt.get(i)).append("권\n");
                         }
                         ageTextView.setText(ageBuilder.toString());
-                        genderTextView.setText(genderBuilder.toString());
-                        loanGrpsCntTextView.setText(loanGrpsCntBuilder.toString());
-                        loanGrpsRankingTextView.setText(loanGrpsRankingBuilder.toString());
 
                         // 키워드 정보 출력
                         List<String> word = bookDetail.getWord();
                         List<String> weight = bookDetail.getWeight();
-                        StringBuilder wordBuilder = new StringBuilder();
-                        StringBuilder weightBuilder = new StringBuilder();
+                        List<KeywordWithWeight> keywords = new ArrayList<>();
                         for (int i = 0; i < word.size(); i++) {
-                            wordBuilder.append(word.get(i)).append("\n");
-                            weightBuilder.append(weight.get(i)).append("\n");
+                            keywords.add(new KeywordWithWeight(word.get(i), weight.get(i)));
                         }
-                        wordTextView.setText(wordBuilder.toString());
-                        weightTextView.setText(weightBuilder.toString());
+
+                        Collections.shuffle(keywords);
+
+                        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
+                        Random random = new Random();
+                        for (KeywordWithWeight kw : keywords) {
+                            int color = Color.rgb(random.nextInt(256), random.nextInt(256), random.nextInt(256));
+                            float size = 1.0f + (Float.parseFloat(kw.weight) / 10); // 가중치에 따라 크기를 조절합니다.
+                            SpannableString keywordSpan = new SpannableString(kw.word + " ");
+                            keywordSpan.setSpan(new ForegroundColorSpan(color), 0, keywordSpan.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            keywordSpan.setSpan(new RelativeSizeSpan(size), 0, keywordSpan.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            spannableStringBuilder.append(keywordSpan);
+                        }
+                        wordTextView.setText(spannableStringBuilder);
 
                         // 도서 중복 확인 중복시 안하고 없을시 추가
                         SearchBookDetail searchBookDetail = new SearchBookDetail(bookDetail.getBookName(),bookDetail.getAuthors(),bookDetail.getPublisher(),bookDetail.getBookImageUrl(),bookDetail.getDescription(),bookDetail.getPublication_year(),bookDetail.getIsbn13(),bookDetail.getVol(),bookDetail.getClass_no(),bookDetail.getClass_nm(),bookDetail.getLoanCnt(),bookDetail.getMonth(),bookDetail.getLoanHistoryCnt(),bookDetail.getRankings(),bookDetail.getAge(),bookDetail.getGender(),bookDetail.getLoanGrpsCnt(),bookDetail.getLoanGrpsRanking(),bookDetail.getWord(),bookDetail.getWeight());
                         dataBase.insertBook(searchBookDetail);
-                        // 도서 아디 찾
-                        int book_id = dataBase.selectBookId(searchBookDetail);
                         // 검색 기록 도서pk확인 있으면 삭제하고 추가 없으면 추가
-                        dataBase.insertHistory(sessionManager.getMember(),book_id);
+
                         //// 즐겨찾기 온클릭시 즐겨찾기 추가
 
                         // 학과별 검색횟수 있으면 업데이트 없으면 추가
-                        int book_count_id = dataBase.findBookCount(book_id, sessionManager.getDepartmentId());
-                        if(book_count_id != 0){
-                            dataBase.updateBookCount(book_count_id);
-                        }else{
-                            dataBase.insertBookCount(sessionManager.getDepartmentId(),book_id);
-                        }
 
 
                         if (bookDetail.getBookImageUrl() != null && !bookDetail.getBookImageUrl().isEmpty()) {
@@ -243,5 +237,14 @@ public class FragmentBookDetail extends Fragment {
                 }
             }
         });
+    }
+    private static class KeywordWithWeight {
+        String word;
+        String weight;
+
+        KeywordWithWeight(String word, String weight) {
+            this.word = word;
+            this.weight = weight;
+        }
     }
 }
