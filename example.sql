@@ -1,6 +1,6 @@
 CREATE TABLE `department` (
 	`department_id`	int	NOT NULL AUTO_INCREMENT,
-	`department`	varchar(30)	NOT NULL,
+	`department`	varchar(30)	NOT NULL unique,
     PRIMARY KEY (`department_id`)
 );
 
@@ -44,8 +44,8 @@ CREATE TABLE `search_history` (
 
 CREATE TABLE `favorite` (
 	`favorite_id`	int	NOT NULL AUTO_INCREMENT,
-	`member_id`	int	NOT NULL,
-	`book_id` int NOT NULL,
+	`member_id`	int	NOT NULL ,
+	`book_id` int NOT NULL unique,
     `favorite_date` DateTime NOT NULL,
     PRIMARY KEY (`favorite_id`),
     FOREIGN KEY (`member_id`) REFERENCES `member_info` (`member_id`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -56,8 +56,8 @@ CREATE TABLE `favorite` (
 CREATE TABLE `book_count` (
 	`book_count_id`	int	NOT NULL AUTO_INCREMENT,
 	`department_id`	int	NOT NULL,
-    `book_id` int NOT NULL,
-	`book_count` int	NULL,
+    `book_id` int NOT NULL unique,
+	`book_count` int NULL default 1,
     PRIMARY KEY (`book_count_id`),
     FOREIGN KEY (`department_id`) REFERENCES `department` (`department_id`) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (`book_id`) REFERENCES `book` (`book_id`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -65,7 +65,7 @@ CREATE TABLE `book_count` (
 
 CREATE TABLE `popular_book` (
 	`popular_id`	int	NOT NULL AUTO_INCREMENT,
-	`book_id` int NOT NULL,
+	`book_id` int NOT NULL unique,
 	`popular_date` DateTime	NULL,
     PRIMARY KEY (`popular_id`),
     FOREIGN KEY (`book_id`) REFERENCES `book` (`book_id`) ON DELETE CASCADE ON UPDATE CASCADE
