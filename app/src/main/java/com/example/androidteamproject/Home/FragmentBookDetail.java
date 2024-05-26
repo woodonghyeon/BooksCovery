@@ -1,5 +1,6 @@
 package com.example.androidteamproject.Home;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +35,8 @@ public class FragmentBookDetail extends Fragment {
     private static String API_KEY = "cc355482ccb755beacd4ba6f7134c20c6b59a237e1ee656a155a6ed3a2003941";
 
     DataBase dataBase = new DataBase();
-    SessionManager sessionManager = new SessionManager(getContext());
+    Context context = getContext();
+    SessionManager sessionManager = new SessionManager(context);
 
     public static FragmentBookDetail newInstance(String isbn13, String bookName, String authors, String imageUrl) {
         FragmentBookDetail fragment = new FragmentBookDetail();
@@ -196,13 +198,21 @@ public class FragmentBookDetail extends Fragment {
                         // 도서 중복 확인 중복시 안하고 없을시 추가
                         SearchBookDetail searchBookDetail = new SearchBookDetail(bookDetail.getBookName(),bookDetail.getAuthors(),bookDetail.getPublisher(),bookDetail.getBookImageUrl(),bookDetail.getDescription(),bookDetail.getPublication_year(),bookDetail.getIsbn13(),bookDetail.getVol(),bookDetail.getClass_no(),bookDetail.getClass_nm(),bookDetail.getLoanCnt(),bookDetail.getMonth(),bookDetail.getLoanHistoryCnt(),bookDetail.getRankings(),bookDetail.getAge(),bookDetail.getGender(),bookDetail.getLoanGrpsCnt(),bookDetail.getLoanGrpsRanking(),bookDetail.getWord(),bookDetail.getWeight());
                         dataBase.insertBook(searchBookDetail);
+                        // 도서 아디 찾
+                        int book_id = dataBase.selectBookId(searchBookDetail);
                         // 검색 기록 도서pk확인 있으면 삭제하고 추가 없으면 추가
-
+                        dataBase.insertHistory(sessionManager.getMember(),book_id);
                         //// 즐겨찾기 온클릭시 즐겨찾기 추가
 
                         // 학과별 검색횟수 있으면 업데이트 없으면 추가
-                        
-                        
+                        int book_count_id = dataBase.findBookCount(book_id, sessionManager.getDepartmentId());
+                        if(book_count_id != 0){
+                            dataBase.updateBookCount(book_count_id);
+                        }else{
+                            dataBase.insertBookCount(sessionManager.getDepartmentId(),book_id);
+                        }
+
+
                         if (bookDetail.getBookImageUrl() != null && !bookDetail.getBookImageUrl().isEmpty()) {
                             Picasso.get().load(bookDetail.getBookImageUrl()).into(bookImageView, new Callback() {
                                 @Override
