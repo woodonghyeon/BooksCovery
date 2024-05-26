@@ -4,6 +4,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -11,10 +13,12 @@ import androidx.fragment.app.Fragment;
 
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.androidteamproject.Login.LoginActivity;
+import com.example.androidteamproject.LoginCheck.LoginCheckActivity;
 import com.example.androidteamproject.R;
 import com.example.androidteamproject.SessionManager;
 import com.example.androidteamproject.ThemeUtil;
@@ -408,21 +413,28 @@ public class FragmentSetting extends Fragment {
         memberWithdrawalDialog.show();
         Window window = memberWithdrawalDialog.getWindow();
         if (window != null) {
-            int heightInDp = 1000;
+            int heightInDp = 700;
             float heightInPx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, heightInDp, getResources().getDisplayMetrics());
             window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, (int) heightInPx);
         }
 
         //삭제 진행
         bt_member_withdrawal.setOnClickListener(view -> {
-            if(et_input_text.getText().toString().equals("회원 정보 탈퇴")){ executeDeleteSync(et_input_text.getText().toString()); executeDeleteSync(et_input_text.getText().toString()); }
+            if(et_input_text.getText().toString().equals("회원 정보 탈퇴")){
+                //회원 탈퇴가 완료되면 다시 처음 페이지로 돌아감 ( 회원 정보가 없으니까 )
+                executeDeleteSync();
+                memberWithdrawalDialog.dismiss();
+                sessionManager.clearSession();
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                startActivity(intent);
+            }
             else { Toast.makeText(getActivity(),"정확하게 입력해주세요.", Toast.LENGTH_SHORT).show(); }
-            });
+        });
     }
 
-    private void executeDeleteSync(String... params) {
+    private void executeDeleteSync() {
         ExecutorService executor = Executors.newSingleThreadExecutor();
-        FutureTask<Boolean> futureTask = new FutureTask<>(new DeleteCallable(params));
+        FutureTask<Boolean> futureTask = new FutureTask<>(new DeleteCallable());
         executor.execute(futureTask);
 
         try {
@@ -436,16 +448,8 @@ public class FragmentSetting extends Fragment {
     }
 
     private class DeleteCallable implements Callable<Boolean> {
-        private String[] params;
-
-        public DeleteCallable(String... params) {
-            this.params = params;
-        }
-
         @Override
         public Boolean call() throws Exception {
-            String check = params[0];
-
             Connection conn = null;
             PreparedStatement pstmt = null;
             String sql = "";
@@ -457,7 +461,7 @@ public class FragmentSetting extends Fragment {
                 conn = DriverManager.getConnection("jdbc:mysql://10.0.2.2:3306/test", "root", "root");
 
                 // 쿼리 실행
-                sql = "Delete member_info where id = ?";
+                sql = "DELETE FROM member_info WHERE id = ?";
                 pstmt = conn.prepareStatement(sql);
                 pstmt.setString(1, sessionManager.getId());
                 int result = pstmt.executeUpdate();

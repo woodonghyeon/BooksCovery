@@ -172,6 +172,7 @@
                 android:fontFamily="@font/suitebold"
                 android:textSize="20dp"
                 android:inputType="text"
+                android:imeOptions="actionDone"
                 android:hint="회원 정보 탈퇴" />
         </com.google.android.material.textfield.TextInputLayout>
 
