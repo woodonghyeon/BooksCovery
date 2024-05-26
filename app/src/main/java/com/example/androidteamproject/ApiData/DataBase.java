@@ -1,5 +1,6 @@
 package com.example.androidteamproject.ApiData;
 
+import android.os.StrictMode;
 import android.util.Log;
 
 import java.sql.Connection;
@@ -20,6 +21,9 @@ public class DataBase {
     public void dbConn() throws ClassNotFoundException, SQLException {
         // JDBC 드라이버 로드
         Class.forName("com.mysql.jdbc.Driver");
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
         // 데이터베이스에 연결 (url : "jdbc:mysql://10.0.2.2 (에뮬레이터 로컬 호스트 주소) :3306/your-database-name", user : DB 아이디, password : DB 비밀번호)
         conn = DriverManager.getConnection("jdbc:mysql://10.0.2.2:3306/test", "root", "root");
     }
@@ -34,7 +38,7 @@ public class DataBase {
             pstmt.setString(1, sbd.getIsbn13());  //String 저장 어떻게 할건지 수정필요
 
             // 쿼리 실행
-            rs = pstmt.executeQuery(sql);
+            rs = pstmt.executeQuery();
             if (rs.next()) {
                 return rs.getInt("book_id");
             }
@@ -64,7 +68,7 @@ public class DataBase {
             pstmt.setString(1, sbd.getIsbn13());  //String 저장 어떻게 할건지 수정필요
 
             // 쿼리 실행
-            rs = pstmt.executeQuery(sql);
+            rs = pstmt.executeQuery();
             if (!rs.next()) {
                 return 0;
             }
@@ -163,7 +167,7 @@ public class DataBase {
             pstmt.setInt(1, book_id);  //String 저장 어떻게 할건지 수정필요
             pstmt.setInt(2, department_id);
             // 쿼리 실행
-            rs = pstmt.executeQuery(sql);
+            rs = pstmt.executeQuery();
             if (rs.next()) {
                 return rs.getInt("book_count_id");
             }
@@ -239,7 +243,7 @@ public class DataBase {
             pstmt.setInt(1, department_id);
 
             // 쿼리 실행
-            rs = pstmt.executeQuery(sql);
+            rs = pstmt.executeQuery();
 
 
 //            return rowsInserted > 0 ? "데이터 삽입 성공" : "데이터 삽입 실패";

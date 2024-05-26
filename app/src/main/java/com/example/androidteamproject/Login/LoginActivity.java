@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -96,6 +97,8 @@ public class LoginActivity extends Activity {
             try {
                 // JDBC 드라이버 로드
                 Class.forName("com.mysql.jdbc.Driver");
+                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                StrictMode.setThreadPolicy(policy);
                 // 데이터베이스에 연결 (url : "jdbc:mysql://10.0.2.2 (에뮬레이터 로컬 호스트 주소) :3306/your-database-name", user : DB 아이디, password : DB 비밀번호)
                 conn = DriverManager.getConnection("jdbc:mysql://10.0.2.2:3306/test", "root", "root");
 
@@ -105,7 +108,7 @@ public class LoginActivity extends Activity {
                 pstmt.setString(1, userid);
 
                 // 쿼리 실행
-                rs = pstmt.executeQuery(sql);
+                rs = pstmt.executeQuery();
                 if(rs.next()) {
                     member_id = rs.getInt("member_id");
                 }
