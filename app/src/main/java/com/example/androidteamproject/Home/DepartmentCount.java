@@ -107,9 +107,11 @@ public class DepartmentCount {
             conn = DriverManager.getConnection("jdbc:mysql://10.0.2.2:3306/test", "root", "root");
 
             // 쿼리 실행
-            String sql = "select b.bookname, b.authors, b.publisher, b.book_image_URL, b.publication_year, b.class_no, b.loan_count, c.book_count" +
+            String sql = "select b.isbn, b.bookname, b.authors, b.publisher, b.book_image_URL, b.publication_year, b.class_no, b.loan_count, c.book_count" +
                     " from book b, book_count c" +
-                    " where b.book_id = c.book_id and department_id = ?";
+                    " where b.book_id = c.book_id and department_id = ?" +
+                    " order by c.book_count desc" +
+                    " limit 10";
             pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, department_id);
 
@@ -150,6 +152,8 @@ public class DepartmentCount {
             // 출판년도를 가져옴
             String publication_year = rs.getString("publication_year");
 
+            String isbn13 = rs.getString("isbn");
+
             String class_no = rs.getString("class_no");
 
             int loan_count = rs.getInt("loan_count");
@@ -157,7 +161,7 @@ public class DepartmentCount {
             int book_count = rs.getInt("book_count");
 
             // 책 정보를 담은 SearchBookKeyword 객체 생성
-            SearchBookKeyword book = new SearchBookKeyword(bookName, authors, bookImageUrl, publisher, publication_year);   // 수정필요
+            SearchBookKeyword book = new SearchBookKeyword(isbn13, bookName, authors, bookImageUrl, publisher, publication_year);   // 수정필요
 
             // 생성한 SearchBookKeyword 객체를 리스트에 추가
             books.add(book);    // 수정필요

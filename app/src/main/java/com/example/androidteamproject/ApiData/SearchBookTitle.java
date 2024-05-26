@@ -17,8 +17,8 @@ public class SearchBookTitle implements Serializable {
         this.publication_year = publication_year;
     }
 
-    public String getIsbn() { return isbn13; }
-    public void setIsbn(String isbn13) {
+    public String getIsbn13() { return isbn13; }
+    public void setIsbn13(String isbn13) {
         this.isbn13 = isbn13;
     }
     public String getBookName() {

@@ -13,7 +13,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.androidteamproject.ApiData.HttpConnection;
+import com.example.androidteamproject.ApiData.SearchBookDetail;
 import com.example.androidteamproject.ApiData.SearchBookTitle;
+import com.example.androidteamproject.Home.FragmentBookDetail;
 import com.example.androidteamproject.R;
 
 import java.util.ArrayList;
@@ -71,7 +73,7 @@ public class FragmentTitleSearch extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                SearchBookTitle selectedBook = bookList.get(position);
+                SearchBookTitle selectedBook = bookList.get(position); // 클릭시 프래그먼트 체인지
                 showBookDetail(selectedBook);
             }
         });
@@ -82,8 +84,13 @@ public class FragmentTitleSearch extends Fragment {
         return view;
     }
 
-    private void showBookDetail(SearchBookTitle book) {
-        FragmentBookDetail fragment = FragmentBookDetail.newInstance(book);
+    private void showBookDetail(SearchBookTitle selectedBook) {
+        FragmentBookDetail fragment = FragmentBookDetail.newInstance(
+                selectedBook.getIsbn13(),
+                selectedBook.getBookName(),
+                selectedBook.getAuthors(),
+                selectedBook.getBookImageUrl()
+        );
 
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.ly_home, fragment);
