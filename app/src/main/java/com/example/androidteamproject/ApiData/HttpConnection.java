@@ -114,9 +114,10 @@ public class HttpConnection {
 
                         // 출판년도를 가져옴
                         String publication_year = doc.getString("publication_year");
+                        String isbn13 = doc.getString("isbn13");
 
                         // 책 정보를 담은 SearchBookKeyword 객체 생성
-                        SearchBookKeyword book = new SearchBookKeyword(bookName, authors, bookImageUrl, publisher, publication_year);
+                        SearchBookKeyword book = new SearchBookKeyword(isbn13, bookName, authors, bookImageUrl, publisher, publication_year);
 
                         // 생성한 SearchBookKeyword 객체를 리스트에 추가
                         books.add(book);
@@ -176,9 +177,10 @@ public class HttpConnection {
 
                         // 출판년도를 가져옴
                         String publication_year = doc.getString("publication_year");
+                        String isbn13 = doc.getString("isbn13");
 
                         // 책 정보를 담은 SearchBookKeyword 객체 생성
-                        SearchBookAuthor book = new SearchBookAuthor(bookName, authors, bookImageUrl, publisher, publication_year);
+                        SearchBookAuthor book = new SearchBookAuthor(isbn13, bookName, authors, bookImageUrl, publisher, publication_year);
 
                         // 생성한 SearchBookKeyword 객체를 리스트에 추가
                         books.add(book);
@@ -418,26 +420,60 @@ public class HttpConnection {
                     JSONObject responseBody = new JSONObject(response.body().string());
                     JSONObject book = responseBody.getJSONObject("response").getJSONObject("book");
 
-                    // 주제분류명(class_nm)을 가져옴
-                    String class_nm = book.getString("class_nm");
-
-                    // 책 이름(bookname)을 가져옴
+                    // 책 정보 추출
                     String bookName = book.getString("bookname");
-
-                    // 책 이미지 URL(bookImageURL)을 가져옴
-                    String bookImageUrl = book.getString("bookImageURL");
-
-                    // 저자(authors)를 가져옴
                     String authors = book.getString("authors");
-
-                    // ISBN13
-                    String isbn13 = book.getString("isbn13");
-
-                    // 설명(description)
+                    String publisher = book.getString("publisher");
+                    String bookImageUrl = book.getString("bookImageURL");
                     String description = book.getString("description");
+                    String publication_year = book.getString("publication_year");
+                    String isbn13 = book.getString("isbn13");
+                    String class_no = book.getString("class_no");
+                    String class_nm = book.getString("class_nm");
+                    String loanCnt = book.getString("loanCnt");
+                    String vol = book.getString("vol");
 
-                    // 책 정보를 담은 SearchBook 객체 생성
-                    SearchBookDetail bookDetail = new SearchBookDetail(class_nm, bookName, authors, bookImageUrl, isbn13, description);
+                    // 대출 기록 정보 추출
+                    JSONArray loanHistoryArray = responseBody.getJSONObject("response").getJSONArray("loanHistory");
+                    List<String> month = new ArrayList<>();
+                    List<String> loanHistoryCnt = new ArrayList<>();
+                    List<String> ranking = new ArrayList<>();
+                    for (int i = 0; i < loanHistoryArray.length(); i++) {
+                        JSONObject loan = loanHistoryArray.getJSONObject(i).getJSONObject("loan"); // 첫 번째 항목만 사용
+                        month.add(loan.getString("month"));
+                        loanHistoryCnt.add(loan.getString("loanCnt"));
+                        ranking.add(loan.getString("ranking"));
+                    }
+
+                    // 대출 그룹 정보 추출
+                    JSONArray loanGrps = responseBody.getJSONObject("response").getJSONArray("loanGrps");
+                    List<String> age = new ArrayList<>();
+                    List<String> gender = new ArrayList<>();
+                    List<String> loanGrpsCnt = new ArrayList<>();
+                    List<String> loanGrpsRanking = new ArrayList<>();
+                    for (int i = 0; i < loanGrps.length(); i++) {
+                        JSONObject loanGrp = loanGrps.getJSONObject(i).getJSONObject("loanGrp");
+                        age.add(loanGrp.getString("age"));
+                        gender.add(loanGrp.getString("gender"));
+                        loanGrpsCnt.add(loanGrp.getString("loanCnt"));
+                        loanGrpsRanking.add(loanGrp.getString("ranking"));
+                    }
+
+                    // 키워드 정보 추출
+                    JSONArray keywords = responseBody.getJSONObject("response").getJSONArray("keywords");
+                    List<String> word = new ArrayList<>();
+                    List<String> weight = new ArrayList<>();
+                    for (int i = 0; i < keywords.length(); i++) {
+                        JSONObject keyword = keywords.getJSONObject(i).getJSONObject("keyword");
+                        word.add(keyword.getString("word"));
+                        weight.add(keyword.getString("weight"));
+                    }
+
+                    // 책 정보를 담은 SearchBookDetail 객체 생성
+                    SearchBookDetail bookDetail = new SearchBookDetail(
+                            bookName, authors, publisher, bookImageUrl, description, publication_year, isbn13, vol, class_no, class_nm, loanCnt,
+                            month, loanHistoryCnt, ranking, age, gender, loanGrpsCnt, loanGrpsRanking, word, weight
+                    );
 
                     // 콜백을 통해 성공적인 응답 처리 (BookDetail 객체 전달)
                     callback.onSuccess(bookDetail);

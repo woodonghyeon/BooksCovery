@@ -274,26 +274,6 @@ public class FragmentHome extends Fragment {
         });
     } // end of setupWeekViewPager
 
-    // showBookDetail
-    private void showBookDetail(String isbn13, String bookName, String authors, String imageUrl) {
-        // 새로운 FragmentBookDetail 인스턴스를 생성하고 필요한 데이터를 전달
-        FragmentBookDetail fragment = FragmentBookDetail.newInstance(isbn13, bookName, authors, imageUrl);
-
-        // FragmentTransaction을 통해 프래그먼트를 관리
-        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-
-        // 현재 프래그먼트를 가져와서 숨김
-        Fragment currentFragment = getParentFragmentManager().findFragmentById(R.id.ly_home);
-        if (currentFragment != null) {
-            transaction.hide(currentFragment);
-        }
-
-        // 새로운 프래그먼트를 추가
-        transaction.add(R.id.ly_home, fragment);
-        transaction.addToBackStack(null); // 백스택에 추가하여 뒤로가기 버튼을 눌렀을 때 이전 프래그먼트로 돌아갈 수 있음
-        transaction.commit();
-    }
-
     // 최근 많이 검색된 도서 출력 (월간)
     private void getResponseApiMonthLoanItems() {
         String getTime = mFormat.format(mDate); // 현재 날짜 가져오기
@@ -318,14 +298,16 @@ public class FragmentHome extends Fragment {
                         List<String> bookName = new ArrayList<>();
                         List<String> authors = new ArrayList<>();
                         List<String> class_nm = new ArrayList<>();
+                        List<String> isbn13 = new ArrayList<>();
                         for (SearchBook book : books) {
                             imageUrls.add(book.getBookImageUrl());
                             bookName.add(book.getBookName());
                             authors.add(book.getAuthors());
                             class_nm.add(book.getClass_nm());
+                            isbn13.add(book.getIsbn13());
                         }
                         // ViewPager2에 이미지 추가
-                        setupMonthViewPager(class_nm, bookName, authors, imageUrls);
+                        setupMonthViewPager(class_nm, bookName, authors, imageUrls, isbn13);
                         Log.d("API Response(Month)", "Image URLs: " + imageUrls.toString() + ", BookName: " + bookName.toString());
                     });
                 }
@@ -344,7 +326,7 @@ public class FragmentHome extends Fragment {
     } // end of getResponseApiMonthLoanItems
 
     // 월간 인기 도서 ViewPager2 setup
-    private void setupMonthViewPager(List<String> class_nm, List<String> bookName, List<String> authors, List<String> imageUrls) {
+    private void setupMonthViewPager(List<String> class_nm, List<String> bookName, List<String> authors, List<String> imageUrls, List<String> isbn13) {
         if (imageUrls == null || imageUrls.isEmpty()) {
             // 이미지 URL이 없는 경우 처리
             return;
@@ -354,7 +336,7 @@ public class FragmentHome extends Fragment {
             return;
         }
         monthBookPager = getView().findViewById(R.id.month_book_viewpager);
-        monthBookAdapter = new MonthBookAdapter(requireActivity(), class_nm, bookName, authors, imageUrls);
+        monthBookAdapter = new MonthBookAdapter(requireActivity(), class_nm, bookName, authors, imageUrls, isbn13, this::showBookDetail);
         monthBookPager.setAdapter(monthBookAdapter);
         monthBookPager.setCurrentItem(1000);
         monthBookPager.setOffscreenPageLimit(10);
@@ -403,14 +385,16 @@ public class FragmentHome extends Fragment {
                         List<String> bookName = new ArrayList<>();
                         List<String> authors = new ArrayList<>();
                         List<String> class_nm = new ArrayList<>();
+                        List<String> isbn13 = new ArrayList<>();
                         for (SearchBook book : books) {
                             imageUrls.add(book.getBookImageUrl());
                             bookName.add(book.getBookName());
                             authors.add(book.getAuthors());
                             class_nm.add(book.getClass_nm());
+                            isbn13.add(book.getIsbn13());
                         }
                         // ViewPager2에 이미지 추가
-                        setupHotTrendViewPager(class_nm, bookName, authors, imageUrls);
+                        setupHotTrendViewPager(class_nm, bookName, authors, imageUrls, isbn13);
                         Log.d("API Response(HotTrend)", "Image URLs: " + imageUrls.toString() + ", BookName: " + bookName.toString());
                     });
                 }
@@ -429,7 +413,7 @@ public class FragmentHome extends Fragment {
     } // end of getResponseApiHotTrend
 
     // 대출 급상승(hotTrend) 도서 ViewPager2 setup
-    private void setupHotTrendViewPager(List<String> class_nm, List<String> bookName, List<String> authors, List<String> imageUrls) {
+    private void setupHotTrendViewPager(List<String> class_nm, List<String> bookName, List<String> authors, List<String> imageUrls, List<String> isbn13) {
         if (imageUrls == null || imageUrls.isEmpty()) {
             // 이미지 URL이 없는 경우 처리
             return;
@@ -439,7 +423,7 @@ public class FragmentHome extends Fragment {
             return;
         }
         hotTrendBookPager = getView().findViewById(R.id.hotTrend_book_viewpager);
-        hotTrendBookAdapter = new HotTrendBookAdapter(requireActivity(), class_nm, bookName, authors, imageUrls);
+        hotTrendBookAdapter = new HotTrendBookAdapter(requireActivity(), class_nm, bookName, authors, imageUrls, isbn13, this::showBookDetail);
         hotTrendBookPager.setAdapter(hotTrendBookAdapter);
         hotTrendBookPager.setCurrentItem(1000);
         hotTrendBookPager.setOffscreenPageLimit(10);
@@ -505,4 +489,24 @@ public class FragmentHome extends Fragment {
             }
         });
     } // end of setupSpinner
+
+    // showBookDetail
+    private void showBookDetail(String isbn13, String bookName, String authors, String imageUrl) {
+        // 새로운 FragmentBookDetail 인스턴스를 생성하고 필요한 데이터를 전달
+        FragmentBookDetail fragment = FragmentBookDetail.newInstance(isbn13, bookName, authors, imageUrl);
+
+        // FragmentTransaction을 통해 프래그먼트를 관리
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+
+        // 현재 프래그먼트를 가져와서 숨김
+        Fragment currentFragment = getParentFragmentManager().findFragmentById(R.id.ly_home);
+        if (currentFragment != null) {
+            transaction.hide(currentFragment);
+        }
+
+        // 새로운 프래그먼트를 추가
+        transaction.add(R.id.ly_home, fragment);
+        transaction.addToBackStack(null); // 백스택에 추가하여 뒤로가기 버튼을 눌렀을 때 이전 프래그먼트로 돌아갈 수 있음
+        transaction.commit();
+    }
 }
