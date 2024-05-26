@@ -230,24 +230,19 @@
                 android:layout_height="wrap_content">
 
                 <!-- 월별 대출 정보 -->
-                <TableRow>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="월별 대출 정보"
-                        android:fontFamily="@font/suitebold"
-                        android:textSize="25sp"
-                        android:textStyle="bold" />
-                </TableRow>
-                <TableRow>
-                    <TextView
-                        android:id="@+id/tv_detail_month"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:fontFamily="@font/suitelight"
-                        android:textSize="25sp"  />
-                </TableRow>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="월별 도서 이용 추이"
+                    android:textStyle="bold"
+                    android:textSize="25sp"
+                    android:layout_marginBottom="8dp" />
+
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/line_chart"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:layout_marginBottom="15dp" />
 
                 <!-- 대출 그룹 정보 -->
                 <TableRow>
