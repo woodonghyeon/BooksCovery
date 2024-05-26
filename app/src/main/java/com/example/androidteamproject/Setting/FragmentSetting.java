@@ -472,9 +472,7 @@ public class FragmentSetting extends Fragment {
                 // 결과 받기
                 return result > 0;
 
-            } catch (SQLException | ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
+            } catch (SQLException | ClassNotFoundException e) { throw new RuntimeException(e); }
         }
     }
     
