@@ -86,8 +86,6 @@ public class SessionManager {
         return pref.getString(KEY_UPDATE_DATE, null);
     }
 
-
-
     public void clearSession() {
         editor.clear();
         editor.commit();
