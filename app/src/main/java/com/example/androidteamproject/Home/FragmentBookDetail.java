@@ -82,7 +82,7 @@ public class FragmentBookDetail extends Fragment {
         TextView loanGrpsCntTextView = view.findViewById(R.id.tv_detail_loan_grps_cnt);
         TextView loanGrpsRankingTextView = view.findViewById(R.id.tv_detail_loan_grps_ranking);
         TextView wordTextView = view.findViewById(R.id.tv_detail_word);
-        TextView weightTextView = view.findViewById(R.id.tv_detail_weight);
+//        TextView weightTextView = view.findViewById(R.id.tv_detail_weight);
 
         // 로깅 추가
         System.out.println("FragmentBookDetail onCreateView: " + bookName + ", " + authors + ", " + imageUrl);
@@ -106,12 +106,12 @@ public class FragmentBookDetail extends Fragment {
         bookNameTextView.setText(bookName);
         authorsTextView.setText(authors);
 
-        fetchBookDetail(isbn13, bookNameTextView, authorsTextView, descriptionTextView, bookImageView, publisherTextView, publicationYearTextView, classNoTextView, classNmTextView, loanCntTextView, monthTextView, loanHistoryCntTextView, rankingTextView, ageTextView, genderTextView, loanGrpsCntTextView, loanGrpsRankingTextView, wordTextView, weightTextView);
+        fetchBookDetail(isbn13, bookNameTextView, authorsTextView, descriptionTextView, bookImageView, publisherTextView, publicationYearTextView, classNoTextView, classNmTextView, loanCntTextView, monthTextView, loanHistoryCntTextView, rankingTextView, ageTextView, genderTextView, loanGrpsCntTextView, loanGrpsRankingTextView, wordTextView);
 
         return view;
     }
 
-    private void fetchBookDetail(String isbn13, TextView bookNameTextView, TextView authorsTextView, TextView descriptionTextView, ImageView bookImageView, TextView publisherTextView, TextView publicationYearTextView, TextView classNoTextView, TextView classNmTextView, TextView loanCntTextView, TextView monthTextView, TextView loanHistoryCntTextView, TextView rankingTextView, TextView ageTextView, TextView genderTextView, TextView loanGrpsCntTextView, TextView loanGrpsRankingTextView, TextView wordTextView, TextView weightTextView) {
+    private void fetchBookDetail(String isbn13, TextView bookNameTextView, TextView authorsTextView, TextView descriptionTextView, ImageView bookImageView, TextView publisherTextView, TextView publicationYearTextView, TextView classNoTextView, TextView classNmTextView, TextView loanCntTextView, TextView monthTextView, TextView loanHistoryCntTextView, TextView rankingTextView, TextView ageTextView, TextView genderTextView, TextView loanGrpsCntTextView, TextView loanGrpsRankingTextView, TextView wordTextView) {
         String url = "http://data4library.kr/api/usageAnalysisList?authKey=" + API_KEY + "&isbn13=" + isbn13 + "&format=json";
 
         HttpConnection.getInstance(getContext()).getDetailBook(url, new HttpConnection.HttpResponseCallback<SearchBookDetail>() {
@@ -193,7 +193,7 @@ public class FragmentBookDetail extends Fragment {
                             weightBuilder.append(weight.get(i)).append("\n");
                         }
                         wordTextView.setText(wordBuilder.toString());
-                        weightTextView.setText(weightBuilder.toString());
+//                        weightTextView.setText(weightBuilder.toString());
 
                         // 도서 중복 확인 중복시 안하고 없을시 추가
                         SearchBookDetail searchBookDetail = new SearchBookDetail(bookDetail.getBookName(),bookDetail.getAuthors(),bookDetail.getPublisher(),bookDetail.getBookImageUrl(),bookDetail.getDescription(),bookDetail.getPublication_year(),bookDetail.getIsbn13(),bookDetail.getVol(),bookDetail.getClass_no(),bookDetail.getClass_nm(),bookDetail.getLoanCnt(),bookDetail.getMonth(),bookDetail.getLoanHistoryCnt(),bookDetail.getRankings(),bookDetail.getAge(),bookDetail.getGender(),bookDetail.getLoanGrpsCnt(),bookDetail.getLoanGrpsRanking(),bookDetail.getWord(),bookDetail.getWeight());
