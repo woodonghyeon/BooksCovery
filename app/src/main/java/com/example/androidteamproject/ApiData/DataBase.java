@@ -2,6 +2,8 @@ package com.example.androidteamproject.ApiData;
 
 import android.util.Log;
 
+import com.example.androidteamproject.SessionManager;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -17,6 +19,8 @@ public class DataBase {
     // 학과별 검색횟수 있으면 업데이트 없으면 추가
     Connection conn = null;
     PreparedStatement pstmt = null;
+    int book_id;
+
     public void dbConn() throws ClassNotFoundException, SQLException {
         // JDBC 드라이버 로드
         Class.forName("com.mysql.jdbc.Driver");
@@ -37,7 +41,7 @@ public class DataBase {
             if (!rs.next()) {
                 return 0;
             }
-
+            book_id = rs.getInt("book_id");
             return 1;
         } catch (Exception e) {
             Log.e("InsertDataTask", "Error inserting data", e);
@@ -92,34 +96,6 @@ public class DataBase {
             }
         }
         return "중복 있음.";
-    }
-
-    public String insertBookCount(Integer department_id, Integer book_id){ //학과별 도서 검색횟수
-        try {
-            dbConn();
-
-            // 쿼리 실행
-            String sql = "Insert into book_count (department_id, book_id) Values (?, ?)";
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, department_id);
-            pstmt.setInt(2, book_id);
-
-            // 쿼리 실행
-            int rowsInserted = pstmt.executeUpdate();
-            return rowsInserted > 0 ? "데이터 삽입 성공" : "데이터 삽입 실패";
-
-        } catch (Exception e) {
-            Log.e("InsertDataTask", "Error inserting data", e);
-            return "데이터 삽입 중 오류 발생";
-
-        } finally {
-            try {
-                if (pstmt != null) pstmt.close();
-                if (conn != null) conn.close();
-            } catch (Exception e) {
-                Log.e("InsertDataTask", "Error closing connection", e);
-            }
-        }
     }
 
     public String updateBookCount(Integer book_count_id){ //학과별 도서검색 카운트 증가
