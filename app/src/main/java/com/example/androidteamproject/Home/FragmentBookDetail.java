@@ -1,12 +1,12 @@
 package com.example.androidteamproject.Home;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
-import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
@@ -45,8 +45,7 @@ public class FragmentBookDetail extends Fragment {
     private static String API_KEY = "cc355482ccb755beacd4ba6f7134c20c6b59a237e1ee656a155a6ed3a2003941";
 
     DataBase dataBase = new DataBase();
-
-    private SessionManager sessionManager;
+    SessionManager sessionManager;
 
     public static FragmentBookDetail newInstance(String isbn13, String bookName, String authors, String imageUrl) {
         FragmentBookDetail fragment = new FragmentBookDetail();
@@ -68,13 +67,14 @@ public class FragmentBookDetail extends Fragment {
             authors = getArguments().getString(ARG_AUTHORS);
             imageUrl = getArguments().getString(ARG_IMAGE_URL);
         }
-        sessionManager = new SessionManager(getContext());
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_book_detail, container, false);
+        Context context = getContext();
+        sessionManager = new SessionManager(context);
 
         ImageView bookImageView = view.findViewById(R.id.iv_detail_book_image);
         TextView bookNameTextView = view.findViewById(R.id.tv_detail_book_name);
