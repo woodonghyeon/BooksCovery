@@ -188,6 +188,13 @@ public class FragmentBookDetail extends Fragment {
                         wordTextView.setText(wordBuilder.toString());
                         weightTextView.setText(weightBuilder.toString());
 
+                        // 도서 중복 확인 중복시 안하고 없을시 추가
+
+                        // 검색 기록 도서pk확인 있으면 삭제하고 추가 없으면 추가
+                        //// 즐겨찾기 온클릭시 즐겨찾기 추가
+                        // 학과별 검색횟수 있으면 업데이트 없으면 추가
+                        
+                        
                         if (bookDetail.getBookImageUrl() != null && !bookDetail.getBookImageUrl().isEmpty()) {
                             Picasso.get().load(bookDetail.getBookImageUrl()).into(bookImageView, new Callback() {
                                 @Override
