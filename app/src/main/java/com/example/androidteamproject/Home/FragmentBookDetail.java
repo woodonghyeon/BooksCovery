@@ -25,8 +25,17 @@ import com.example.androidteamproject.ApiData.HttpConnection;
 import com.example.androidteamproject.ApiData.SearchBookDetail;
 import com.example.androidteamproject.R;
 import com.example.androidteamproject.SessionManager;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,6 +52,7 @@ public class FragmentBookDetail extends Fragment {
     private String bookName;
     private String authors;
     private String imageUrl;
+    private LineChart lineChart;
     private static String API_KEY = "***REMOVED***";
 
     DataBase dataBase = new DataBase();
@@ -86,9 +96,9 @@ public class FragmentBookDetail extends Fragment {
         TextView classNoTextView = view.findViewById(R.id.tv_detail_class_no);
         TextView classNmTextView = view.findViewById(R.id.tv_detail_class_nm);
         TextView loanCntTextView = view.findViewById(R.id.tv_detail_loan_cnt);
-        TextView monthTextView = view.findViewById(R.id.tv_detail_month);
         TextView ageTextView = view.findViewById(R.id.tv_detail_age);
         TextView wordTextView = view.findViewById(R.id.tv_detail_word);
+        lineChart = view.findViewById(R.id.line_chart);
 
         // 로깅 추가
         System.out.println("FragmentBookDetail onCreateView: " + bookName + ", " + authors + ", " + imageUrl);
@@ -112,12 +122,12 @@ public class FragmentBookDetail extends Fragment {
         bookNameTextView.setText(bookName);
         authorsTextView.setText(authors);
 
-        fetchBookDetail(isbn13, bookNameTextView, authorsTextView, descriptionTextView, bookImageView, publisherTextView, publicationYearTextView, classNoTextView, classNmTextView, loanCntTextView, monthTextView, ageTextView, wordTextView);
+        fetchBookDetail(isbn13, bookNameTextView, authorsTextView, descriptionTextView, bookImageView, publisherTextView, publicationYearTextView, classNoTextView, classNmTextView, loanCntTextView, ageTextView, wordTextView);
 
         return view;
     }
 
-    private void fetchBookDetail(String isbn13, TextView bookNameTextView, TextView authorsTextView, TextView descriptionTextView, ImageView bookImageView, TextView publisherTextView, TextView publicationYearTextView, TextView classNoTextView, TextView classNmTextView, TextView loanCntTextView, TextView monthTextView, TextView ageTextView, TextView wordTextView) {
+    private void fetchBookDetail(String isbn13, TextView bookNameTextView, TextView authorsTextView, TextView descriptionTextView, ImageView bookImageView, TextView publisherTextView, TextView publicationYearTextView, TextView classNoTextView, TextView classNmTextView, TextView loanCntTextView, TextView ageTextView, TextView wordTextView) {
         String url = "http://data4library.kr/api/usageAnalysisList?authKey=" + API_KEY + "&isbn13=" + isbn13 + "&format=json";
 
         HttpConnection.getInstance(getContext()).getDetailBook(url, new HttpConnection.HttpResponseCallback<SearchBookDetail>() {
@@ -156,13 +166,61 @@ public class FragmentBookDetail extends Fragment {
                         // 월별 대출 정보 출력
                         List<String> month = bookDetail.getMonth();
                         List<String> loanHistoryCnt = bookDetail.getLoanHistoryCnt();
-                        List<String> ranking = bookDetail.getRankings();
-                        StringBuilder monthBuilder = new StringBuilder();
+
+                        List<Entry> entries = new ArrayList<>();
                         for (int i = 0; i < month.size(); i++) {
-                            // ranking은 일단 생략함
-                            monthBuilder.append(month.get(i)).append(" : ").append(loanHistoryCnt.get(i)).append("권\n");
+                            entries.add(new Entry(i, Float.parseFloat(loanHistoryCnt.get(i))));
                         }
-                        monthTextView.setText(monthBuilder.toString());
+
+                        LineDataSet dataSet = new LineDataSet(entries, "월별 대출 건수");
+                        dataSet.setColor(Color.CYAN); // 라인 색상 변경
+                        dataSet.setCircleColor(Color.CYAN); // 데이터 점 색상 변경
+                        dataSet.setLineWidth(2f); // 라인 두께 변경
+                        dataSet.setCircleRadius(5f); // 데이터 점 크기 변경
+                        dataSet.setDrawValues(false); // 데이터 값 라벨 제거
+
+                        LineData lineData = new LineData(dataSet);
+                        lineChart.setData(lineData);
+
+                        XAxis xAxis = lineChart.getXAxis();
+                        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+                        xAxis.setGranularity(1f);
+                        xAxis.setValueFormatter(new XAxisFormatter(month));
+                        xAxis.setLabelCount(month.size()); // 월별 라벨 표시
+
+                        YAxis leftAxis = lineChart.getAxisLeft();
+                        leftAxis.setDrawGridLines(false); // Y축 격자 제거
+                        leftAxis.setDrawLabels(false); // Y축 라벨 제거
+                        leftAxis.setDrawAxisLine(false); // Y축 선 제거
+
+                        YAxis rightAxis = lineChart.getAxisRight();
+                        rightAxis.setEnabled(false); // 오른쪽 Y축 비활성화
+
+                        // 여백 추가
+                        lineChart.setExtraOffsets(80, 50, 80, 0);
+
+                        // 모든 선 제거
+                        lineChart.getXAxis().setDrawLabels(false); // X축 라벨 제거
+                        lineChart.getAxisLeft().setDrawAxisLine(false);
+                        lineChart.getAxisLeft().setDrawGridLines(false);
+                        lineChart.getAxisRight().setDrawAxisLine(false);
+                        lineChart.getAxisRight().setDrawGridLines(false);
+                        lineChart.getXAxis().setDrawAxisLine(false);
+                        lineChart.getXAxis().setDrawGridLines(false); // grid 라인 제거
+                        lineChart.getLegend().setEnabled(false); // 범례 제거
+                        lineChart.getDescription().setEnabled(false); // 설명 라벨 제거
+                        lineChart.setDrawBorders(false); // 테두리 제거
+                        
+                        // 터치 기능 활성화/비활성화
+                        lineChart.setTouchEnabled(true); // 터치 활성화(데이터 클릭시 표시하기 위함)
+                        lineChart.setDragEnabled(false); // 드래그로 줌인, 줌아웃 가능해서 비활성화
+                        lineChart.setScaleEnabled(false); // 줌 기능 비활성화
+
+                        CustomMarkerView markerView = new CustomMarkerView(getContext(), R.layout.marker_view, month);
+                        lineChart.setMarker(markerView);
+
+                        // 차트 새로고침
+                        lineChart.invalidate();
 
                         // 대출 그룹 정보 출력
                         List<String> age = bookDetail.getAge();
@@ -256,6 +314,19 @@ public class FragmentBookDetail extends Fragment {
         KeywordWithWeight(String word, String weight) {
             this.word = word;
             this.weight = weight;
+        }
+    }
+
+    public class XAxisFormatter extends ValueFormatter {
+        private final List<String> month;
+
+        public XAxisFormatter(List<String> month) {
+            this.month = month;
+        }
+
+        @Override
+        public String getFormattedValue(float value) {
+            return month.get((int) value).substring(5);
         }
     }
 }
