@@ -24,6 +24,37 @@ public class DataBase {
         conn = DriverManager.getConnection("jdbc:mysql://10.0.2.2:3306/test", "root", "root");
     }
 
+    public int selectBookId(SearchBookDetail sbd){
+        ResultSet rs = null;
+        try {
+            dbConn();
+            String sql = "select book_id from book where isbn = ?";
+            // 쿼리 실행
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, sbd.getIsbn13());  //String 저장 어떻게 할건지 수정필요
+
+            // 쿼리 실행
+            rs = pstmt.executeQuery(sql);
+            if (rs.next()) {
+                return rs.getInt("book_id");
+            }
+
+            return 1;
+        } catch (Exception e) {
+            Log.e("InsertDataTask", "Error inserting data", e);
+//            return "데이터 삽입 중 오류 발생";
+            return 0; // 이거 어떻게 리턴할 지 ,..?
+
+        } finally {
+            try {
+                if (pstmt != null) pstmt.close();
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                Log.e("InsertDataTask", "Error closing connection", e);
+            }
+        }
+    }
+
     public int checkDuplicate(SearchBookDetail sbd, String sql) { //상세보기에 들어가면 체크
         ResultSet rs = null;
         try {
@@ -111,6 +142,37 @@ public class DataBase {
         } catch (Exception e) {
             Log.e("InsertDataTask", "Error inserting data", e);
             return "데이터 삽입 중 오류 발생";
+
+        } finally {
+            try {
+                if (pstmt != null) pstmt.close();
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                Log.e("InsertDataTask", "Error closing connection", e);
+            }
+        }
+    }
+
+    public int findBookCount(int book_id, int department_id){
+        ResultSet rs = null;
+        try {
+            dbConn();
+            String sql = "select book_count_id from book_count where book_id = ? and department_id = ?";
+            // 쿼리 실행
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, book_id);  //String 저장 어떻게 할건지 수정필요
+            pstmt.setInt(2, department_id);
+            // 쿼리 실행
+            rs = pstmt.executeQuery(sql);
+            if (rs.next()) {
+                return rs.getInt("book_count_id");
+            }
+
+            return 1;
+        } catch (Exception e) {
+            Log.e("InsertDataTask", "Error inserting data", e);
+//            return "데이터 삽입 중 오류 발생";
+            return 0; // 이거 어떻게 리턴할 지 ,..?
 
         } finally {
             try {
