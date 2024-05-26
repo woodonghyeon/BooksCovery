@@ -54,14 +54,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/suitebold"
-                            android:textSize="20sp"
+                            android:textSize="30sp"
                             android:text="저자 정보 : "/>
 
                         <TextView
                             android:id="@+id/tv_detail_authors"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="20sp"
+                            android:textSize="30sp"
                             android:text="저자 정보"
                             android:fontFamily="@font/suitelight"
                             android:layout_marginBottom="8dp" />
@@ -75,13 +75,13 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/suitebold"
-                            android:textSize="20sp"
+                            android:textSize="30sp"
                             android:text="출판사 : "/>
                         <TextView
                             android:id="@+id/tv_detail_publisher"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="20sp"
+                            android:textSize="30sp"
                             android:text="출판사 정보"
                             android:fontFamily="@font/suitelight"
                             android:layout_marginBottom="8dp" />
@@ -95,13 +95,13 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/suitebold"
-                            android:textSize="20sp"
+                            android:textSize="30sp"
                             android:text="출판 연도 : "/>
                         <TextView
                             android:id="@+id/tv_detail_publication_year"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="20sp"
+                            android:textSize="30sp"
                             android:text="출판 연도"
                             android:fontFamily="@font/suitelight"
                             android:layout_marginBottom="8dp" />
@@ -115,13 +115,13 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/suitebold"
-                            android:textSize="20sp"
+                            android:textSize="30sp"
                             android:text="ISBN : "/>
                         <TextView
                             android:id="@+id/tv_detail_isbn"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="20sp"
+                            android:textSize="30sp"
                             android:text="ISBN"
                             android:fontFamily="@font/suitelight"
                             android:layout_marginBottom="8dp" />
@@ -150,7 +150,7 @@
                     android:id="@+id/tv_detail_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
+                    android:textSize="25sp"
                     android:text="책 설명"
                     android:layout_marginBottom="16dp" />
             </LinearLayout>
@@ -172,13 +172,15 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="주제 분류"
-                        android:textStyle="bold" />
+                        android:fontFamily="@font/suitebold"
+                        android:textSize="25sp" />
                     <TextView
                         android:id="@+id/tv_detail_class_no"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:textSize="16sp" />
+                        android:fontFamily="@font/suitelight"
+                        android:textSize="25sp" />
                 </TableRow>
 
                 <TableRow>
@@ -186,13 +188,16 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="주제 분류명"
+                        android:fontFamily="@font/suitebold"
+                        android:textSize="25sp"
                         android:textStyle="bold" />
                     <TextView
                         android:id="@+id/tv_detail_class_nm"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:textSize="16sp" />
+                        android:fontFamily="@font/suitelight"
+                        android:textSize="25sp"/>
                 </TableRow>
 
                 <TableRow>
@@ -200,13 +205,15 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="대출 건수"
-                        android:textStyle="bold" />
+                        android:fontFamily="@font/suitebold"
+                        android:textSize="25sp" />
                     <TextView
                         android:id="@+id/tv_detail_loan_cnt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:textSize="16sp" />
+                        android:fontFamily="@font/suitelight"
+                        android:textSize="25sp" />
                 </TableRow>
             </TableLayout>
         </androidx.cardview.widget.CardView>
@@ -228,6 +235,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="월별 대출 정보"
+                        android:fontFamily="@font/suitebold"
+                        android:textSize="25sp"
                         android:textStyle="bold" />
                 </TableRow>
                 <TableRow>
@@ -236,7 +245,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:textSize="16sp" />
+                        android:fontFamily="@font/suitelight"
+                        android:textSize="25sp"  />
                 </TableRow>
 
                 <!-- 대출 그룹 정보 -->
@@ -245,7 +255,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="대출 그룹 정보"
-                        android:textStyle="bold" />
+                        android:fontFamily="@font/suitebold"
+                        android:textSize="25sp" />
                 </TableRow>
                 <TableRow>
                     <TextView
@@ -253,7 +264,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:textSize="16sp" />
+                        android:fontFamily="@font/suitelight"
+                        android:textSize="25sp" />
                 </TableRow>
 
                 <!-- 키워드 정보 -->
@@ -262,7 +274,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="키워드 정보"
-                        android:textStyle="bold" />
+                        android:fontFamily="@font/suitebold"
+                        android:textSize="25sp" />
                 </TableRow>
                 <TableRow>
                     <TextView
@@ -270,7 +283,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:textSize="16sp" />
+                        android:fontFamily="@font/suitelight"
+                        android:textSize="25sp"  />
                 </TableRow>
             </TableLayout>
         </androidx.cardview.widget.CardView>
