@@ -76,9 +76,9 @@ public class FragmentHome extends Fragment {
         setupSpinner(view); // 스피너 설정 메서드 호출
         startAnimation(view);
         CurrentEventSettingImg(view);
-        getResponseApiWeekLoanItems();
-        getResponseApiMonthLoanItems();
-        getResponseApiHotTrend();
+//        getResponseApiWeekLoanItems();
+//        getResponseApiMonthLoanItems();
+//        getResponseApiHotTrend();
 
         return view;
     } // end of onCreateView

@@ -62,7 +62,6 @@ public class FragmentSetting extends Fragment {
     private SessionManager sessionManager;
     private String gender = "", department = "", pwd = null;
     private Spinner spinner_gender, et_input_department;
-    private static Boolean check;
 
     public FragmentSetting() {
     }
