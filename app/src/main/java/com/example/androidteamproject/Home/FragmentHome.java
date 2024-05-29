@@ -37,7 +37,7 @@ public class FragmentHome extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private final int currentEventNum = 4;
+    private final int currentEventNum = 9;
     private static final float MIN_SCALE = 0.6f; // WeekBook scale
     long now = System.currentTimeMillis();
     private Date mDate = new Date(now);
@@ -91,7 +91,7 @@ public class FragmentHome extends Fragment {
         homePagerAdapter = new CurrentEventAdapter(requireActivity(), currentEventNum);
         currentEventPager.setAdapter(homePagerAdapter);
         currentEventPager.setCurrentItem(1000);
-        currentEventPager.setOffscreenPageLimit(4);
+        currentEventPager.setOffscreenPageLimit(3);
 
         // viewpager2 간격 변환을 위함 -> res.values.dimes.xml에서 확인
         int pageMarginPx = getResources().getDimensionPixelOffset(R.dimen.eventPageMargin);
