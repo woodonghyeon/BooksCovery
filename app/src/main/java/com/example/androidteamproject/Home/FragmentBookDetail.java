@@ -94,6 +94,7 @@ public class FragmentBookDetail extends Fragment {
         TextView descriptionTextView = view.findViewById(R.id.tv_detail_description);
         TextView publisherTextView = view.findViewById(R.id.tv_detail_publisher);
         TextView publicationYearTextView = view.findViewById(R.id.tv_detail_publication_year);
+        TextView isbnTextView = view.findViewById(R.id.tv_detail_isbn);
         TextView classNoTextView = view.findViewById(R.id.tv_detail_class_no);
         TextView classNmTextView = view.findViewById(R.id.tv_detail_class_nm);
         TextView loanCntTextView = view.findViewById(R.id.tv_detail_loan_cnt);
@@ -123,12 +124,12 @@ public class FragmentBookDetail extends Fragment {
         bookNameTextView.setText(bookName);
         authorsTextView.setText(authors);
 
-        fetchBookDetail(isbn13, bookNameTextView, authorsTextView, descriptionTextView, bookImageView, publisherTextView, publicationYearTextView, classNoTextView, classNmTextView, loanCntTextView, ageTextView, wordTextView);
+        fetchBookDetail(isbn13, bookNameTextView, authorsTextView, descriptionTextView, bookImageView, publisherTextView, publicationYearTextView, isbnTextView, classNoTextView, classNmTextView, loanCntTextView, ageTextView, wordTextView);
 
         return view;
     }
 
-    private void fetchBookDetail(String isbn13, TextView bookNameTextView, TextView authorsTextView, TextView descriptionTextView, ImageView bookImageView, TextView publisherTextView, TextView publicationYearTextView, TextView classNoTextView, TextView classNmTextView, TextView loanCntTextView, TextView ageTextView, TextView wordTextView) {
+    private void fetchBookDetail(String isbn13, TextView bookNameTextView, TextView authorsTextView, TextView descriptionTextView, ImageView bookImageView, TextView publisherTextView, TextView publicationYearTextView, TextView isbnTextView, TextView classNoTextView, TextView classNmTextView, TextView loanCntTextView, TextView ageTextView, TextView wordTextView) {
         String url = "http://data4library.kr/api/usageAnalysisList?authKey=" + API_KEY + "&isbn13=" + isbn13 + "&format=json";
 
         HttpConnection.getInstance(getContext()).getDetailBook(url, new HttpConnection.HttpResponseCallback<SearchBookDetail>() {
@@ -154,6 +155,9 @@ public class FragmentBookDetail extends Fragment {
 
                         System.out.println("Setting publication_year: " + bookDetail.getPublication_year());
                         publicationYearTextView.setText(bookDetail.getPublication_year());
+
+                        System.out.println("Setting ISBN: " + bookDetail.getIsbn13());
+                        isbnTextView.setText(bookDetail.getIsbn13());
 
                         System.out.println("Setting class_no: " + bookDetail.getClass_no());
                         classNoTextView.setText(bookDetail.getClass_no());
