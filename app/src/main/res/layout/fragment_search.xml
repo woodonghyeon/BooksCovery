@@ -27,6 +27,7 @@
             app:dividerColor="@color/gray"/>
 
         <TextView
+            android:id="@+id/tv_Keyword_of_the_month"
             android:layout_marginTop="10dp"
             android:layout_marginStart="10dp"
             android:layout_width="match_parent"
@@ -53,25 +54,6 @@
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
             app:dividerColor="@color/gray"/>
-
-        <TextView
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/suitebold"
-            android:text="추천 검색어"
-            android:textSize="30dp"
-            android:textColor="@color/brandcolor2"
-            android:gravity="start"></TextView>
-
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chip_group2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:singleLine="true"
-            app:singleSelection="false" />
 
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
