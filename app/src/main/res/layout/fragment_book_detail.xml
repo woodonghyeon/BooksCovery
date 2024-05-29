@@ -35,16 +35,36 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:layout_gravity="center"
-                        android:id="@+id/tv_detail_book_name"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="30sp"
-                        android:fontFamily="@font/suitebold"
-                        android:textStyle="bold"
-                        android:text="책 제목"
-                        android:layout_marginBottom="8dp" />
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tv_detail_book_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="30sp"
+                            android:fontFamily="@font/suitebold"
+                            android:textStyle="bold"
+                            android:text="책 제목 "
+                            android:layout_marginBottom="8dp" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" />
+
+                        <ToggleButton
+                            android:id="@+id/toggle_bookmark"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/ic_bookmark_off"
+                            android:textOff=""
+                            android:textOn=""
+                            android:layout_marginEnd="16dp"
+                            android:layout_gravity="end"/>
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
