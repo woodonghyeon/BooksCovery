@@ -44,7 +44,7 @@ public class FragmentHome extends Fragment {
     public static SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd"); //딴 곳에도 쓸거라 public으로 바꿧음
     private ViewPager2 currentEventPager, weekBookPager, monthBookPager, hotTrendBookPager;
     private FragmentStateAdapter homePagerAdapter, weekBookAdapter, monthBookAdapter, hotTrendBookAdapter;
-    private TextView tv_department_title, tv_popular_book_week, tv_popular_book_month, tv_hotTrend_title, tv_department;
+    private TextView tv_popular_book_week, tv_popular_book_month, tv_hotTrend_title, tv_department;
     private Animation anime_left_to_right, anime_right_to_left;
     private Spinner departmentSpinner;
 
@@ -458,21 +458,18 @@ public class FragmentHome extends Fragment {
 
     // 애니메이션
     private void startAnimation(View view) {
-        tv_department_title = view.findViewById(R.id.tv_currentEvent);
+        tv_department = view.findViewById(R.id.tv_department);
         tv_popular_book_week = view.findViewById(R.id.tv_popular_book_week);
         tv_popular_book_month = view.findViewById(R.id.tv_popular_book_month);
         tv_hotTrend_title = view.findViewById(R.id.tv_hotTrend_book_title);
-        tv_department = view.findViewById(R.id.tv_department);
 
         anime_left_to_right = AnimationUtils.loadAnimation(getContext(), R.anim.anime_left_to_right);
         anime_right_to_left = AnimationUtils.loadAnimation(getContext(), R.anim.anime_right_to_left);
 
         tv_department.startAnimation(anime_right_to_left);
-        tv_department_title.startAnimation(anime_right_to_left);
-        tv_popular_book_week.startAnimation(anime_right_to_left);
+        tv_popular_book_week.startAnimation(anime_left_to_right);
         tv_popular_book_month.startAnimation(anime_right_to_left);
-        tv_hotTrend_title.startAnimation(anime_right_to_left);
-        departmentSpinner.startAnimation(anime_right_to_left);
+        tv_hotTrend_title.startAnimation(anime_left_to_right);
     } // end of startAnimation
 
     private void setupSpinner(View view) {
