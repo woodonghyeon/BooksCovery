@@ -10,7 +10,7 @@
     <com.example.androidteamproject.Home.RoundedCurrentEventImageView
         android:id="@+id/iv_currentEvent"
         android:layout_width="500dp"
-        android:layout_height="500dp"
+        android:layout_height="530dp"
         android:scaleType="fitXY"
         android:background="@drawable/radius_current_event_img"
         android:src="@drawable/current_event_1"/>
