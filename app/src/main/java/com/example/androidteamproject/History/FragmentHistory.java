@@ -117,7 +117,13 @@ public class FragmentHistory extends Fragment {
             nameView.setText(bookname.get(position));
             authorView.setText(authors.get(position));
             publisherView.setText(publisher.get(position));
-            Picasso.get().load(bookImageURL.get(position)).into(imageView);
+
+            String imageUrl = bookImageURL.get(position);
+            if (imageUrl != null && !imageUrl.isEmpty()) {
+                Picasso.get().load(imageUrl).placeholder(R.drawable.ic_error).error(R.drawable.ic_error).into(imageView);
+            } else {
+                Picasso.get().load(R.drawable.ic_error).into(imageView);
+            }
 
             return view;
         }
