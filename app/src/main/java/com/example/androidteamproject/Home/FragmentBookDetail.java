@@ -215,7 +215,7 @@ public class FragmentBookDetail extends Fragment {
                         lineChart.getLegend().setEnabled(false); // 범례 제거
                         lineChart.getDescription().setEnabled(false); // 설명 라벨 제거
                         lineChart.setDrawBorders(false); // 테두리 제거
-                        
+
                         // 터치 기능 활성화/비활성화
                         lineChart.setTouchEnabled(true); // 터치 활성화(데이터 클릭시 표시하기 위함)
                         lineChart.setDragEnabled(false); // 드래그로 줌인, 줌아웃 가능해서 비활성화
