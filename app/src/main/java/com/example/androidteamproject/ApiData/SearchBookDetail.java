@@ -3,12 +3,13 @@ package com.example.androidteamproject.ApiData;
 import java.util.List;
 
 public class SearchBookDetail {
-    private String bookName, authors, publisher, bookImageUrl, description, publication_year, isbn13, vol, class_no, class_nm, loanCnt;
+    private String bookName, authors, publisher, bookImageUrl, description, isbn13, vol, class_no, class_nm;
+    private int publication_year, loanCnt, book_count;
     private List<String> month, loanHistoryCnt, ranking;
     private List<String> age, gender, loanGrpsCnt, loanGrpsRanking;
     private List<String> word, weight;
 
-    public SearchBookDetail(String bookName, String authors, String bookImageUrl, String publisher, String publication_year, String isbn13, String class_no, String loanCnt) {
+    public SearchBookDetail(String bookName, String authors, String bookImageUrl, String publisher, int publication_year, String isbn13, String class_no, int loanCnt, int book_count) {
         this.bookName = bookName;
         this.authors = authors;
         this.bookImageUrl = bookImageUrl;
@@ -17,9 +18,10 @@ public class SearchBookDetail {
         this.isbn13 = isbn13;
         this.class_no = class_no;
         this.loanCnt = loanCnt;
+        this.book_count = book_count;
     }
 
-    public SearchBookDetail(String bookName, String authors, String publisher, String bookImageUrl, String description, String publication_year, String isbn13, String vol, String class_no, String class_nm, String loanCnt,
+    public SearchBookDetail(String bookName, String authors, String publisher, String bookImageUrl, String description, int publication_year, String isbn13, String vol, String class_no, String class_nm, int loanCnt,
                             List<String> month, List<String> loanHistoryCnt, List<String> ranking, List<String> age, List<String> gender, List<String> loanGrpsCnt, List<String> loanGrpsRanking, List<String> word, List<String> weight) {
         this.bookName = bookName;
         this.authors = authors;
@@ -84,11 +86,11 @@ public class SearchBookDetail {
         this.description = description;
     }
 
-    public String getPublication_year() {
+    public int getPublication_year() {
         return publication_year;
     }
 
-    public void setPublication_year(String publication_year) {
+    public void setPublication_year(int publication_year) {
         this.publication_year = publication_year;
     }
 
@@ -124,11 +126,11 @@ public class SearchBookDetail {
         this.class_nm = class_nm;
     }
 
-    public String getLoanCnt() {
+    public int getLoanCnt() {
         return loanCnt;
     }
 
-    public void setLoanCnt(String loanCnt) {
+    public void setLoanCnt(int loanCnt) {
         this.loanCnt = loanCnt;
     }
 
@@ -211,5 +213,13 @@ public class SearchBookDetail {
                 ", word='" + word + '\'' +
                 ", weight='" + weight + '\'' +
                 '}';
+    }
+
+    public int getBook_count() {
+        return book_count;
+    }
+
+    public void setBook_count(int book_count) {
+        this.book_count = book_count;
     }
 }

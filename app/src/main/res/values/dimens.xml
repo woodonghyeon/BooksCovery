@@ -12,4 +12,7 @@
 
     <dimen name="monthBookPageMargin">300dp</dimen>
     <dimen name="monthBookPageWidth">30dp</dimen>
+
+    <dimen name="popularBookPageMargin">300dp</dimen>
+    <dimen name="popularBookPageWidth">30dp</dimen>
 </resources>

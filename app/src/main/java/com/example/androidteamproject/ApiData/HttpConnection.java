@@ -426,11 +426,11 @@ public class HttpConnection {
                     String publisher = book.getString("publisher");
                     String bookImageUrl = book.getString("bookImageURL");
                     String description = book.getString("description");
-                    String publication_year = book.getString("publication_year");
+                    int publication_year = book.getInt("publication_year");
                     String isbn13 = book.getString("isbn13");
                     String class_no = book.getString("class_no");
                     String class_nm = book.getString("class_nm");
-                    String loanCnt = book.getString("loanCnt");
+                    int loanCnt = book.getInt("loanCnt");
                     String vol = book.getString("vol");
 
                     // 대출 기록 정보 추출
