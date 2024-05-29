@@ -120,13 +120,13 @@ public class FragmentSearch extends Fragment {
 
         // 키워드가 비어있거나 시간이 지난 경우 API 호출
         if (keywords.isEmpty() || timeCheck()) {
-//            getResponseApiKeyword();
+            getResponseApiKeyword();
         } else {
             // SharedPreferences에서 불러온 키워드를 사용하여 칩 추가
             addChips();
         }
         // 최근 많이 대출된 도서 이미지 출력
-//        getResponseApiLoanItems();
+        getResponseApiLoanItems();
     }
 
     // 키워드 검색 API 호출 메서드
