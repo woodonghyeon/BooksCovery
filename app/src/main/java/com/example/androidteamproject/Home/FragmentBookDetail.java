@@ -126,8 +126,8 @@ public class FragmentBookDetail extends Fragment {
             bookImageView.setImageResource(R.drawable.ic_error);
         }
 
-        bookNameTextView.setText(bookName);
-        authorsTextView.setText(authors);
+        bookNameTextView.setText(bookName != null ? bookName : "N/A");
+        authorsTextView.setText(authors != null ? authors : "N/A");
 
         fetchBookDetail(isbn13, bookNameTextView, authorsTextView, descriptionTextView, bookImageView, publisherTextView, publicationYearTextView, isbnTextView, classNoTextView, classNmTextView, loanCntTextView, ageTextView, wordTextView);
 
@@ -146,32 +146,15 @@ public class FragmentBookDetail extends Fragment {
                         System.out.println("Book Detail: " + bookDetail.toString());
 
                         // 모든 데이터를 설정하기 전에 각 데이터에 로그를 추가하여 확인
-                        System.out.println("Setting bookName: " + bookDetail.getBookName());
                         bookNameTextView.setText(bookDetail.getBookName());
-
-                        System.out.println("Setting authors: " + bookDetail.getAuthors());
                         authorsTextView.setText(bookDetail.getAuthors());
-
-                        System.out.println("Setting description: " + bookDetail.getDescription());
                         descriptionTextView.setText(Html.fromHtml(bookDetail.getDescription(), Html.FROM_HTML_MODE_LEGACY)); // &lt; 와 같은 특수문자 변환을 위해 수정함
-
-                        System.out.println("Setting publisher: " + bookDetail.getPublisher());
                         publisherTextView.setText(bookDetail.getPublisher());
-
-                        System.out.println("Setting publication_year: " + bookDetail.getPublication_year());
-                        publicationYearTextView.setText(bookDetail.getPublication_year());
-
-                        System.out.println("Setting ISBN: " + bookDetail.getIsbn13());
+                        publicationYearTextView.setText(String.valueOf(bookDetail.getPublication_year()));
                         isbnTextView.setText(bookDetail.getIsbn13());
-
-                        System.out.println("Setting class_no: " + bookDetail.getClass_no());
                         classNoTextView.setText(bookDetail.getClass_no());
-
-                        System.out.println("Setting class_nm: " + bookDetail.getClass_nm());
                         classNmTextView.setText(bookDetail.getClass_nm());
-
-                        System.out.println("Setting loanCnt: " + bookDetail.getLoanCnt());
-                        loanCntTextView.setText(bookDetail.getLoanCnt());
+                        loanCntTextView.setText(String.valueOf(bookDetail.getLoanCnt())); // 정수 값을 문자열로 변환
 
                         // 월별 대출 정보 출력
                         List<String> month = bookDetail.getMonth();
