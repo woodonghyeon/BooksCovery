@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ly_detail_book"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:elevation="4dp"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/iv_detail_book_image"
+                    android:layout_width="150dp"
+                    android:layout_height="200dp"
+                    android:layout_marginEnd="16dp"
+                    android:src="@drawable/ic_warring" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tv_detail_book_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="30sp"
+                            android:fontFamily="@font/suitebold"
+                            android:textStyle="bold"
+                            android:text="책 제목 "
+                            android:layout_marginBottom="8dp" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" />
+
+                        <ToggleButton
+                            android:id="@+id/toggle_bookmark"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/ic_bookmark_off"
+                            android:textOff=""
+                            android:textOn=""
+                            android:layout_marginEnd="16dp"
+                            android:layout_gravity="end"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/suitebold"
+                            android:textSize="30sp"
+                            android:text="저자 정보 : "/>
+
+                        <TextView
+                            android:id="@+id/tv_detail_authors"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="30sp"
+                            android:text="저자 정보"
+                            android:fontFamily="@font/suitelight"
+                            android:layout_marginBottom="8dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/suitebold"
+                            android:textSize="30sp"
+                            android:text="출판사 : "/>
+                        <TextView
+                            android:id="@+id/tv_detail_publisher"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="30sp"
+                            android:text="출판사 정보"
+                            android:fontFamily="@font/suitelight"
+                            android:layout_marginBottom="8dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/suitebold"
+                            android:textSize="30sp"
+                            android:text="출판 연도 : "/>
+                        <TextView
+                            android:id="@+id/tv_detail_publication_year"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="30sp"
+                            android:text="출판 연도"
+                            android:fontFamily="@font/suitelight"
+                            android:layout_marginBottom="8dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/suitebold"
+                            android:textSize="30sp"
+                            android:text="ISBN : "/>
+                        <TextView
+                            android:id="@+id/tv_detail_isbn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="30sp"
+                            android:text="ISBN"
+                            android:fontFamily="@font/suitelight"
+                            android:layout_marginBottom="8dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:elevation="4dp"
+            android:padding="16dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/suitebold"
+                    android:textSize="40sp"
+                    android:text="책 소개"/>
+                <TextView
+                    android:id="@+id/tv_detail_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="25sp"
+                    android:text="책 설명"
+                    android:layout_marginBottom="16dp" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:elevation="4dp"
+            android:padding="16dp">
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TableRow>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="주제 분류"
+                        android:fontFamily="@font/suitebold"
+                        android:textSize="25sp" />
+                    <TextView
+                        android:id="@+id/tv_detail_class_no"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:fontFamily="@font/suitelight"
+                        android:textSize="25sp" />
+                </TableRow>
+
+                <TableRow>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="주제 분류명"
+                        android:fontFamily="@font/suitebold"
+                        android:textSize="25sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/tv_detail_class_nm"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:fontFamily="@font/suitelight"
+                        android:textSize="25sp"/>
+                </TableRow>
+
+                <TableRow>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="대출 건수"
+                        android:fontFamily="@font/suitebold"
+                        android:textSize="25sp" />
+                    <TextView
+                        android:id="@+id/tv_detail_loan_cnt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:fontFamily="@font/suitelight"
+                        android:textSize="25sp" />
+                </TableRow>
+            </TableLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:elevation="4dp"
+            android:padding="16dp">
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!-- 월별 대출 정보 -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="월별 도서 이용 추이"
+                    android:textStyle="bold"
+                    android:textSize="25sp"
+                    android:layout_marginBottom="8dp" />
+
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/line_chart"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:layout_marginBottom="15dp" />
+
+                <!-- 대출 그룹 정보 -->
+                <TableRow>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="대출 그룹 정보"
+                        android:fontFamily="@font/suitebold"
+                        android:textSize="25sp" />
+                </TableRow>
+                <TableRow>
+                    <TextView
+                        android:id="@+id/tv_detail_age"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:fontFamily="@font/suitelight"
+                        android:textSize="25sp" />
+                </TableRow>
+
+                <!-- 키워드 정보 -->
+                <TableRow>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="키워드 정보"
+                        android:fontFamily="@font/suitebold"
+                        android:textSize="25sp" />
+                </TableRow>
+                <TableRow>
+                    <TextView
+                        android:id="@+id/tv_detail_word"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:fontFamily="@font/suitelight"
+                        android:textSize="25sp"  />
+                </TableRow>
+            </TableLayout>
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
+</ScrollView>

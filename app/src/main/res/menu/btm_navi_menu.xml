@@ -8,8 +8,7 @@
     <item
         android:id="@+id/tab_find"
         android:icon="@drawable/ic_find"
-        android:title="검색"
-        app:showAsAction="ifRoom"/>
+        android:title="검색" />
     <item
         android:id="@+id/tab_history"
         android:icon="@drawable/ic_history"

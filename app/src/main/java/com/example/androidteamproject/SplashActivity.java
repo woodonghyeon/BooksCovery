@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.example.androidteamproject.Login.LoginActivity;
 
 public class SplashActivity extends Activity {
-
+    String themeColor;
     private static final int SPLASH_TIMEOUT = 3000;
 
     @Override
@@ -27,6 +27,9 @@ public class SplashActivity extends Activity {
 
         iv_ic_book.startAnimation(anime_splash_ball);
         tv_text.startAnimation(anime_splash_ball);
+
+        themeColor = ThemeUtil.modLoad(getApplicationContext());
+        ThemeUtil.applyTheme(themeColor);
 
         new Handler().postDelayed(new Runnable() {
             @Override
