@@ -55,13 +55,15 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1" />
 
-                        <ImageButton
-                            android:id="@+id/ibt_bookmark"
+                        <ToggleButton
+                            android:id="@+id/toggle_bookmark"
                             android:layout_width="40dp"
                             android:layout_height="40dp"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/ic_bookmark_off"
-                            android:gravity="end"/>
+                            android:background="@drawable/ic_bookmark_off"
+                            android:textOff=""
+                            android:textOn=""
+                            android:layout_marginEnd="16dp"
+                            android:layout_gravity="end"/>
                     </LinearLayout>
 
                     <LinearLayout
