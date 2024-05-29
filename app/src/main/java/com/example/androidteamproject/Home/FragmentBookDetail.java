@@ -269,18 +269,24 @@ public class FragmentBookDetail extends Fragment {
                         // 도서 중복 확인 중복시 안하고 없을시 추가
                         SearchBookDetail searchBookDetail = new SearchBookDetail(bookDetail.getBookName(),bookDetail.getAuthors(),bookDetail.getPublisher(),bookDetail.getBookImageUrl(),bookDetail.getDescription(),bookDetail.getPublication_year(),bookDetail.getIsbn13(),bookDetail.getVol(),bookDetail.getClass_no(),bookDetail.getClass_nm(),bookDetail.getLoanCnt(),bookDetail.getMonth(),bookDetail.getLoanHistoryCnt(),bookDetail.getRankings(),bookDetail.getAge(),bookDetail.getGender(),bookDetail.getLoanGrpsCnt(),bookDetail.getLoanGrpsRanking(),bookDetail.getWord(),bookDetail.getWeight());
                         dataBase.insertBook(searchBookDetail);
-                        // 도서 아디 찾
+                        // 도서 아디 찾기
                         int book_id = dataBase.selectBookId(searchBookDetail);
                         Log.e("cha",""+book_id);
                         // 검색 기록 도서pk확인 있으면 삭제하고 추가 없으면 추가
                         dataBase.insertHistory(sessionManager.getMember(),book_id);
-                        //// 즐겨찾기 온클릭시 즐겨찾기 추가
+                        //상세보기 들어왔을때 즐겨찾기 되어있는지 확인
+
+                        //되어있으면 즐겨찾기에 체크
+                        //안되어있으면 즐겨찾기 빈것그대로
+
+                        // 토글 버튼으로 즐겨찾기 추가 / 삭제
                         toggle_bookmark.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                             @Override
                             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                                 if (isChecked) {
                                     // bookmark on 상태
                                     toggle_bookmark.setBackgroundResource(R.drawable.ic_bookmark_on);
+
                                 } else {
                                     // bookmark off 상태
                                     toggle_bookmark.setBackgroundResource(R.drawable.ic_bookmark_off);

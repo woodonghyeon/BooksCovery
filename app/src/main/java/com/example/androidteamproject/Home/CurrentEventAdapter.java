@@ -17,7 +17,7 @@ public class CurrentEventAdapter extends FragmentStateAdapter {
         // 이미지 리소스 ID 배열에 각 이미지에 해당하는 리소스 ID 저장
         for (int i = 0; i < imageCount; i++) {
             // 이미지 파일 이름이 순차적으로 설정되어 있다면, 리소스 ID를 계산하여 배열에 저장
-            String imageName = "test" + (i + 1); // 예: test1, test2, test3
+            String imageName = "current_event_" + (i + 1); // 예: test1, test2, test3
             imageResIds[i] = fa.getResources().getIdentifier(imageName, "drawable", fa.getPackageName());
         }
     }
