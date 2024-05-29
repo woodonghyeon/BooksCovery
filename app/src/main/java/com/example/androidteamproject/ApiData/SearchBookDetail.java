@@ -8,6 +8,17 @@ public class SearchBookDetail {
     private List<String> age, gender, loanGrpsCnt, loanGrpsRanking;
     private List<String> word, weight;
 
+    public SearchBookDetail(String bookName, String authors, String bookImageUrl, String publisher, String publication_year, String isbn13, String class_no, String loanCnt) {
+        this.bookName = bookName;
+        this.authors = authors;
+        this.bookImageUrl = bookImageUrl;
+        this.publisher = publisher;
+        this.publication_year = publication_year;
+        this.isbn13 = isbn13;
+        this.class_no = class_no;
+        this.loanCnt = loanCnt;
+    }
+
     public SearchBookDetail(String bookName, String authors, String publisher, String bookImageUrl, String description, String publication_year, String isbn13, String vol, String class_no, String class_nm, String loanCnt,
                             List<String> month, List<String> loanHistoryCnt, List<String> ranking, List<String> age, List<String> gender, List<String> loanGrpsCnt, List<String> loanGrpsRanking, List<String> word, List<String> weight) {
         this.bookName = bookName;
