@@ -13,8 +13,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -53,6 +56,7 @@ public class FragmentBookDetail extends Fragment {
     private String authors;
     private String imageUrl;
     private LineChart lineChart;
+    private ToggleButton toggle_bookmark;
     private static String API_KEY;
 
     DataBase dataBase = new DataBase();
@@ -100,6 +104,7 @@ public class FragmentBookDetail extends Fragment {
         TextView loanCntTextView = view.findViewById(R.id.tv_detail_loan_cnt);
         TextView ageTextView = view.findViewById(R.id.tv_detail_age);
         TextView wordTextView = view.findViewById(R.id.tv_detail_word);
+        toggle_bookmark = view.findViewById(R.id.toggle_bookmark);
         lineChart = view.findViewById(R.id.line_chart);
 
         // 로깅 추가
@@ -215,7 +220,7 @@ public class FragmentBookDetail extends Fragment {
                         lineChart.getLegend().setEnabled(false); // 범례 제거
                         lineChart.getDescription().setEnabled(false); // 설명 라벨 제거
                         lineChart.setDrawBorders(false); // 테두리 제거
-                        
+
                         // 터치 기능 활성화/비활성화
                         lineChart.setTouchEnabled(true); // 터치 활성화(데이터 클릭시 표시하기 위함)
                         lineChart.setDragEnabled(false); // 드래그로 줌인, 줌아웃 가능해서 비활성화
@@ -264,12 +269,30 @@ public class FragmentBookDetail extends Fragment {
                         // 도서 중복 확인 중복시 안하고 없을시 추가
                         SearchBookDetail searchBookDetail = new SearchBookDetail(bookDetail.getBookName(),bookDetail.getAuthors(),bookDetail.getPublisher(),bookDetail.getBookImageUrl(),bookDetail.getDescription(),bookDetail.getPublication_year(),bookDetail.getIsbn13(),bookDetail.getVol(),bookDetail.getClass_no(),bookDetail.getClass_nm(),bookDetail.getLoanCnt(),bookDetail.getMonth(),bookDetail.getLoanHistoryCnt(),bookDetail.getRankings(),bookDetail.getAge(),bookDetail.getGender(),bookDetail.getLoanGrpsCnt(),bookDetail.getLoanGrpsRanking(),bookDetail.getWord(),bookDetail.getWeight());
                         dataBase.insertBook(searchBookDetail);
-                        // 도서 아디 찾
+                        // 도서 아디 찾기
                         int book_id = dataBase.selectBookId(searchBookDetail);
                         Log.e("cha",""+book_id);
                         // 검색 기록 도서pk확인 있으면 삭제하고 추가 없으면 추가
                         dataBase.insertHistory(sessionManager.getMember(),book_id);
-                        //// 즐겨찾기 온클릭시 즐겨찾기 추가
+                        //상세보기 들어왔을때 즐겨찾기 되어있는지 확인
+
+                        //되어있으면 즐겨찾기에 체크
+                        //안되어있으면 즐겨찾기 빈것그대로
+
+                        // 토글 버튼으로 즐겨찾기 추가 / 삭제
+                        toggle_bookmark.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                            @Override
+                            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                                if (isChecked) {
+                                    // bookmark on 상태
+                                    toggle_bookmark.setBackgroundResource(R.drawable.ic_bookmark_on);
+
+                                } else {
+                                    // bookmark off 상태
+                                    toggle_bookmark.setBackgroundResource(R.drawable.ic_bookmark_off);
+                                }
+                            }
+                        });
 
                         // 학과별 검색횟수 있으면 업데이트 없으면 추가
                         int book_count_id = dataBase.findBookCount(book_id, sessionManager.getDepartmentId());
