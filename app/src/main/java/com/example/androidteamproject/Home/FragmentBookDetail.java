@@ -53,7 +53,7 @@ public class FragmentBookDetail extends Fragment {
     private String authors;
     private String imageUrl;
     private LineChart lineChart;
-    private static String API_KEY = "***REMOVED***";
+    private static String API_KEY;
 
     DataBase dataBase = new DataBase();
     SessionManager sessionManager;
@@ -86,6 +86,7 @@ public class FragmentBookDetail extends Fragment {
         View view = inflater.inflate(R.layout.fragment_book_detail, container, false);
         Context context = getContext();
         sessionManager = new SessionManager(context);
+        API_KEY = context.getString(R.string.second_api_key);
 
         ImageView bookImageView = view.findViewById(R.id.iv_detail_book_image);
         TextView bookNameTextView = view.findViewById(R.id.tv_detail_book_name);
