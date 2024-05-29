@@ -32,7 +32,7 @@ public class HttpConnection {
                 .readTimeout(30, TimeUnit.SECONDS)
                 .writeTimeout(30, TimeUnit.SECONDS)
                 .build();
-        API_KEY = context.getString(R.string.second_api_key);
+        API_KEY = context.getString(R.string.api_key);
     }
 
     public static HttpConnection getInstance(Context context) {
