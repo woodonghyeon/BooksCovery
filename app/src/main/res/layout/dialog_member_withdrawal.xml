@@ -1,0 +1,190 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+        <TextView
+            android:id="@+id/tv_userid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/suitebold"
+            android:textSize="50dp"
+            android:layout_margin="20dp"
+            android:text=""
+            android:layout_gravity="center">
+        </TextView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="10dp">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_warring"
+                android:layout_marginEnd="10dp">
+            </ImageView>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/suitebold"
+                android:textColor="@color/red"
+                android:text="지금 탈퇴하시면 아래 모든 기능을 사용하실 수 없어요!"
+                android:textSize="30dp">
+            </TextView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="10dp">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_warring"
+                android:layout_marginEnd="10dp">
+            </ImageView>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/suitebold"
+                android:text="즐겨찾기 목록을 이용하실 수 없어요!"
+                android:textSize="30dp">
+            </TextView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="10dp">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_warring"
+                android:layout_marginEnd="10dp">
+            </ImageView>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/suitebold"
+                android:text="검색 기록을 이용하실 수 없어요!"
+                android:textSize="30dp">
+            </TextView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="10dp">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_warring"
+                android:layout_marginEnd="10dp">
+            </ImageView>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/suitebold"
+                android:text="책 기록을 이용하실 수 없어요!"
+                android:textSize="30dp">
+            </TextView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="10dp">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_warring"
+                android:layout_marginEnd="10dp">
+            </ImageView>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/suitebold"
+                android:textColor="@color/red"
+                android:text="모든 정보는 복구가 불가능해요!"
+                android:textSize="30dp">
+            </TextView>
+        </LinearLayout>
+
+        <TextView
+            android:layout_margin="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/suitebold"
+            android:textColor="@color/brandcolor2"
+            android:text="탈퇴를 원하시면 아래와 같이 입력해주세요!"
+            android:textSize="30dp"
+            android:gravity="center">
+        </TextView>
+
+        <TextView
+            android:layout_margin="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/suitebold"
+            android:textColor="@color/theme_text_color"
+            android:text="회원 정보 탈퇴"
+            android:textSize="30dp"
+            android:gravity="center">
+        </TextView>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:hintTextColor="@color/brandcolor5"
+            app:boxStrokeColor="@color/brandcolor5"
+            android:layout_gravity="center">
+            <EditText
+                android:id="@+id/et_input_text"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:paddingStart="10dp"
+                android:fontFamily="@font/suitebold"
+                android:textSize="20dp"
+                android:inputType="text"
+                android:imeOptions="actionDone"
+                android:hint="회원 정보 탈퇴" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/bt_member_withdrawal"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/suitebold"
+            android:backgroundTint="#80C3F9"
+            android:textSize="25dp"
+            android:text="탈퇴하기"
+            android:layout_gravity="center"/>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/primaryColor"
+    android:background="@android:color/transparent"
     tools:context=".Search.FragmentSearch">
 
     <LinearLayout
@@ -34,7 +34,7 @@
             android:fontFamily="@font/suitebold"
             android:text="이달의 키워드"
             android:textSize="30dp"
-            android:textColor="@color/primaryDarkColor"
+            android:textColor="@color/brandcolor2"
             android:gravity="start"></TextView>
 
         <com.google.android.material.chip.ChipGroup
@@ -62,7 +62,7 @@
             android:fontFamily="@font/suitebold"
             android:text="추천 검색어"
             android:textSize="30dp"
-            android:textColor="@color/primaryDarkColor"
+            android:textColor="@color/brandcolor2"
             android:gravity="start"></TextView>
 
         <com.google.android.material.chip.ChipGroup
@@ -96,7 +96,7 @@
                 android:fontFamily="@font/suitebold"
                 android:text="최근 많이 검색된 도서"
                 android:textSize="30dp"
-                android:textColor="@color/primaryDarkColor"
+                android:textColor="@color/brandcolor2"
                 android:gravity="start"/>
         </LinearLayout>
 

@@ -4,14 +4,13 @@
     android:id="@+id/activity_home"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/primaryColor"
+    android:background="@android:color/transparent"
     android:orientation="vertical">
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:src="@drawable/logo_bookscovery"
-        android:background="@android:color/transparent">
+        android:src="@drawable/logo_bookscovery">
     </ImageView>
 
     <!-- itemActiveIndicatorStyle은 선택시 아이콘 뒤로 나오는 색상 -->
@@ -31,6 +30,5 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
-        android:layout_weight="1"/>
-
+        android:layout_weight="1" />
 </LinearLayout>
