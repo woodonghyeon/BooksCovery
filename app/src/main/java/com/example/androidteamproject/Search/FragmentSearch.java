@@ -132,8 +132,6 @@ public class FragmentSearch extends Fragment {
             // SharedPreferences에서 불러온 키워드를 사용하여 칩 추가
             addChips();
         }
-        // 최근 많이 대출된 도서 이미지 출력
-        getResponseApiLoanItems();
     }
 
     private void startAnimation(View view) {
@@ -232,88 +230,6 @@ public class FragmentSearch extends Fragment {
         transaction.addToBackStack(null); // 백스택에 추가하여 뒤로가기 버튼을 눌렀을 때 이전 프래그먼트로 돌아갈 수 있음
         transaction.commit();
     }
-
-    // 최근 많이 대출된 도서 이미지 출력
-    private void getResponseApiLoanItems() {
-        String startDt = "2023-01-01";
-        String endDt = "2024-05-01";
-        String from_age = "20";
-        String to_age = "40";
-        int pageNo = 1;
-        int pageSize = 10;
-        String format = "json";
-
-        HttpConnection.getInstance(getContext()).getLoanItems(startDt, endDt, from_age, to_age, pageNo, pageSize, format, new HttpConnection.HttpResponseCallback<List<SearchBook>>() {
-            @Override
-            public void onSuccess(List<SearchBook> books) {
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> {
-                        List<String> imageUrls = new ArrayList<>();
-                        List<String> bookName = new ArrayList<>();
-                        List<String> authors = new ArrayList<>();
-                        List<String> isbn13 = new ArrayList<>();
-                        for (SearchBook book : books) {
-                            imageUrls.add(book.getBookImageUrl());
-                            bookName.add(book.getBookName());
-                            authors.add(book.getAuthors());
-                            isbn13.add(book.getIsbn13());
-                        }
-                        setupViewPager(bookName, imageUrls, authors, isbn13);
-                        Log.d("API Response", "Image URLs: " + imageUrls.toString() + ", BookName: " + bookName.toString());
-                    });
-                }
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> {
-                        Log.e("API Failure", "Error: " + e.getMessage());
-                    });
-                }
-            }
-        });
-    }
-
-    // ViewPager2 설정 메서드
-    private void setupViewPager(List<String> bookName, List<String> imageUrls, List<String> authors, List<String> isbn13) {
-        if (imageUrls == null || imageUrls.isEmpty()) {
-            return;
-        }
-        if (getView() == null) {
-            return;
-        }
-        mPager = getView().findViewById(R.id.search_viewpager);
-        searchPagerAdapter = new SearchPageAdapter(requireActivity(), bookName, imageUrls, authors, isbn13, this::showBookDetail);
-        mPager.setAdapter(searchPagerAdapter);
-        mPager.setCurrentItem(1000);
-        mPager.setOffscreenPageLimit(3);
-        mPager.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
-
-        // viewpager2 간격 변환을 위함 -> res.values.dimes.xml에서 확인
-        int pageMarginPx = getResources().getDimensionPixelOffset(R.dimen.searchPageMargin);
-        int pagerWidth = getResources().getDimensionPixelOffset(R.dimen.searchPageWidth);
-        int screenWidth = getResources().getDisplayMetrics().widthPixels;
-        int offsetPx = screenWidth - pageMarginPx - pagerWidth;
-
-        // viewpager2 간격 변환
-        mPager.setPageTransformer((page, position) -> page.setTranslationX(position * -offsetPx));
-
-        mPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
-                if (positionOffsetPixels == 0) {
-                    mPager.setCurrentItem(position);
-                }
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                super.onPageSelected(position);
-            }
-        });
-    } // end of setupMonthViewPager
 
     // showBookDetail
     private void showBookDetail(String isbn13, String bookName, String authors, String imageUrl) {
