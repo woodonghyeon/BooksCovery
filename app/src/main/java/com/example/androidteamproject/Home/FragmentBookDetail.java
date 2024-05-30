@@ -132,9 +132,6 @@ public class FragmentBookDetail extends Fragment {
 
         fetchBookDetail(isbn13, bookNameTextView, authorsTextView, descriptionTextView, bookImageView, publisherTextView, publicationYearTextView, isbnTextView, classNoTextView, classNmTextView, loanCntTextView, ageTextView, wordTextView);
 
-        // 즐겨찾기 여부 확인
-        checkFavoriteStatus();
-
         return view;
     }
 
@@ -288,6 +285,7 @@ public class FragmentBookDetail extends Fragment {
                         } else {
                             bookImageView.setImageResource(R.drawable.ic_error); // Placeholder 이미지 설정
                         }
+                        checkFavoriteStatus();
                     });
                 }
             }
