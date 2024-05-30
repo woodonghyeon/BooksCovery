@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -145,7 +146,7 @@ public class FragmentHistory extends Fragment {
             List<String> authorsTemp = new ArrayList<>();
             List<String> publisherTemp = new ArrayList<>();
             List<String> bookImageURLTemp = new ArrayList<>();
-            List<String> isbnTemp = new ArrayList<>();
+//            List<String> isbnTemp = new ArrayList<>();
 
             try {
                 // JDBC 드라이버 로드
@@ -183,7 +184,7 @@ public class FragmentHistory extends Fragment {
                     authorsTemp.add(rs.getString("authors"));
                     publisherTemp.add(rs.getString("publisher"));
                     bookImageURLTemp.add(rs.getString("book_image_URL"));
-                    isbnTemp.add(rs.getString("isbn")); // 민욱 테스트중
+//                    isbnTemp.add(rs.getString("isbn")); // 민욱 테스트중
                 }
                 // 끝
                 rs.close();

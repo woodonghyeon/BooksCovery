@@ -35,13 +35,15 @@ public class LoginActivity extends Activity {
     private EditText et_input_id;
     private EditText et_input_pwd;
     private SharedPreferences sharedPreferences;
+    SessionManager sessionManager;
 
+    int member_id ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+//        sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
 
         // fadein 애니메이션 설정
         final ImageView iv_ic_book = findViewById(R.id.iv_ic_book);
@@ -88,8 +90,9 @@ public class LoginActivity extends Activity {
         if (resultCode == RESULT_CANCELED) {
             Toast.makeText(getApplicationContext(), "로그인에 실패했습니다.", Toast.LENGTH_SHORT).show();
         } else if (resultCode == RESULT_OK) {
-            String userid = data.getStringExtra("Id");
-            int member_id ;
+            sessionManager = new SessionManager(getApplicationContext());
+            String userid = sessionManager.getId();
+
             Connection conn = null;
             PreparedStatement pstmt = null;
             ResultSet rs = null;
@@ -127,15 +130,15 @@ public class LoginActivity extends Activity {
 
             Toast.makeText(getApplicationContext(), "로그인에 성공하셨습니다.", Toast.LENGTH_SHORT).show();
             // SharedPreferences에 userid 저장
-            SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString("userid", userid);
-            editor.apply();
+//            SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+//            SharedPreferences.Editor editor = sharedPreferences.edit();
+//            editor.putString("userid", userid);
+//            editor.apply();
 
             //세션 매니저 만들었는데 위에꺼 필요할까?
             SessionManager sessionManager = new SessionManager(getApplicationContext());
             sessionManager.createLoginSession(
-                    data.getIntExtra("Member",1),
+                    data.getIntExtra("Member",member_id),
                     data.getStringExtra("Name"),
                     data.getStringExtra("Gender"),
                     data.getIntExtra("Age", 0),
@@ -150,5 +153,5 @@ public class LoginActivity extends Activity {
             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
             startActivity(intent);
         }
-    }
+    } // end of onActivityResult
 }
