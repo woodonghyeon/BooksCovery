@@ -9,6 +9,10 @@ public class SearchBookDetail {
     private List<String> age, gender, loanGrpsCnt, loanGrpsRanking;
     private List<String> word, weight;
 
+    public SearchBookDetail(String isbn13) {
+        this.isbn13 = isbn13;
+    }
+
     public SearchBookDetail(String bookName, String authors, String bookImageUrl, String publisher, int publication_year, String isbn13, String class_no, int loanCnt, int book_count) {
         this.bookName = bookName;
         this.authors = authors;

@@ -304,4 +304,88 @@ public class DataBase {
             }
         }
     }
+
+    // 즐겨찾기 확인
+    public boolean isFavorite(int member_id, int book_id) {
+        ResultSet rs = null;
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try {
+            conn = dbConn();
+            String sql = "SELECT * FROM favorite WHERE member_id = ? AND book_id = ?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, member_id);
+            pstmt.setInt(2, book_id);
+
+            rs = pstmt.executeQuery();
+            return rs.next();
+        } catch (Exception e) {
+            Log.e("Database", "Error checking favorite", e);
+            return false;
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (pstmt != null) pstmt.close();
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                Log.e("Database", "Error closing connection", e);
+            }
+        }
+    }
+
+    // 즐겨찾기 추가
+    public String addFavorite(int member_id, int book_id) {
+        if (isFavorite(member_id, book_id)) {
+            return "이미 즐겨찾기에 추가된 도서입니다.";
+        }
+
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try {
+            conn = dbConn();
+            String sql = "INSERT INTO favorite (member_id, book_id, favorite_date) VALUES (?, ?, NOW())";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, member_id);
+            pstmt.setInt(2, book_id);
+
+            int rowsInserted = pstmt.executeUpdate();
+            return rowsInserted > 0 ? "즐겨찾기 추가 성공" : "즐겨찾기 추가 실패";
+        } catch (Exception e) {
+            Log.e("Database", "Error adding favorite", e);
+            return "즐겨찾기 추가 중 오류 발생";
+        } finally {
+            try {
+                if (pstmt != null) pstmt.close();
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                Log.e("Database", "Error closing connection", e);
+            }
+        }
+    }
+
+    // 즐겨찾기 삭제
+    public String removeFavorite(int member_id, int book_id) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try {
+            conn = dbConn();
+            String sql = "DELETE FROM favorite WHERE member_id = ? AND book_id = ?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, member_id);
+            pstmt.setInt(2, book_id);
+
+            int rowsDeleted = pstmt.executeUpdate();
+            return rowsDeleted > 0 ? "즐겨찾기 삭제 성공" : "즐겨찾기 삭제 실패";
+        } catch (Exception e) {
+            Log.e("Database", "Error removing favorite", e);
+            return "즐겨찾기 삭제 중 오류 발생";
+        } finally {
+            try {
+                if (pstmt != null) pstmt.close();
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                Log.e("Database", "Error closing connection", e);
+            }
+        }
+    }
 }
