@@ -24,7 +24,7 @@ public class LoginCheckActivity extends AppCompatActivity {
 
     //setId, setPw -> 사용자가 입력한 id, pw
     String setId, setPw;
-    String name,gender,id,pwd,password_key,email,mode;
+    String member,name,gender,id,pwd,password_key,email,mode;
     int age,department_id;
     //String updateDate;
 
@@ -126,6 +126,7 @@ public class LoginCheckActivity extends AppCompatActivity {
                 finish();
             }
             else{
+                outIntent.putExtra("Member",member);
                 outIntent.putExtra("Name",name);
                 outIntent.putExtra("Gender",gender);
                 outIntent.putExtra("Age",age);
@@ -176,7 +177,6 @@ public class LoginCheckActivity extends AppCompatActivity {
             }
             return result;
         }
-
 
     }
 

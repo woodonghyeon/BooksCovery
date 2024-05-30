@@ -51,8 +51,9 @@ public class SessionManager {
         editor.putString(KEY_EMAIL, email);
         editor.commit();
     }
+
     public int getMember() {
-        return pref.getInt(KEY_MEMBER,1);
+        return pref.getInt(KEY_MEMBER,0);
     }
     public String getName() {
         return pref.getString(KEY_NAME, null);

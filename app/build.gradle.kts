@@ -48,4 +48,5 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     //DB연결
     implementation ("mysql:mysql-connector-java:5.1.49")
+    implementation("org.mariadb.jdbc:mariadb-java-client:2.7.4")
 }

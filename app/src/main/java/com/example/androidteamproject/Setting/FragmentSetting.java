@@ -91,8 +91,9 @@ public class FragmentSetting extends Fragment {
         Context context = getActivity();
         if (context != null) {
             sessionManager = new SessionManager(context);
-            SharedPreferences sharedPreferences = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
-            userid = sharedPreferences.getString("userid", null);
+            //SharedPreferences sharedPreferences = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+            //userid = sharedPreferences.getString("userid", null);
+            userid = sessionManager.getId();
 
             tv_userid = view.findViewById(R.id.tv_userid);
             tv_userid.setText(userid);
