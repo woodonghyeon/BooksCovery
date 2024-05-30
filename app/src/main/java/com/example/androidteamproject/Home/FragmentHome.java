@@ -565,8 +565,8 @@ public class FragmentHome extends Fragment {
         hotTrendBookPager.setCurrentItem(startPos);
 
         // viewpager2 간격 변환을 위함 -> res.values.dimes.xml에서 확인
-        int pageMarginPx = getResources().getDimensionPixelOffset(R.dimen.monthBookPageMargin);
-        int pagerWidth = getResources().getDimensionPixelOffset(R.dimen.monthBookPageWidth);
+        int pageMarginPx = getResources().getDimensionPixelOffset(R.dimen.hotTrendPageMargin);
+        int pagerWidth = getResources().getDimensionPixelOffset(R.dimen.hotTrendPageWidth);
         int screenWidth = getResources().getDisplayMetrics().widthPixels;
         int offsetPx = screenWidth - pageMarginPx - pagerWidth;
 

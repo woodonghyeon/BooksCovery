@@ -54,48 +54,6 @@
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
             app:dividerColor="@color/gray"/>
-
-        <com.google.android.material.divider.MaterialDivider
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
-            app:dividerColor="@color/gray"/>
-
-        <LinearLayout
-            android:id="@+id/currentLayout"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp">
-            <TextView
-                android:id="@+id/tv_currentEvent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/suitebold"
-                android:text="최근 많이 검색된 도서"
-                android:textSize="30dp"
-                android:textColor="@color/brandcolor2"
-                android:gravity="start"/>
-        </LinearLayout>
-
-        <androidx.viewpager2.widget.ViewPager2
-            android:layout_marginTop="10dp"
-            android:id="@+id/search_viewpager"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <com.google.android.material.divider.MaterialDivider
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
-            app:dividerColor="@color/gray"/>
     </LinearLayout>
 
 </ScrollView>
