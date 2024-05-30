@@ -335,10 +335,6 @@ public class DataBase {
 
     // 즐겨찾기 추가
     public String addFavorite(int member_id, int book_id) {
-        if (isFavorite(member_id, book_id)) {
-            return "이미 즐겨찾기에 추가된 도서입니다.";
-        }
-
         Connection conn = null;
         PreparedStatement pstmt = null;
         try {
