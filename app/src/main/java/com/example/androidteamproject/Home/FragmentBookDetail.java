@@ -55,6 +55,7 @@ public class FragmentBookDetail extends Fragment {
     private String bookName;
     private String authors;
     private String imageUrl;
+    private int bookId;
     private LineChart lineChart;
     private ToggleButton toggle_bookmark;
     private static String API_KEY;
@@ -130,6 +131,30 @@ public class FragmentBookDetail extends Fragment {
         authorsTextView.setText(authors != null ? authors : "N/A");
 
         fetchBookDetail(isbn13, bookNameTextView, authorsTextView, descriptionTextView, bookImageView, publisherTextView, publicationYearTextView, isbnTextView, classNoTextView, classNmTextView, loanCntTextView, ageTextView, wordTextView);
+
+        // 즐겨찾기 여부 확인
+        checkFavoriteStatus();
+
+        toggle_bookmark.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                new Thread(() -> {
+                    if (isChecked) {
+                        // 즐겨찾기에 추가
+                        String result = dataBase.addFavorite(sessionManager.getMember(), bookId);
+                        getActivity().runOnUiThread(() -> {
+                            toggle_bookmark.setBackgroundResource(result.equals("즐겨찾기 추가 성공") ? R.drawable.ic_bookmark_on : R.drawable.ic_bookmark_off);
+                        });
+                    } else {
+                        // 즐겨찾기에서 삭제
+                        String result = dataBase.removeFavorite(sessionManager.getMember(), bookId);
+                        getActivity().runOnUiThread(() -> {
+                            toggle_bookmark.setBackgroundResource(result.equals("즐겨찾기 삭제 성공") ? R.drawable.ic_bookmark_off : R.drawable.ic_bookmark_on);
+                        });
+                    }
+                }).start();
+            }
+        });
 
         return view;
     }
@@ -257,25 +282,6 @@ public class FragmentBookDetail extends Fragment {
                         Log.e("cha",""+book_id);
                         // 검색 기록 도서pk확인 있으면 삭제하고 추가 없으면 추가
                         dataBase.insertHistory(sessionManager.getMember(),book_id);
-                        //상세보기 들어왔을때 즐겨찾기 되어있는지 확인
-
-                        //되어있으면 즐겨찾기에 체크
-                        //안되어있으면 즐겨찾기 빈것그대로
-
-                        // 토글 버튼으로 즐겨찾기 추가 / 삭제
-                        toggle_bookmark.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                            @Override
-                            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                                if (isChecked) {
-                                    // bookmark on 상태
-                                    toggle_bookmark.setBackgroundResource(R.drawable.ic_bookmark_on);
-
-                                } else {
-                                    // bookmark off 상태
-                                    toggle_bookmark.setBackgroundResource(R.drawable.ic_bookmark_off);
-                                }
-                            }
-                        });
 
                         // 학과별 검색횟수 있으면 업데이트 없으면 추가
                         int book_count_id = dataBase.findBookCount(book_id, sessionManager.getDepartmentId());
@@ -339,5 +345,19 @@ public class FragmentBookDetail extends Fragment {
         public String getFormattedValue(float value) {
             return month.get((int) value).substring(5);
         }
+    }
+
+    private void checkFavoriteStatus() {
+        new Thread(() -> {
+            bookId = dataBase.selectBookId(new SearchBookDetail(isbn13)); // isbn13을 기반으로 bookId 가져오기
+            boolean isFavorite = dataBase.isFavorite(sessionManager.getMember(), bookId);
+
+            if (getActivity() != null) {
+                getActivity().runOnUiThread(() -> {
+                    toggle_bookmark.setChecked(isFavorite);
+                    toggle_bookmark.setBackgroundResource(isFavorite ? R.drawable.ic_bookmark_on : R.drawable.ic_bookmark_off);
+                });
+            }
+        }).start();
     }
 }
