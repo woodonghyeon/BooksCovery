@@ -60,7 +60,7 @@ public class DataBase {
         }
     }
 
-    public int checkDuplicate(SearchBookDetail sbd, String sql) {
+    public int checkDuplicate(SearchBookDetail sbd, String sql) { //상세보기에 들어가면 체크
         ResultSet rs = null;
         Connection conn = null;
         PreparedStatement pstmt = null;
