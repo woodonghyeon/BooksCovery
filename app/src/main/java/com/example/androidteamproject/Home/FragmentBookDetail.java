@@ -91,7 +91,7 @@ public class FragmentBookDetail extends Fragment {
         View view = inflater.inflate(R.layout.fragment_book_detail, container, false);
         Context context = getContext();
         sessionManager = new SessionManager(context);
-        API_KEY = context.getString(R.string.api_key);
+        API_KEY = context.getString(R.string.second_api_key);
 
         ImageView bookImageView = view.findViewById(R.id.iv_detail_book_image);
         TextView bookNameTextView = view.findViewById(R.id.tv_detail_book_name);
@@ -134,25 +134,6 @@ public class FragmentBookDetail extends Fragment {
 
         // 즐겨찾기 여부 확인
         checkFavoriteStatus();
-
-        toggle_bookmark.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    // 즐겨찾기에 추가
-                    new Thread(() -> {
-                        dataBase.addFavorite(sessionManager.getMember(), bookId);
-                    }).start();
-                    toggle_bookmark.setBackgroundResource(R.drawable.ic_bookmark_on);
-                } else {
-                    // 즐겨찾기에서 삭제
-                    new Thread(() -> {
-                        dataBase.removeFavorite(sessionManager.getMember(), bookId);
-                    }).start();
-                    toggle_bookmark.setBackgroundResource(R.drawable.ic_bookmark_off);
-                }
-            }
-        });
 
         return view;
     }
@@ -354,6 +335,26 @@ public class FragmentBookDetail extends Fragment {
                 getActivity().runOnUiThread(() -> {
                     toggle_bookmark.setChecked(isFavorite);
                     toggle_bookmark.setBackgroundResource(isFavorite ? R.drawable.ic_bookmark_on : R.drawable.ic_bookmark_off);
+
+                    // 리스너 설정
+                    toggle_bookmark.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                            if (isChecked) {
+                                // 즐겨찾기에 추가
+                                new Thread(() -> {
+                                    dataBase.addFavorite(sessionManager.getMember(), bookId);
+                                }).start();
+                                toggle_bookmark.setBackgroundResource(R.drawable.ic_bookmark_on);
+                            } else {
+                                // 즐겨찾기에서 삭제
+                                new Thread(() -> {
+                                    dataBase.removeFavorite(sessionManager.getMember(), bookId);
+                                }).start();
+                                toggle_bookmark.setBackgroundResource(R.drawable.ic_bookmark_off);
+                            }
+                        }
+                    });
                 });
             }
         }).start();
