@@ -337,6 +337,8 @@ public class FragmentBookDetail extends Fragment {
                     toggle_bookmark.setBackgroundResource(isFavorite ? R.drawable.ic_bookmark_on : R.drawable.ic_bookmark_off);
 
                     // 리스너 설정
+                    toggle_bookmark.setOnCheckedChangeListener(null); // 기존 리스너 제거
+
                     toggle_bookmark.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                         @Override
                         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
