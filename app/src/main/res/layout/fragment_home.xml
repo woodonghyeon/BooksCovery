@@ -68,6 +68,11 @@
                 android:entries="@array/department_array2"/>
         </LinearLayout>
 
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/popular_book_viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -86,7 +91,7 @@
             android:gravity="start"
             android:text="이번 주 인기도서"
             android:textColor="@color/brandcolor2"
-            android:textSize="30dp"></TextView>
+            android:textSize="30dp" />
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/week_book_viewpager"
