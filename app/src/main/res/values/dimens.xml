@@ -4,14 +4,14 @@
     <dimen name="eventPageMargin">500dp</dimen>
     <dimen name="eventPageWidth">50dp</dimen>
 
-    <dimen name="searchPageMargin">300dp</dimen>
-    <dimen name="searchPageWidth">30dp</dimen>
-
     <dimen name="weekBookPageMargin">300dp</dimen>
     <dimen name="weekBookPageWidth">30dp</dimen>
 
     <dimen name="monthBookPageMargin">300dp</dimen>
     <dimen name="monthBookPageWidth">30dp</dimen>
+
+    <dimen name="hotTrendPageMargin">350dp</dimen>
+    <dimen name="hotTrendPageWidth">30dp</dimen>
 
     <dimen name="popularBookPageMargin">300dp</dimen>
     <dimen name="popularBookPageWidth">30dp</dimen>
