@@ -430,7 +430,7 @@ public class HttpConnection {
                     String isbn13 = book.getString("isbn13");
                     String class_no = book.getString("class_no");
                     String class_nm = book.getString("class_nm");
-                    int loanCnt = book.getInt("loanCnt");
+                    int loanCnt = book.has("loanCnt") ? book.getInt("loanCnt") : 0; // loanCnt 이후 데이터가 존재하지 않는 도서가 있어 기본값 0으로 설정
                     String vol = book.getString("vol");
 
                     // 대출 기록 정보 추출
