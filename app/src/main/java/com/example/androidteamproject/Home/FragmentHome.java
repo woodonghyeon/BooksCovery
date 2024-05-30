@@ -19,10 +19,13 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.androidteamproject.ApiData.DataBase;
 import com.example.androidteamproject.ApiData.HttpConnection;
+import com.example.androidteamproject.ApiData.SearchBookDetail;
 import com.example.androidteamproject.R;
 import com.example.androidteamproject.ApiData.SearchBook;
 
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -42,8 +45,8 @@ public class FragmentHome extends Fragment {
     long now = System.currentTimeMillis();
     private Date mDate = new Date(now);
     public static SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd"); //딴 곳에도 쓸거라 public으로 바꿧음
-    private ViewPager2 currentEventPager, weekBookPager, monthBookPager, hotTrendBookPager;
-    private FragmentStateAdapter homePagerAdapter, weekBookAdapter, monthBookAdapter, hotTrendBookAdapter;
+    private ViewPager2 currentEventPager, weekBookPager, monthBookPager, hotTrendBookPager, popularBookPager;
+    private FragmentStateAdapter homePagerAdapter, weekBookAdapter, monthBookAdapter, hotTrendBookAdapter, popularBookAdapter;
     private TextView tv_popular_book_week, tv_popular_book_month, tv_hotTrend_title, tv_department;
     private Animation anime_left_to_right, anime_right_to_left;
     private Spinner departmentSpinner;
@@ -73,12 +76,14 @@ public class FragmentHome extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+        // 데이터베이스 객체 생성
+        DataBase db = new DataBase();
         setupSpinner(view); // 스피너 설정 메서드 호출
         startAnimation(view);
         CurrentEventSettingImg(view);
-//        getResponseApiWeekLoanItems();
-//        getResponseApiMonthLoanItems();
-//        getResponseApiHotTrend();
+        getResponseApiWeekLoanItems();
+        getResponseApiMonthLoanItems();
+        getResponseApiHotTrend();
 
         return view;
     } // end of onCreateView
@@ -140,6 +145,134 @@ public class FragmentHome extends Fragment {
                 }
             }
         });
+    }
+
+    private void fetchPopularBooks(int departmentId) {
+        new Thread(() -> {
+            DataBase db = new DataBase();
+            try {
+                List<SearchBookDetail> popularBooks = db.getPopularBooks(departmentId);
+
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        List<String> bookName = new ArrayList<>();
+                        List<String> authors = new ArrayList<>();
+                        List<String> imageUrl = new ArrayList<>();
+                        List<String> isbn13 = new ArrayList<>();
+                        List<String> publisher = new ArrayList<>();
+                        List<Integer> publicationYear = new ArrayList<>();
+                        List<String> classNo = new ArrayList<>();
+                        List<Integer> loanCount = new ArrayList<>();
+                        List<Integer> bookCount = new ArrayList<>();
+
+                        for (SearchBookDetail book : popularBooks) {
+                            bookName.add(book.getBookName());
+                            authors.add(book.getAuthors());
+                            imageUrl.add(book.getBookImageUrl());
+                            isbn13.add(book.getIsbn13());
+                            publisher.add(book.getPublisher());
+                            publicationYear.add(book.getPublication_year());
+                            classNo.add(book.getClass_no());
+                            loanCount.add(book.getLoanCnt());
+                            bookCount.add(book.getBook_count());
+                        }
+
+                        setupPopularBooksViewPager(bookName, authors, imageUrl, isbn13);
+                    });
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
+    private void setupPopularBooksViewPager(List<String> bookNames, List<String> authors, List<String> imageUrls, List<String> isbn13s) {
+        if (imageUrls == null || imageUrls.isEmpty()) {
+            Log.d("ImageURL Check", "Image URLs are null or empty.");
+            return;
+        }
+        Log.d("ImageURL Check", "Image URLs: " + imageUrls.toString());
+
+        if (getView() == null) {
+            return;
+        }
+
+        popularBookPager = getView().findViewById(R.id.popular_book_viewpager);
+        popularBookAdapter = new PopularBooksAdapter(requireActivity(), bookNames, authors, imageUrls, isbn13s, this::showBookDetail);
+        popularBookPager.setAdapter(popularBookAdapter);
+        popularBookPager.setCurrentItem(1000);
+        popularBookPager.setOffscreenPageLimit(10);
+
+        int startPos = imageUrls.size() / 2;
+        popularBookPager.setCurrentItem(startPos);
+
+        int pageMarginPx = getResources().getDimensionPixelOffset(R.dimen.popularBookPageMargin);
+        int pagerWidth = getResources().getDimensionPixelOffset(R.dimen.popularBookPageWidth);
+        int screenWidth = getResources().getDisplayMetrics().widthPixels;
+        int offsetPx = screenWidth - pageMarginPx - pagerWidth;
+
+        popularBookPager.setPageTransformer((page, position) -> page.setTranslationX(position * -offsetPx));
+
+        popularBookPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+                if (positionOffsetPixels == 0) {
+                    popularBookPager.setCurrentItem(position);
+                }
+            }
+        });
+    }
+
+    private void setupSpinner(View view) {
+        departmentSpinner = view.findViewById(R.id.department_spinner);
+        departmentSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedDepartment = parent.getItemAtPosition(position).toString();
+                tv_department.setText(selectedDepartment + " 인기도서");
+
+                // 학과 이름을 학과 ID로 매핑하는 방법
+                int departmentId = getDepartmentIdByName(selectedDepartment);
+                fetchPopularBooks(departmentId);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // 선택되지 않았을 때 처리
+            }
+        });
+    } // end of setupSpinner
+
+    private int getDepartmentIdByName(String departmentName) {
+        switch (departmentName) {
+            case "컴퓨터정보계열": return 1;
+            case "IT온라인창업과": return 2;
+            case "AI융합기계계열": return 3;
+            case "반도체전자계열": return 4;
+            case "무인항공드론과": return 5;
+            case "신재생에너지전기계열": return 6;
+            case "건축과": return 7;
+            case "인테리어디자인과": return 8;
+            case "DIY실내장식과": return 9;
+            case "항공정비부사관과": return 10;
+            case "국방정보통신과": return 11;
+            case "의무/전투부사관과": return 12;
+            case "글로벌시스템융합과": return 13;
+            case "경영회계서비스계열": return 14;
+            case "호텔항공관광과": return 15;
+            case "사회복지과": return 16;
+            case "유아교육과": return 17;
+            case "간호학과": return 18;
+            case "보건의료행정과": return 19;
+            case "응급구조과": return 20;
+            case "동물보건과": return 21;
+            case "반려동물과": return 22;
+            case "조리제과제빵과": return 23;
+            case "콘텐츠디자인과": return 24;
+            case "만화애니메이션과": return 25;
+            default: return -1;  // 또는 기본값
+        }
     }
 
     //     최근 많이 검색된 도서 출력 (주간)
@@ -471,21 +604,6 @@ public class FragmentHome extends Fragment {
         tv_popular_book_month.startAnimation(anime_right_to_left);
         tv_hotTrend_title.startAnimation(anime_left_to_right);
     } // end of startAnimation
-
-    private void setupSpinner(View view) {
-        departmentSpinner = view.findViewById(R.id.department_spinner);
-        departmentSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedDepartment = parent.getItemAtPosition(position).toString();
-                tv_department.setText(selectedDepartment + " 인기도서");
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // 이거 없으면 selectedListener 안 먹힌다고 함
-            }
-        });
-    } // end of setupSpinner
 
     // showBookDetail
     private void showBookDetail(String isbn13, String bookName, String authors, String imageUrl) {
