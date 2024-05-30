@@ -133,7 +133,7 @@ public class FragmentSearch extends Fragment {
             addChips();
         }
         // 최근 많이 대출된 도서 이미지 출력
-//        getResponseApiLoanItems();
+        getResponseApiLoanItems();
     }
 
     private void startAnimation(View view) {
