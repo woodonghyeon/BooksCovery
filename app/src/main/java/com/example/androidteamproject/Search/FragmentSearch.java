@@ -122,6 +122,7 @@ public class FragmentSearch extends Fragment {
 
         startAnimation(view);
 
+
         // SharedPreferences에서 키워드를 불러옴
         keywords = loadKeywordsFromSharedPreferences();
 
@@ -136,13 +137,11 @@ public class FragmentSearch extends Fragment {
 
     private void startAnimation(View view) {
         TextView tv_Keyword_of_the_month = view.findViewById(R.id.tv_Keyword_of_the_month);
-        TextView tv_currentEvent = view.findViewById(R.id.tv_currentEvent);
 
         anime_left_to_right = AnimationUtils.loadAnimation(getContext(), R.anim.anime_left_to_right);
         anime_right_to_left = AnimationUtils.loadAnimation(getContext(), R.anim.anime_right_to_left);
 
         tv_Keyword_of_the_month.startAnimation(anime_right_to_left);
-        tv_currentEvent.startAnimation(anime_left_to_right);
     } // end of startAnimation
 
     // 키워드 검색 API 호출 메서드
