@@ -41,6 +41,7 @@ public class FragmentHistory extends Fragment {
     private static List<String> authors = new ArrayList<>();
     private static List<String> publisher = new ArrayList<>();
     private static List<String> searchDate = new ArrayList<>();
+//    private static List<String> isbn = new ArrayList<>(); // 검색 결과 만들려고 우선 놔둠
 
     private static String id; //회원 아이디
     private static int check; // 목록 체크 용도 (0이면 즐겨찾기, 1이면 검색기록)
@@ -144,6 +145,7 @@ public class FragmentHistory extends Fragment {
             List<String> authorsTemp = new ArrayList<>();
             List<String> publisherTemp = new ArrayList<>();
             List<String> bookImageURLTemp = new ArrayList<>();
+            List<String> isbnTemp = new ArrayList<>();
 
             try {
                 // JDBC 드라이버 로드
@@ -181,8 +183,8 @@ public class FragmentHistory extends Fragment {
                     authorsTemp.add(rs.getString("authors"));
                     publisherTemp.add(rs.getString("publisher"));
                     bookImageURLTemp.add(rs.getString("book_image_URL"));
+                    isbnTemp.add(rs.getString("isbn")); // 민욱 테스트중
                 }
-
                 // 끝
                 rs.close();
                 pstmt.close();
