@@ -183,7 +183,7 @@ public class FragmentHistory extends Fragment {
                     authorsTemp.add(rs.getString("authors"));
                     publisherTemp.add(rs.getString("publisher"));
                     bookImageURLTemp.add(rs.getString("book_image_URL"));
-                    isbnTemp.add(rs.getString("isbn")); // 민욱 테스트중
+//                    isbnTemp.add(rs.getString("isbn")); // 민욱 테스트중
                 }
                 // 끝
                 rs.close();
