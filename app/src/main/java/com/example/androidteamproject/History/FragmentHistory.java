@@ -249,6 +249,7 @@ public class FragmentHistory extends Fragment {
                 authors.clear();
                 publisher.clear();
                 bookImageURL.clear();
+                isbn13.clear();
 
                 // 새 데이터 추가
                 bookname.addAll(result[0]);

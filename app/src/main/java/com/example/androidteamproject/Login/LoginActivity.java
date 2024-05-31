@@ -150,8 +150,6 @@ public class LoginActivity extends Activity {
                     data.getStringExtra("UpdateDate")
             );
             // HomeActivity로 이동
-            Log.v("gose",String.valueOf(sessionManager.getMember()));
-            Log.v("gose",String.valueOf(sessionManager.getAge()));
             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
             startActivity(intent);
         }
