@@ -21,8 +21,8 @@ CREATE TABLE `member_info` (
 
 CREATE TABLE `book` (
     `book_id` int NOT NULL auto_increment,
-    `bookname`	varchar(100) NOT NULL,
-	`isbn`	bigint(13) NULL,
+    `bookname`	varchar(200) NOT NULL,
+	`isbn`	bigint(13) NULL unique,
     `authors`	varchar(30)	NULL,
 	`publisher`	varchar(30)	NULL,
     `book_image_URL` varchar(500) NOT NULL,
@@ -56,7 +56,7 @@ CREATE TABLE `favorite` (
 CREATE TABLE `book_count` (
 	`book_count_id`	int	NOT NULL AUTO_INCREMENT,
 	`department_id`	int	NOT NULL,
-    `book_id` int NOT NULL unique,
+    `book_id` int NOT NULL,
 	`book_count` int NULL default 1,
     PRIMARY KEY (`book_count_id`),
     FOREIGN KEY (`department_id`) REFERENCES `department` (`department_id`) ON DELETE CASCADE ON UPDATE CASCADE,
