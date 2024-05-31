@@ -3,9 +3,11 @@ package com.example.androidteamproject.History;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -16,7 +18,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
+import com.example.androidteamproject.Home.FragmentBookDetail;
 import com.example.androidteamproject.SessionManager;
 import com.example.androidteamproject.R;
 import com.squareup.picasso.Picasso;
@@ -99,6 +103,29 @@ public class FragmentHistory extends Fragment {
 
         // 리스트 뷰에 어댑터 설정
         list.setAdapter(adapter);
+
+        //기록에서 이미지 누르면 상세보기로 넘어가기
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                FragmentBookDetail fragment = FragmentBookDetail.newInstance(isbn13.get(position), bookname.get(position), authors.get(position), bookImageURL.get(position));
+                // FragmentTransaction을 통해 프래그먼트를 관리
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+
+                // 현재 프래그먼트를 가져와서 숨김
+                Fragment currentFragment = getParentFragmentManager().findFragmentById(R.id.ly_home);
+                if (currentFragment != null) {
+                    transaction.hide(currentFragment);
+                }
+
+                // 새로운 프래그먼트를 추가
+                transaction.add(R.id.ly_home, fragment);
+                transaction.addToBackStack(null); // 백스택에 추가하여 뒤로가기 버튼을 눌렀을 때 이전 프래그먼트로 돌아갈 수 있음
+                transaction.commit();
+            }
+        });
+
+
         return view;
     }
 
@@ -184,7 +211,7 @@ public class FragmentHistory extends Fragment {
                     sql = "Select * from favorite f join book b on f.book_id = b.book_id where f.member_id = ?";
                 }
                 else if(check == 1){
-                    sql = "Select * from search_history sh join book b on sh.book_id = b.book_id where sh.member_id = ?";
+                    sql = "Select * from search_history sh join book b on sh.book_id = b.book_id where sh.member_id = ? order by sh.search_history_id desc";
                 }
 
                 pstmt = conn.prepareStatement(sql);
@@ -214,6 +241,7 @@ public class FragmentHistory extends Fragment {
         @Override
         protected void onPostExecute(List<String>[] result) {
             super.onPostExecute(result);
+
             // 어댑터에 데이터 변경 알리기
             if (adapter != null) {
                 // 기존 데이터 지우기
@@ -227,6 +255,7 @@ public class FragmentHistory extends Fragment {
                 authors.addAll(result[1]);
                 publisher.addAll(result[2]);
                 bookImageURL.addAll(result[3]);
+                isbn13.addAll(result[4]);
 
                 adapter.notifyDataSetChanged();
             }

@@ -5,17 +5,17 @@ import android.content.SharedPreferences;
 
 public class SessionManager {
 
-    private static final String PREF_NAME = "UserSession";
-    private static final String KEY_MEMBER = "Member";
-    private static final String KEY_NAME = "Name";
-    private static final String KEY_GENDER = "Gender";
-    private static final String KEY_AGE = "Age";
-    private static final String KEY_DEPARTMENT_ID = "Department_id";
-    private static final String KEY_ID = "Id";
-    private static final String KEY_PASSWORD_KEY = "Password_Key";
-    private static final String KEY_EMAIL = "Email";
-    private static final String KEY_MODE = "Mode";
-    private static final String KEY_UPDATE_DATE = "UpdateDate";
+    private static String PREF_NAME = "UserSession";
+    private static String KEY_MEMBER = "Member";
+    private static String KEY_NAME = "Name";
+    private static String KEY_GENDER = "Gender";
+    private static String KEY_AGE = "Age";
+    private static String KEY_DEPARTMENT_ID = "Department_id";
+    private static String KEY_ID = "Id";
+    private static String KEY_PASSWORD_KEY = "Password_Key";
+    private static String KEY_EMAIL = "Email";
+    private static String KEY_MODE = "Mode";
+    private static String KEY_UPDATE_DATE = "UpdateDate";
 
     SharedPreferences pref;
     SharedPreferences.Editor editor;
