@@ -136,9 +136,9 @@ public class LoginActivity extends Activity {
 //            editor.apply();
 
             //세션 매니저 만들었는데 위에꺼 필요할까?
-            SessionManager sessionManager = new SessionManager(getApplicationContext());
+            sessionManager = new SessionManager(LoginActivity.this);
             sessionManager.createLoginSession(
-                    data.getIntExtra("Member",member_id),
+                    data.getIntExtra("Member",0),
                     data.getStringExtra("Name"),
                     data.getStringExtra("Gender"),
                     data.getIntExtra("Age", 0),
@@ -150,6 +150,8 @@ public class LoginActivity extends Activity {
                     data.getStringExtra("UpdateDate")
             );
             // HomeActivity로 이동
+            Log.v("gose",String.valueOf(sessionManager.getMember()));
+            Log.v("gose",String.valueOf(sessionManager.getAge()));
             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
             startActivity(intent);
         }
