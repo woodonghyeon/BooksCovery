@@ -11,7 +11,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.TextView;
-
+import android.os.Handler;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -22,11 +22,9 @@ import com.example.androidteamproject.Home.FragmentBookDetail;
 import com.example.androidteamproject.R;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -145,10 +143,8 @@ public class FragmentSearch extends Fragment {
 
     private void startAnimation(View view) {
         TextView tv_Keyword_of_the_month = view.findViewById(R.id.tv_Keyword_of_the_month);
-
         anime_left_to_right = AnimationUtils.loadAnimation(getContext(), R.anim.anime_left_to_right);
         anime_right_to_left = AnimationUtils.loadAnimation(getContext(), R.anim.anime_right_to_left);
-
         tv_Keyword_of_the_month.startAnimation(anime_right_to_left);
     } // end of startAnimation
 
@@ -224,8 +220,13 @@ public class FragmentSearch extends Fragment {
 
             // 칩 클릭 이벤트 추가
             chip.setOnClickListener(v -> onChipClick(keyword));
-
             chipGroup1.addView(chip);
+
+            // 지연 시간을 추가하여 애니메이션 시작
+            new Handler().postDelayed(() -> {
+                Animation left = AnimationUtils.loadAnimation(getContext(), R.anim.anime_left_to_right);
+                chip.startAnimation(left);
+            }, 100);
         }
     }
 
