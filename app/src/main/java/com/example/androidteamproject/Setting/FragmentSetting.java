@@ -493,5 +493,4 @@ public class FragmentSetting extends Fragment {
             Toast.makeText(super.getContext(), "회원 정보 삭제에 실패했습니다.", Toast.LENGTH_SHORT).show();
         }
     }
-
 }
