@@ -414,7 +414,7 @@ public class FragmentSetting extends Fragment {
         memberWithdrawalDialog.show();
         Window window = memberWithdrawalDialog.getWindow();
         if (window != null) {
-            int heightInDp = 700;
+            int heightInDp = 1000;
             float heightInPx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, heightInDp, getResources().getDisplayMetrics());
             window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, (int) heightInPx);
         }
