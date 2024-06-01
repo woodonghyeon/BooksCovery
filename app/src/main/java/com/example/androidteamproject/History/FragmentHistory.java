@@ -168,7 +168,6 @@ public class FragmentHistory extends Fragment {
 
     // 데이터베이스에서 기록을 검색하는 AsyncTask
     public class getHistoryForDB extends AsyncTask<Void, Void, List<String>[]> {
-
         int member_id;
 
         @Override
