@@ -3,6 +3,7 @@ package com.example.androidteamproject.Search;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,8 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
@@ -75,6 +78,11 @@ public class FragmentSearch extends Fragment {
         sv_author = view.findViewById(R.id.sv_author);
         sv_keyword = view.findViewById(R.id.sv_keyword);
 
+        // SearchView의 힌트 텍스트 색상을 파란색으로 설정
+        setSearchViewHintColor(sv_title, R.color.brandcolor2);
+        setSearchViewHintColor(sv_author, R.color.brandcolor2);
+        setSearchViewHintColor(sv_keyword, R.color.brandcolor2);
+
         sv_title.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -122,7 +130,6 @@ public class FragmentSearch extends Fragment {
 
         startAnimation(view);
 
-
         // SharedPreferences에서 키워드를 불러옴
         keywords = loadKeywordsFromSharedPreferences();
 
@@ -143,6 +150,13 @@ public class FragmentSearch extends Fragment {
 
         tv_Keyword_of_the_month.startAnimation(anime_right_to_left);
     } // end of startAnimation
+
+    // SearchView의 힌트 텍스트 색상을 변경하는 메서드
+    private void setSearchViewHintColor(SearchView searchView, int colorResId) {
+        EditText searchEditText = searchView.findViewById(androidx.appcompat.R.id.search_src_text);
+        int color = ContextCompat.getColor(getContext(), colorResId);
+        searchEditText.setHintTextColor(color);
+    }
 
     // 키워드 검색 API 호출 메서드
     private void getResponseApiKeyword() {
