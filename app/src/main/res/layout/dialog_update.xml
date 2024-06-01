@@ -20,6 +20,12 @@
             android:orientation="vertical"
             android:padding="20dp">
 
+            <ImageView
+                android:id="@+id/iv_ic_book"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:src="@drawable/logo_bookscovery" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
@@ -184,8 +190,8 @@
                 android:fontFamily="@font/suitebold"
                 android:backgroundTint="#80C3F9"
                 android:textSize="25sp"
+                android:layout_gravity="center"
                 android:text="수정하기"/>
-
         </LinearLayout>
 
     </ScrollView>
