@@ -28,8 +28,7 @@
         android:layout_below="@id/bookname"
         android:layout_marginTop="5dp"
         android:layout_toRightOf="@id/image"
-        android:textSize="15dp"
-        />
+        android:textSize="15dp" />
 
     <TextView
         android:layout_width="fill_parent"
@@ -39,5 +38,4 @@
         android:layout_toRightOf="@id/image"
         android:layout_marginTop="5dp"
         android:textSize="15dp" />
-
 </RelativeLayout>
