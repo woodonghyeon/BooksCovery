@@ -44,20 +44,20 @@ public class FragmentHistory extends Fragment {
     private String mParam2;
 
     // 책 정보를 저장할 목록
-    private static List<String> bookImageURL = new ArrayList<>();
-    private static List<String> bookname = new ArrayList<>();
-    private static List<String> authors = new ArrayList<>();
-    private static List<String> publisher = new ArrayList<>();
-    private static List<String> searchDate = new ArrayList<>();
-    private static List<String> isbn13 = new ArrayList<>();
+    private List<String> bookImageURL;
+    private List<String> bookname;
+    private List<String> authors;
+    private List<String> publisher;
+    private List<String> searchDate;
+    private List<String> isbn13;
 
     // 회원 ID와 체크 변수
-    private static String id;
-    private static int check;
+    private String id;
+    private int check;
 
     // 뷰와 어댑터
     private ListView list;
-    private static CustomList adapter;
+    private CustomList adapter;
     private Button favorite, search;
 
     // 프래그먼트의 새 인스턴스 생성하는 메서드
@@ -78,8 +78,6 @@ public class FragmentHistory extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        // 어댑터 생성
-        adapter = new CustomList(this, bookname, bookImageURL, authors, publisher, searchDate);
     }
 
     @Nullable
@@ -88,11 +86,21 @@ public class FragmentHistory extends Fragment {
         View view = inflater.inflate(R.layout.fragment_history, container, false);
         list = view.findViewById(R.id.List);
 
-        // 버튼 초기화
+        // 데이터 초기화
+        bookImageURL = new ArrayList<>();
+        bookname = new ArrayList<>();
+        authors = new ArrayList<>();
+        publisher = new ArrayList<>();
+        searchDate = new ArrayList<>();
+        isbn13 = new ArrayList<>();
+
+        // 어댑터 생성 및 설정
+        adapter = new CustomList(this, bookname, bookImageURL, authors, publisher, searchDate);
+        list.setAdapter(adapter);
+
+        // 버튼 초기화 및 클릭 리스너 설정
         favorite = view.findViewById(R.id.favorite);
         search = view.findViewById(R.id.search);
-
-        // 버튼 클릭 리스너 설정하여 데이터베이스에서 기록 검색
         favorite.setOnClickListener(view1 -> {check = 0; new getHistoryForDB().execute();});
         search.setOnClickListener(view1 -> {check = 1; new getHistoryForDB().execute();});
 
@@ -101,30 +109,18 @@ public class FragmentHistory extends Fragment {
         SessionManager sessionManager = new SessionManager(context);
         id = String.valueOf(sessionManager.getId());
 
-        // 리스트 뷰에 어댑터 설정
-        list.setAdapter(adapter);
-
-        //기록에서 이미지 누르면 상세보기로 넘어가기
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                FragmentBookDetail fragment = FragmentBookDetail.newInstance(isbn13.get(position), bookname.get(position), authors.get(position), bookImageURL.get(position));
-                // FragmentTransaction을 통해 프래그먼트를 관리
-                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-
-                // 현재 프래그먼트를 가져와서 숨김
-                Fragment currentFragment = getParentFragmentManager().findFragmentById(R.id.ly_home);
-                if (currentFragment != null) {
-                    transaction.hide(currentFragment);
-                }
-
-                // 새로운 프래그먼트를 추가
-                transaction.add(R.id.ly_home, fragment);
-                transaction.addToBackStack(null); // 백스택에 추가하여 뒤로가기 버튼을 눌렀을 때 이전 프래그먼트로 돌아갈 수 있음
-                transaction.commit();
+        // 기록에서 이미지 누르면 상세보기로 넘어가기
+        list.setOnItemClickListener((parent, view1, position, id) -> {
+            FragmentBookDetail fragment = FragmentBookDetail.newInstance(isbn13.get(position), bookname.get(position), authors.get(position), bookImageURL.get(position));
+            FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+            Fragment currentFragment = getParentFragmentManager().findFragmentById(R.id.ly_home);
+            if (currentFragment != null) {
+                transaction.hide(currentFragment);
             }
+            transaction.add(R.id.ly_home, fragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
         });
-
 
         return view;
     }
@@ -171,7 +167,7 @@ public class FragmentHistory extends Fragment {
     }
 
     // 데이터베이스에서 기록을 검색하는 AsyncTask
-    public static class getHistoryForDB extends AsyncTask<Void, Void, List<String>[]> {
+    public class getHistoryForDB extends AsyncTask<Void, Void, List<String>[]> {
 
         int member_id;
 
