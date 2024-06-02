@@ -246,6 +246,7 @@ public class FragmentHome extends Fragment {
 
     private int getDepartmentIdByName(String departmentName) {
         switch (departmentName) {
+            case "전체 학과": return 0;
             case "컴퓨터정보계열": return 1;
             case "IT온라인창업과": return 2;
             case "AI융합기계계열": return 3;

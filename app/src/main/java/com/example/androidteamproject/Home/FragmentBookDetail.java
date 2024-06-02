@@ -320,7 +320,12 @@ public class FragmentBookDetail extends Fragment {
 
         @Override
         public String getFormattedValue(float value) {
-            return month.get((int) value).substring(5);
+            int index = (int) value;
+            if (index < 0 || index >= month.size()) {
+                // 유효하지 않은 인덱스 처리
+                return "";
+            }
+            return month.get(index).substring(5);
         }
     }
 
