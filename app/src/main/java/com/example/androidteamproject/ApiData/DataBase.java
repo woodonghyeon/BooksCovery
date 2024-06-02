@@ -227,14 +227,28 @@ public class DataBase {
         List<SearchBookDetail> books = new ArrayList<>();
         try {
             conn = dbConn();
+            String sql;
 
-            String sql = "select bc.book_count, b.bookname, b.authors, b.book_image_URL, b.loan_count, b.isbn, b.publisher, b.publication_year, b.class_no " +
-                    "from book_count bc, book b " +
-                    "where b.book_id = bc.book_id " +
-                    "and bc.department_id = ? " +
-                    "order by bc.book_count desc, b.loan_count desc limit 0,10";
+            if (department_id == 0) {
+                // 전체학과 조회
+                sql = "SELECT b.bookname, b.authors, b.book_image_URL, b.loan_count, b.isbn, b.publisher, b.publication_year, b.class_no, SUM(bc.book_count) AS total_book_count " +
+                        "FROM book_count bc " +
+                        "JOIN book b ON b.book_id = bc.book_id " +
+                        "GROUP BY bc.book_id " +
+                        "ORDER BY total_book_count DESC, b.loan_count DESC " +
+                        "LIMIT 20";
+            } else {
+                // 선택학과 조회
+                sql = "select bc.book_count, b.bookname, b.authors, b.book_image_URL, b.loan_count, b.isbn, b.publisher, b.publication_year, b.class_no " +
+                        "from book_count bc, book b " +
+                        "where b.book_id = bc.book_id " +
+                        "and bc.department_id = ? " +
+                        "order by bc.book_count desc, b.loan_count desc limit 0,10";
+            }
             pstmt = conn.prepareStatement(sql);
+            if (department_id != 0) {
             pstmt.setInt(1, department_id);
+            }
             // 쿼리 실행
             rs = pstmt.executeQuery();
 
@@ -252,7 +266,7 @@ public class DataBase {
                 String isbn13 = rs.getString("isbn");
                 String class_no = rs.getString("class_no");
                 int loanCnt = rs.getInt("loan_count");
-                int book_count = rs.getInt("book_count");
+                int book_count = department_id == 0 ? rs.getInt("total_book_count") : rs.getInt("book_count");
 
                 Log.d("DB 결과 ", "BookName: " + bookName + ", ImageURL: " + bookImageUrl);
                 // 책 정보를 담은 SearchBookDetail 객체 생성
