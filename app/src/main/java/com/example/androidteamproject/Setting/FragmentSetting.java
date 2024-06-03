@@ -91,8 +91,9 @@ public class FragmentSetting extends Fragment {
         Context context = getActivity();
         if (context != null) {
             sessionManager = new SessionManager(context);
-            SharedPreferences sharedPreferences = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
-            userid = sharedPreferences.getString("userid", null);
+            //SharedPreferences sharedPreferences = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+            //userid = sharedPreferences.getString("userid", null);
+            userid = sessionManager.getId();
 
             tv_userid = view.findViewById(R.id.tv_userid);
             tv_userid.setText(userid);
@@ -110,6 +111,7 @@ public class FragmentSetting extends Fragment {
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
                     startActivity(intent);
                     tv_userid.setText(userid);
+                    sessionManager.clearSession();
                     Toast.makeText(getActivity(), "로그아웃에 성공하셨습니다.", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -412,7 +414,7 @@ public class FragmentSetting extends Fragment {
         memberWithdrawalDialog.show();
         Window window = memberWithdrawalDialog.getWindow();
         if (window != null) {
-            int heightInDp = 700;
+            int heightInDp = 1000;
             float heightInPx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, heightInDp, getResources().getDisplayMetrics());
             window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, (int) heightInPx);
         }
@@ -491,5 +493,4 @@ public class FragmentSetting extends Fragment {
             Toast.makeText(super.getContext(), "회원 정보 삭제에 실패했습니다.", Toast.LENGTH_SHORT).show();
         }
     }
-
 }

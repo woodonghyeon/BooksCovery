@@ -146,7 +146,7 @@ public class JoinActivity extends AppCompatActivity {
 
             } catch (Exception e) {
                 Log.e("InsertDataTask", "Error inserting data", e);
-                return "데이터 삽입 중 오류 발생";
+                return String.valueOf(e);
 
             } finally {
                 try {

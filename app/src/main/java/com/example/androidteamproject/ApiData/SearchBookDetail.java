@@ -9,6 +9,10 @@ public class SearchBookDetail {
     private List<String> age, gender, loanGrpsCnt, loanGrpsRanking;
     private List<String> word, weight;
 
+    public SearchBookDetail(String isbn13) {
+        this.isbn13 = isbn13;
+    }
+
     public SearchBookDetail(String bookName, String authors, String bookImageUrl, String publisher, int publication_year, String isbn13, String class_no, int loanCnt, int book_count) {
         this.bookName = bookName;
         this.authors = authors;
@@ -188,7 +192,12 @@ public class SearchBookDetail {
     public void setWeight(List<String> weight) {
         this.weight = weight;
     }
-
+    public int getBook_count() {
+        return book_count;
+    }
+    public void setBook_count(int book_count) {
+        this.book_count = book_count;
+    }
     @Override
     public String toString() { // 로그 후에 삭제
         return "SearchBookDetail{" +
@@ -213,13 +222,5 @@ public class SearchBookDetail {
                 ", word='" + word + '\'' +
                 ", weight='" + weight + '\'' +
                 '}';
-    }
-
-    public int getBook_count() {
-        return book_count;
-    }
-
-    public void setBook_count(int book_count) {
-        this.book_count = book_count;
     }
 }
