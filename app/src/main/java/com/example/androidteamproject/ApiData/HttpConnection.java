@@ -48,7 +48,7 @@ public class HttpConnection {
     }
 
     public void getKeyword(String format, final HttpResponseCallback callback) {
-        String url = BASE_URL + "monthlyKeywords?authKey=" + API_KEY + "&month=2024-04" + "&format=" + format;
+        String url = BASE_URL + "monthlyKeywords?authKey=" + API_KEY + "&month=2024-05" + "&format=" + format;
         Request request = new Request.Builder().url(url).build();
 
         client.newCall(request).enqueue(new Callback() {

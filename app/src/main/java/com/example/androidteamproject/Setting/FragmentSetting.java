@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -286,6 +287,27 @@ public class FragmentSetting extends Fragment {
         et_input_name.setText(sessionManager.getName());
         et_input_age.setText(String.valueOf(sessionManager.getAge()));
         et_input_email.setText(sessionManager.getEmail());
+
+        ArrayAdapter<CharSequence> genderAdapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.gender_array, android.R.layout.simple_spinner_item);
+        genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner_gender.setAdapter(genderAdapter);
+
+        ArrayAdapter<CharSequence> departmentAdapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.department_array, android.R.layout.simple_spinner_item);
+        departmentAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        et_input_department.setAdapter(departmentAdapter);
+
+        String savedGender = sessionManager.getGender();
+        if (savedGender != null) {
+            int genderPosition = genderAdapter.getPosition(savedGender);
+            spinner_gender.setSelection(genderPosition);
+        }
+
+        int savedDepartment = sessionManager.getDepartmentId();
+        if (savedDepartment > 0) {
+            et_input_department.setSelection(savedDepartment - 1);
+        }
 
         bt_modify_dialog.setOnClickListener(new View.OnClickListener() {
             @Override
