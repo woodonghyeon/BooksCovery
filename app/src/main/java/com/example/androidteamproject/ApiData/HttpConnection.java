@@ -32,7 +32,7 @@ public class HttpConnection {
                 .readTimeout(30, TimeUnit.SECONDS)
                 .writeTimeout(30, TimeUnit.SECONDS)
                 .build();
-        API_KEY = context.getString(R.string.api_key);
+        API_KEY = context.getString(R.string.second_api_key);
     }
 
     public static HttpConnection getInstance(Context context) {
@@ -261,7 +261,7 @@ public class HttpConnection {
         });
     } // end of booksearchTitle
 
-    // LoanItems -> 대출 많은 도서를 뽑아옴 후에 수정 예정
+    // LoanItems -> 대출 많은 도서를 뽑아옴
     public void getLoanItems(String startDt, String endDt, String from_age, String to_age, int pageNo, int pageSize, String format, HttpResponseCallback<List<SearchBook>> callback) {
         String url = BASE_URL + "loanItemSrch?authKey=" + API_KEY
                 + "&startDt=" + startDt
@@ -430,7 +430,7 @@ public class HttpConnection {
                     String isbn13 = book.getString("isbn13");
                     String class_no = book.getString("class_no");
                     String class_nm = book.getString("class_nm");
-                    int loanCnt = book.getInt("loanCnt");
+                    int loanCnt = book.has("loanCnt") ? book.getInt("loanCnt") : 0; // loanCnt 이후 데이터가 존재하지 않는 도서가 있어 기본값 0으로 설정
                     String vol = book.getString("vol");
 
                     // 대출 기록 정보 추출

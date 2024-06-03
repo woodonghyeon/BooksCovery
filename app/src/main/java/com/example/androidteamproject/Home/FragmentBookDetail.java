@@ -55,6 +55,7 @@ public class FragmentBookDetail extends Fragment {
     private String bookName;
     private String authors;
     private String imageUrl;
+    private int bookId;
     private LineChart lineChart;
     private ToggleButton toggle_bookmark;
     private static String API_KEY;
@@ -90,7 +91,7 @@ public class FragmentBookDetail extends Fragment {
         View view = inflater.inflate(R.layout.fragment_book_detail, container, false);
         Context context = getContext();
         sessionManager = new SessionManager(context);
-        API_KEY = context.getString(R.string.api_key);
+        API_KEY = context.getString(R.string.second_api_key);
 
         ImageView bookImageView = view.findViewById(R.id.iv_detail_book_image);
         TextView bookNameTextView = view.findViewById(R.id.tv_detail_book_name);
@@ -257,25 +258,6 @@ public class FragmentBookDetail extends Fragment {
                         Log.e("cha",""+book_id);
                         // 검색 기록 도서pk확인 있으면 삭제하고 추가 없으면 추가
                         dataBase.insertHistory(sessionManager.getMember(),book_id);
-                        //상세보기 들어왔을때 즐겨찾기 되어있는지 확인
-
-                        //되어있으면 즐겨찾기에 체크
-                        //안되어있으면 즐겨찾기 빈것그대로
-
-                        // 토글 버튼으로 즐겨찾기 추가 / 삭제
-                        toggle_bookmark.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                            @Override
-                            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                                if (isChecked) {
-                                    // bookmark on 상태
-                                    toggle_bookmark.setBackgroundResource(R.drawable.ic_bookmark_on);
-
-                                } else {
-                                    // bookmark off 상태
-                                    toggle_bookmark.setBackgroundResource(R.drawable.ic_bookmark_off);
-                                }
-                            }
-                        });
 
                         // 학과별 검색횟수 있으면 업데이트 없으면 추가
                         int book_count_id = dataBase.findBookCount(book_id, sessionManager.getDepartmentId());
@@ -303,6 +285,7 @@ public class FragmentBookDetail extends Fragment {
                         } else {
                             bookImageView.setImageResource(R.drawable.ic_error); // Placeholder 이미지 설정
                         }
+                        checkFavoriteStatus();
                     });
                 }
             }
@@ -337,7 +320,48 @@ public class FragmentBookDetail extends Fragment {
 
         @Override
         public String getFormattedValue(float value) {
-            return month.get((int) value).substring(5);
+            int index = (int) value;
+            if (index < 0 || index >= month.size()) {
+                // 유효하지 않은 인덱스 처리
+                return "";
+            }
+            return month.get(index).substring(5);
         }
+    }
+
+    private void checkFavoriteStatus() {
+        new Thread(() -> {
+            bookId = dataBase.selectBookId(new SearchBookDetail(isbn13)); // isbn13을 기반으로 bookId 가져오기
+            boolean isFavorite = dataBase.isFavorite(sessionManager.getMember(), bookId);
+
+            if (getActivity() != null) {
+                getActivity().runOnUiThread(() -> {
+                    toggle_bookmark.setChecked(isFavorite);
+                    toggle_bookmark.setBackgroundResource(isFavorite ? R.drawable.ic_bookmark_on : R.drawable.ic_bookmark_off);
+
+                    // 리스너 설정
+                    toggle_bookmark.setOnCheckedChangeListener(null); // 기존 리스너 제거
+
+                    toggle_bookmark.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                            if (isChecked) {
+                                // 즐겨찾기에 추가
+                                new Thread(() -> {
+                                    dataBase.addFavorite(sessionManager.getMember(), bookId);
+                                }).start();
+                                toggle_bookmark.setBackgroundResource(R.drawable.ic_bookmark_on);
+                            } else {
+                                // 즐겨찾기에서 삭제
+                                new Thread(() -> {
+                                    dataBase.removeFavorite(sessionManager.getMember(), bookId);
+                                }).start();
+                                toggle_bookmark.setBackgroundResource(R.drawable.ic_bookmark_off);
+                            }
+                        }
+                    });
+                });
+            }
+        }).start();
     }
 }

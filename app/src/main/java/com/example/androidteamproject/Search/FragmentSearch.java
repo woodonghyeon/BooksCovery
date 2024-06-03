@@ -4,20 +4,20 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.EditText;
 import android.widget.TextView;
-
+import android.os.Handler;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 import com.example.androidteamproject.ApiData.HttpConnection;
-import com.example.androidteamproject.ApiData.SearchBook;
 import com.example.androidteamproject.Home.FragmentBookDetail;
 import com.example.androidteamproject.R;
 import com.google.android.material.chip.Chip;
@@ -28,6 +28,7 @@ import org.json.JSONObject;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
 import androidx.appcompat.widget.SearchView;
 
 public class FragmentSearch extends Fragment {
@@ -75,6 +76,11 @@ public class FragmentSearch extends Fragment {
         sv_author = view.findViewById(R.id.sv_author);
         sv_keyword = view.findViewById(R.id.sv_keyword);
 
+        // SearchView의 힌트 텍스트 색상과 입력 텍스트 색상을 설정
+        setSearchViewColors(sv_title, R.color.brandcolor2, R.color.brandcolor2);
+        setSearchViewColors(sv_author, R.color.brandcolor2, R.color.brandcolor2);
+        setSearchViewColors(sv_keyword, R.color.brandcolor2, R.color.brandcolor2);
+
         sv_title.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -108,6 +114,7 @@ public class FragmentSearch extends Fragment {
                 searchByKeyword(query);
                 return false;
             }
+
             @Override
             public boolean onQueryTextChange(String newText) {
                 return false;
@@ -132,20 +139,23 @@ public class FragmentSearch extends Fragment {
             // SharedPreferences에서 불러온 키워드를 사용하여 칩 추가
             addChips();
         }
-        // 최근 많이 대출된 도서 이미지 출력
-        getResponseApiLoanItems();
     }
 
     private void startAnimation(View view) {
         TextView tv_Keyword_of_the_month = view.findViewById(R.id.tv_Keyword_of_the_month);
-        TextView tv_currentEvent = view.findViewById(R.id.tv_currentEvent);
-
         anime_left_to_right = AnimationUtils.loadAnimation(getContext(), R.anim.anime_left_to_right);
         anime_right_to_left = AnimationUtils.loadAnimation(getContext(), R.anim.anime_right_to_left);
-
         tv_Keyword_of_the_month.startAnimation(anime_right_to_left);
-        tv_currentEvent.startAnimation(anime_left_to_right);
     } // end of startAnimation
+
+    // SearchView의 힌트 텍스트 색상과 입력 텍스트 색상을 변경하는 메서드
+    private void setSearchViewColors(SearchView searchView, int hintColorResId, int textColorResId) {
+        EditText searchEditText = searchView.findViewById(androidx.appcompat.R.id.search_src_text);
+        int hintColor = ContextCompat.getColor(getContext(), hintColorResId);
+        int textColor = ContextCompat.getColor(getContext(), textColorResId);
+        searchEditText.setHintTextColor(hintColor);
+        searchEditText.setTextColor(textColor);
+    }
 
     // 키워드 검색 API 호출 메서드
     private void getResponseApiKeyword() {
@@ -210,8 +220,13 @@ public class FragmentSearch extends Fragment {
 
             // 칩 클릭 이벤트 추가
             chip.setOnClickListener(v -> onChipClick(keyword));
-
             chipGroup1.addView(chip);
+
+            // 지연 시간을 추가하여 애니메이션 시작
+            new Handler().postDelayed(() -> {
+                Animation left = AnimationUtils.loadAnimation(getContext(), R.anim.anime_left_to_right);
+                chip.startAnimation(left);
+            }, 100);
         }
     }
 
@@ -233,88 +248,6 @@ public class FragmentSearch extends Fragment {
         transaction.commit();
     }
 
-    // 최근 많이 대출된 도서 이미지 출력
-    private void getResponseApiLoanItems() {
-        String startDt = "2023-01-01";
-        String endDt = "2024-05-01";
-        String from_age = "20";
-        String to_age = "40";
-        int pageNo = 1;
-        int pageSize = 10;
-        String format = "json";
-
-        HttpConnection.getInstance(getContext()).getLoanItems(startDt, endDt, from_age, to_age, pageNo, pageSize, format, new HttpConnection.HttpResponseCallback<List<SearchBook>>() {
-            @Override
-            public void onSuccess(List<SearchBook> books) {
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> {
-                        List<String> imageUrls = new ArrayList<>();
-                        List<String> bookName = new ArrayList<>();
-                        List<String> authors = new ArrayList<>();
-                        List<String> isbn13 = new ArrayList<>();
-                        for (SearchBook book : books) {
-                            imageUrls.add(book.getBookImageUrl());
-                            bookName.add(book.getBookName());
-                            authors.add(book.getAuthors());
-                            isbn13.add(book.getIsbn13());
-                        }
-                        setupViewPager(bookName, imageUrls, authors, isbn13);
-                        Log.d("API Response", "Image URLs: " + imageUrls.toString() + ", BookName: " + bookName.toString());
-                    });
-                }
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> {
-                        Log.e("API Failure", "Error: " + e.getMessage());
-                    });
-                }
-            }
-        });
-    }
-
-    // ViewPager2 설정 메서드
-    private void setupViewPager(List<String> bookName, List<String> imageUrls, List<String> authors, List<String> isbn13) {
-        if (imageUrls == null || imageUrls.isEmpty()) {
-            return;
-        }
-        if (getView() == null) {
-            return;
-        }
-        mPager = getView().findViewById(R.id.search_viewpager);
-        searchPagerAdapter = new SearchPageAdapter(requireActivity(), bookName, imageUrls, authors, isbn13, this::showBookDetail);
-        mPager.setAdapter(searchPagerAdapter);
-        mPager.setCurrentItem(1000);
-        mPager.setOffscreenPageLimit(3);
-        mPager.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
-
-        // viewpager2 간격 변환을 위함 -> res.values.dimes.xml에서 확인
-        int pageMarginPx = getResources().getDimensionPixelOffset(R.dimen.searchPageMargin);
-        int pagerWidth = getResources().getDimensionPixelOffset(R.dimen.searchPageWidth);
-        int screenWidth = getResources().getDisplayMetrics().widthPixels;
-        int offsetPx = screenWidth - pageMarginPx - pagerWidth;
-
-        // viewpager2 간격 변환
-        mPager.setPageTransformer((page, position) -> page.setTranslationX(position * -offsetPx));
-
-        mPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
-                if (positionOffsetPixels == 0) {
-                    mPager.setCurrentItem(position);
-                }
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                super.onPageSelected(position);
-            }
-        });
-    } // end of setupMonthViewPager
-
     // showBookDetail
     private void showBookDetail(String isbn13, String bookName, String authors, String imageUrl) {
         // 새로운 FragmentBookDetail 인스턴스를 생성하고 필요한 데이터를 전달
@@ -329,105 +262,94 @@ public class FragmentSearch extends Fragment {
             transaction.hide(currentFragment);
         }
 
-        // 새로운 프래그먼트를 추가
+        // 새로운 프래그먼트를 추가하고 백스택에 추가하여 뒤로가기 버튼을 눌렀을 때 이전 프래그먼트로 돌아갈 수 있도록 설정
         transaction.add(R.id.ly_home, fragment);
         transaction.addToBackStack(null); // 백스택에 추가하여 뒤로가기 버튼을 눌렀을 때 이전 프래그먼트로 돌아갈 수 있음
         transaction.commit();
     }
 
-    // SharedPreferences에서 키워드를 불러오는 메서드
-    private List<String> loadKeywordsFromSharedPreferences() {
-        SharedPreferences preferences = requireActivity().getSharedPreferences("keywords", Context.MODE_PRIVATE);
-        String keywordString = preferences.getString("keywords", "");
-        List<String> keywords = new ArrayList<>();
-
-        if (!keywordString.isEmpty()) {
-            String[] keywordArray = keywordString.split(",");
-            for (String keyword : keywordArray) {
-                keywords.add(keyword);
-            }
-        }
-        return keywords;
-    }
-
-    // SharedPreferences에 키워드를 저장하는 메서드
+    // 검색 키워드를 SharedPreferences에 저장하는 메서드
     private void saveKeywordsToSharedPreferences(List<String> keywords) {
-        SharedPreferences preferences = requireActivity().getSharedPreferences("keywords", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        StringBuilder keywordString = new StringBuilder();
-
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("SearchKeywords", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        JSONArray jsonArray = new JSONArray();
         for (String keyword : keywords) {
-            keywordString.append(keyword).append(",");
+            jsonArray.put(keyword);
         }
-
-        if (keywordString.length() > 0) {
-            keywordString.setLength(keywordString.length() - 1); // 마지막 쉼표 제거
-        }
-
-        editor.putString("keywords", keywordString.toString());
+        editor.putString("keywords", jsonArray.toString());
+        editor.putString("date", mDate.toString());
         editor.apply();
     }
 
-    // 날짜 차이를 확인하여 시간이 지난 경우 true를 반환하는 메서드
+    // SharedPreferences에서 검색 키워드를 불러오는 메서드
+    private List<String> loadKeywordsFromSharedPreferences() {
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("SearchKeywords", Context.MODE_PRIVATE);
+        String keywordsString = sharedPreferences.getString("keywords", "");
+        String dateString = sharedPreferences.getString("date", "");
+
+        if (!keywordsString.isEmpty()) {
+            try {
+                JSONArray jsonArray = new JSONArray(keywordsString);
+                List<String> keywords = new ArrayList<>();
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    keywords.add(jsonArray.getString(i));
+                }
+                checkDate = LocalDate.parse(dateString);
+                return keywords;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return new ArrayList<>();
+    }
+
+    // 날짜를 확인하는 메서드
     private boolean timeCheck() {
-        if (checkDate == null || mDate.minusDays(7).isAfter(checkDate)) {
-            checkDate = mDate;
-            return true;
-        }
-        return false;
+        return !checkDate.equals(mDate);
     }
 
-    // 키워드 검색 메서드
-    private void searchByKeyword(String keyword) {
-        FragmentKeywordSearch fragment = FragmentKeywordSearch.newInstance(keyword, "");
-
+    // 제목으로 책 검색 메서드
+    private void searchByTitle(String query) {
+        FragmentTitleSearch fragment = FragmentTitleSearch.newInstance(query, "");
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
 
-        // 현재 프래그먼트를 가져와서 숨김
         Fragment currentFragment = getParentFragmentManager().findFragmentById(R.id.ly_home);
         if (currentFragment != null) {
             transaction.hide(currentFragment);
         }
 
-        // 새 프래그먼트를 추가
         transaction.add(R.id.ly_home, fragment);
-        transaction.addToBackStack(null); // 백스택에 추가하여 뒤로가기 버튼을 눌렀을 때 이전 프래그먼트로 돌아갈 수 있음
+        transaction.addToBackStack(null);
         transaction.commit();
     }
 
-    // 타이틀 검색
-    private void searchByTitle(String title) {
-        FragmentTitleSearch fragment = FragmentTitleSearch.newInstance(title, "");
-
+    // 저자로 책 검색 메서드
+    private void searchByAuthor(String query) {
+        FragmentAuthorSearch fragment = FragmentAuthorSearch.newInstance(query, "");
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
 
-        // 현재 프래그먼트를 가져와서 숨김
         Fragment currentFragment = getParentFragmentManager().findFragmentById(R.id.ly_home);
         if (currentFragment != null) {
             transaction.hide(currentFragment);
         }
 
-        // 새 프래그먼트를 추가
         transaction.add(R.id.ly_home, fragment);
-        transaction.addToBackStack(null); // 백스택에 추가하여 뒤로가기 버튼을 눌렀을 때 이전 프래그먼트로 돌아갈 수 있음
+        transaction.addToBackStack(null);
         transaction.commit();
     }
 
-    // 저자 검색
-    private void searchByAuthor(String author) {
-        FragmentAuthorSearch fragment = FragmentAuthorSearch.newInstance(author, "");
-
+    // 키워드로 책 검색 메서드
+    private void searchByKeyword(String query) {
+        FragmentKeywordSearch fragment = FragmentKeywordSearch.newInstance(query, "");
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
 
-        // 현재 프래그먼트를 가져와서 숨김
         Fragment currentFragment = getParentFragmentManager().findFragmentById(R.id.ly_home);
         if (currentFragment != null) {
             transaction.hide(currentFragment);
         }
 
-        // 새 프래그먼트를 추가
         transaction.add(R.id.ly_home, fragment);
-        transaction.addToBackStack(null); // 백스택에 추가하여 뒤로가기 버튼을 눌렀을 때 이전 프래그먼트로 돌아갈 수 있음
+        transaction.addToBackStack(null);
         transaction.commit();
     }
 }

@@ -72,6 +72,7 @@
     <!-- SearchView Style 설정 -->
     <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">
         <item name="android:background">@color/pastelYellow</item>
+        <item name="android:textColorHint">@color/brandcolor1</item> <!-- 파란색 힌트 텍스트 -->
     </style>
     
 </resources>
