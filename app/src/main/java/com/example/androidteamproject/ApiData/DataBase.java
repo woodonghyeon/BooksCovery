@@ -60,7 +60,7 @@ public class DataBase {
         }
     }
 
-    public int checkDuplicate(SearchBookDetail sbd, String sql) {
+    public int checkDuplicate(SearchBookDetail sbd, String sql) { //상세보기에 들어가면 체크
         ResultSet rs = null;
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -227,14 +227,28 @@ public class DataBase {
         List<SearchBookDetail> books = new ArrayList<>();
         try {
             conn = dbConn();
+            String sql;
 
-            String sql = "select bc.book_count, b.bookname, b.authors, b.book_image_URL, b.loan_count, b.isbn, b.publisher, b.publication_year, b.class_no " +
-                    "from book_count bc, book b " +
-                    "where b.book_id = bc.book_id " +
-                    "and bc.department_id = ? " +
-                    "order by bc.book_count desc, b.loan_count desc limit 0,10";
+            if (department_id == 0) {
+                // 전체학과 조회
+                sql = "SELECT b.bookname, b.authors, b.book_image_URL, b.loan_count, b.isbn, b.publisher, b.publication_year, b.class_no, SUM(bc.book_count) AS total_book_count " +
+                        "FROM book_count bc " +
+                        "JOIN book b ON b.book_id = bc.book_id " +
+                        "GROUP BY bc.book_id " +
+                        "ORDER BY total_book_count DESC, b.loan_count DESC " +
+                        "LIMIT 20";
+            } else {
+                // 선택학과 조회
+                sql = "select bc.book_count, b.bookname, b.authors, b.book_image_URL, b.loan_count, b.isbn, b.publisher, b.publication_year, b.class_no " +
+                        "from book_count bc, book b " +
+                        "where b.book_id = bc.book_id " +
+                        "and bc.department_id = ? " +
+                        "order by bc.book_count desc, b.loan_count desc limit 0,10";
+            }
             pstmt = conn.prepareStatement(sql);
+            if (department_id != 0) {
             pstmt.setInt(1, department_id);
+            }
             // 쿼리 실행
             rs = pstmt.executeQuery();
 
@@ -252,7 +266,7 @@ public class DataBase {
                 String isbn13 = rs.getString("isbn");
                 String class_no = rs.getString("class_no");
                 int loanCnt = rs.getInt("loan_count");
-                int book_count = rs.getInt("book_count");
+                int book_count = department_id == 0 ? rs.getInt("total_book_count") : rs.getInt("book_count");
 
                 Log.d("DB 결과 ", "BookName: " + bookName + ", ImageURL: " + bookImageUrl);
                 // 책 정보를 담은 SearchBookDetail 객체 생성
@@ -301,6 +315,86 @@ public class DataBase {
                 if (conn != null) conn.close();
             } catch (Exception e) {
                 Log.e("InsertDataTask", "Error closing connection", e);
+            }
+        }
+    }
+
+    // 즐겨찾기 확인
+    public boolean isFavorite(int member_id, int book_id) {
+        ResultSet rs = null;
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try {
+            conn = dbConn();
+            String sql = "SELECT * FROM favorite WHERE member_id = ? AND book_id = ?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, member_id);
+            pstmt.setInt(2, book_id);
+
+            rs = pstmt.executeQuery();
+            return rs.next();
+        } catch (Exception e) {
+            Log.e("Database", "Error checking favorite", e);
+            return false;
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (pstmt != null) pstmt.close();
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                Log.e("Database", "Error closing connection", e);
+            }
+        }
+    }
+
+    // 즐겨찾기 추가
+    public String addFavorite(int member_id, int book_id) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try {
+            conn = dbConn();
+            String sql = "INSERT INTO favorite (member_id, book_id, favorite_date) VALUES (?, ?, NOW())";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, member_id);
+            pstmt.setInt(2, book_id);
+
+            int rowsInserted = pstmt.executeUpdate();
+            return rowsInserted > 0 ? "즐겨찾기 추가 성공" : "즐겨찾기 추가 실패";
+        } catch (Exception e) {
+            Log.e("Database", "Error adding favorite", e);
+            return "즐겨찾기 추가 중 오류 발생";
+        } finally {
+            try {
+                if (pstmt != null) pstmt.close();
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                Log.e("Database", "Error closing connection", e);
+            }
+        }
+    }
+
+    // 즐겨찾기 삭제
+    public String removeFavorite(int member_id, int book_id) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try {
+            conn = dbConn();
+            String sql = "DELETE FROM favorite WHERE member_id = ? AND book_id = ?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, member_id);
+            pstmt.setInt(2, book_id);
+
+            int rowsDeleted = pstmt.executeUpdate();
+            return rowsDeleted > 0 ? "즐겨찾기 삭제 성공" : "즐겨찾기 삭제 실패";
+        } catch (Exception e) {
+            Log.e("Database", "Error removing favorite", e);
+            return "즐겨찾기 삭제 중 오류 발생";
+        } finally {
+            try {
+                if (pstmt != null) pstmt.close();
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                Log.e("Database", "Error closing connection", e);
             }
         }
     }

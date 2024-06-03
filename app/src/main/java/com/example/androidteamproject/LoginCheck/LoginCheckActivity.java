@@ -25,7 +25,7 @@ public class LoginCheckActivity extends AppCompatActivity {
     //setId, setPw -> 사용자가 입력한 id, pw
     String setId, setPw;
     String name,gender,id,pwd,password_key,email,mode;
-    int age,department_id;
+    int member,age,department_id;
     //String updateDate;
 
     @Override
@@ -85,6 +85,7 @@ public class LoginCheckActivity extends AppCompatActivity {
 
                 //결과 받기
                 while (rs.next()) {
+                    member = rs.getInt("member_id");
                     name = rs.getString("name");
                     gender = rs.getString("gender");
                     age = rs.getInt("age");
@@ -126,6 +127,7 @@ public class LoginCheckActivity extends AppCompatActivity {
                 finish();
             }
             else{
+                outIntent.putExtra("Member",member);
                 outIntent.putExtra("Name",name);
                 outIntent.putExtra("Gender",gender);
                 outIntent.putExtra("Age",age);
@@ -176,7 +178,6 @@ public class LoginCheckActivity extends AppCompatActivity {
             }
             return result;
         }
-
 
     }
 

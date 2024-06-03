@@ -7,13 +7,14 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <androidx.appcompat.widget.AppCompatImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/iv_hotTrendBookImg"
-        android:layout_width="250dp"
-        android:layout_height="350dp"
-        android:layout_gravity="center"
-        android:scaleType="fitXY"
-        android:background="@null"/>
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:scaleType="centerCrop"
+        app:civ_border_color="@color/lightGray"
+        app:civ_border_overlay="true"
+        app:civ_border_width="5dp" />
 
     <TextView
         android:id="@+id/tv_hotTrendClassName"
@@ -24,7 +25,8 @@
         android:textSize="15sp"
         android:textStyle="bold"
         android:textColor="@color/gray"
-        android:textAlignment="textStart"
+        android:textAlignment="center"
+        android:gravity="center"
         android:visibility="visible"/>
 
     <TextView
@@ -35,7 +37,8 @@
         android:fontFamily="@font/suitebold"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:textAlignment="textStart"
+        android:textAlignment="center"
+        android:gravity="center"
         android:visibility="visible" />
 
     <TextView
@@ -45,7 +48,8 @@
         android:fontFamily="@font/suitebold"
         android:textSize="15sp"
         android:textColor="@color/gray"
-        android:textAlignment="textStart"
+        android:textAlignment="center"
+        android:gravity="center"
         android:visibility="visible"/>
 
 </LinearLayout>
