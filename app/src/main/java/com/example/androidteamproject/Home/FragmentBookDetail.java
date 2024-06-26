@@ -22,6 +22,9 @@ import android.widget.ToggleButton;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.androidteamproject.ApiData.DataBase;
 import com.example.androidteamproject.ApiData.HttpConnection;
@@ -59,6 +62,8 @@ public class FragmentBookDetail extends Fragment {
     private LineChart lineChart;
     private ToggleButton toggle_bookmark;
     private static String API_KEY;
+    private ViewPager2 maniaBookPager;
+    private ManiaBookAdapter maniaBookAdapter;
 
     DataBase dataBase = new DataBase();
     SessionManager sessionManager;
@@ -301,6 +306,50 @@ public class FragmentBookDetail extends Fragment {
             }
         });
     }
+
+    private void getManiaRecBookItems() {
+        
+    }
+
+    public void setupManiaViewPager(List<String> bookNames, List<String> imageUrls, List<String> isbn13s) {
+        if(imageUrls == null || imageUrls.isEmpty()) {
+            // 이미지 없는 경우 처리
+            return;
+        }
+        // 이미지 URL 있는 경우 설정
+        if(getView() == null) {
+            return;
+        }
+        maniaBookPager = getView().findViewById(R.id.maniaBooks_viewpager);
+        maniaBookAdapter = new ManiaBookAdapter(requireActivity(), bookNames, imageUrls, isbn13s);
+        maniaBookPager.setAdapter(maniaBookAdapter);
+        maniaBookPager.setCurrentItem(1000);
+        maniaBookPager.setOffscreenPageLimit(10);
+
+        int startPos = imageUrls.size() / 2;
+        maniaBookPager.setCurrentItem(startPos);
+
+        int pageMarginPx = getResources().getDimensionPixelOffset(R.dimen.maniaBookPageMargin);
+        int pagerWidth = getResources().getDimensionPixelOffset(R.dimen.maniaBookPageWidth);
+        int screenWidth = getResources().getDisplayMetrics().widthPixels;
+        int offsetPx = screenWidth - pageMarginPx - pagerWidth;
+
+        maniaBookPager.setPageTransformer((page, position) -> page.setTranslationX(position * -offsetPx));
+        maniaBookPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+                if (positionOffsetPixels == 0) {
+                    maniaBookPager.setCurrentItem(position);
+                }
+            }
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+            }
+        });
+    }
+
     private static class KeywordWithWeight {
         String word;
         String weight;

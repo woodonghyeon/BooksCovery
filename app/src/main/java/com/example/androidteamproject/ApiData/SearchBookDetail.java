@@ -8,9 +8,17 @@ public class SearchBookDetail {
     private List<String> month, loanHistoryCnt, ranking;
     private List<String> age, gender, loanGrpsCnt, loanGrpsRanking;
     private List<String> word, weight;
+    private List<String> maniaBookName, maniaIsbn13, readerBookName, readerIsbn13;
 
     public SearchBookDetail(String isbn13) {
         this.isbn13 = isbn13;
+    }
+
+    public SearchBookDetail(List<String> maniaBookName, List<String> maniaIsbn13, List<String> readerBookName, List<String> readerIsbn13) {
+        this.maniaBookName = maniaBookName;
+        this.maniaIsbn13 = maniaIsbn13;
+        this.readerBookName = readerBookName;
+        this.readerIsbn13 = readerIsbn13;
     }
 
     public SearchBookDetail(String bookName, String authors, String bookImageUrl, String publisher, int publication_year, String isbn13, String class_no, int loanCnt, int book_count) {
@@ -222,5 +230,37 @@ public class SearchBookDetail {
                 ", word='" + word + '\'' +
                 ", weight='" + weight + '\'' +
                 '}';
+    }
+
+    public List<String> getManiaBookName() {
+        return maniaBookName;
+    }
+
+    public void setManiaBookName(List<String> maniaBookName) {
+        this.maniaBookName = maniaBookName;
+    }
+
+    public List<String> getManiaIsbn13() {
+        return maniaIsbn13;
+    }
+
+    public void setManiaIsbn13(List<String> maniaIsbn13) {
+        this.maniaIsbn13 = maniaIsbn13;
+    }
+
+    public List<String> getReaderBookName() {
+        return readerBookName;
+    }
+
+    public void setReaderBookName(List<String> readerBookName) {
+        this.readerBookName = readerBookName;
+    }
+
+    public List<String> getReaderIsbn13() {
+        return readerIsbn13;
+    }
+
+    public void setReaderIsbn13(List<String> readerIsbn13) {
+        this.readerIsbn13 = readerIsbn13;
     }
 }
