@@ -402,6 +402,7 @@ public class HttpConnection {
         });
     } // end of hotTrend
 
+    // 상세보기
     public void getDetailBook(String url, final HttpResponseCallback<SearchBookDetail> callback) {
         Request request = new Request.Builder().url(url).build();
         client.newCall(request).enqueue(new Callback() {
@@ -469,19 +470,46 @@ public class HttpConnection {
                         weight.add(keyword.getString("weight"));
                     }
 
+                    // 마니아, 다독자 isbn13 추출
+                    JSONArray maniaRecBooks = responseBody.getJSONObject("response").getJSONArray("maniaRecBooks");
+                    List<String> maniaBookName = new ArrayList<>();
+                    List<String> maniaIsbn13 = new ArrayList<>();
+                    for (int i = 0; i < maniaRecBooks.length(); i++) {
+                        JSONObject maniaBook = maniaRecBooks.getJSONObject(i).getJSONObject("book");
+                        maniaBookName.add(maniaBook.getString("bookname"));
+                        maniaIsbn13.add(maniaBook.getString("isbn13"));
+                    }
+
+                    JSONArray readerRecBooks = responseBody.getJSONObject("response").getJSONArray("readerRecBooks");
+                    List<String> readerBookName = new ArrayList<>();
+                    List<String> readerIsbn13 = new ArrayList<>();
+                    for (int i = 0; i < readerRecBooks.length(); i++) {
+                        JSONObject readerBook = readerRecBooks.getJSONObject(i).getJSONObject("book");
+                        readerBookName.add(readerBook.getString("bookname"));
+                        readerIsbn13.add(readerBook.getString("isbn13"));
+                    }
+
                     // 책 정보를 담은 SearchBookDetail 객체 생성
                     SearchBookDetail bookDetail = new SearchBookDetail(
                             bookName, authors, publisher, bookImageUrl, description, publication_year, isbn13, vol, class_no, class_nm, loanCnt,
                             month, loanHistoryCnt, ranking, age, gender, loanGrpsCnt, loanGrpsRanking, word, weight
                     );
 
+                    SearchBookDetail maniaReaderBookDetail = new SearchBookDetail(maniaBookName, maniaIsbn13, readerBookName, readerIsbn13);
+
                     // 콜백을 통해 성공적인 응답 처리 (BookDetail 객체 전달)
                     callback.onSuccess(bookDetail);
+                    callback.onSuccess(maniaReaderBookDetail);
                 } catch (JSONException e) {
                     // JSON 파싱 중 예외가 발생한 경우 콜백을 통해 실패 처리
                     callback.onFailure(e);
                 }
             }
         });
+    } // end of getDetailBook
+
+    public void getManiaRecBook() {
+
     }
+
 }

@@ -15,4 +15,7 @@
 
     <dimen name="popularBookPageMargin">300dp</dimen>
     <dimen name="popularBookPageWidth">30dp</dimen>
+
+    <dimen name="maniaBookPageMargin">300dp</dimen>
+    <dimen name="maniaBookPageWidth">30dp</dimen>
 </resources>
