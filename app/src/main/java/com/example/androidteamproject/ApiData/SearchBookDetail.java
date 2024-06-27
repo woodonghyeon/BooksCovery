@@ -149,87 +149,81 @@ public class SearchBookDetail {
     public List<String> getMonth() {
         return month;
     }
+
     public void setMonths(List<String> month) {
         this.month = month;
     }
+
     public List<String> getLoanHistoryCnt() {
         return loanHistoryCnt;
     }
+
     public void setLoanHistoryCnt(List<String> loanHistoryCnt) {
         this.loanHistoryCnt = loanHistoryCnt;
     }
+
     public List<String> getRankings() {
         return ranking;
     }
+
     public void setRanking(List<String> ranking) {
         this.ranking = ranking;
     }
+
     public List<String> getAge() {
         return age;
     }
+
     public void setAge(List<String> age) {
         this.age = age;
     }
+
     public List<String> getGender() {
         return gender;
     }
+
     public void setGender(List<String> gender) {
         this.gender = gender;
     }
+
     public List<String> getLoanGrpsCnt() {
         return loanGrpsCnt;
     }
+
     public void setLoanGrpsCnt(List<String> loanGrpsCnt) {
         this.loanGrpsCnt = loanGrpsCnt;
     }
+
     public List<String> getLoanGrpsRanking() {
         return loanGrpsRanking;
     }
+
     public void setLoanGrpsRanking(List<String> loanGrpsRanking) {
         this.loanGrpsRanking = loanGrpsRanking;
     }
+
     public List<String> getWord() {
         return word;
     }
+
     public void setWord(List<String> word) {
         this.word = word;
     }
+
     public List<String> getWeight() {
         return weight;
     }
+
     public void setWeight(List<String> weight) {
         this.weight = weight;
     }
+
     public int getBook_count() {
         return book_count;
     }
+
     public void setBook_count(int book_count) {
         this.book_count = book_count;
-    }
-    @Override
-    public String toString() { // 로그 후에 삭제
-        return "SearchBookDetail{" +
-                "bookName='" + bookName + '\'' +
-                ", authors='" + authors + '\'' +
-                ", publisher='" + publisher + '\'' +
-                ", bookImageUrl='" + bookImageUrl + '\'' +
-                ", description='" + description + '\'' +
-                ", publication_year='" + publication_year + '\'' +
-                ", isbn13='" + isbn13 + '\'' +
-                ", vol='" + vol + '\'' +
-                ", class_no='" + class_no + '\'' +
-                ", class_nm='" + class_nm + '\'' +
-                ", loanCnt='" + loanCnt + '\'' +
-                ", month='" + month + '\'' +
-                ", loanHistoryCnt='" + loanHistoryCnt + '\'' +
-                ", ranking='" + ranking + '\'' +
-                ", age='" + age + '\'' +
-                ", gender='" + gender + '\'' +
-                ", loanGrpsCnt='" + loanGrpsCnt + '\'' +
-                ", loanGrpsRanking='" + loanGrpsRanking + '\'' +
-                ", word='" + word + '\'' +
-                ", weight='" + weight + '\'' +
-                '}';
     }
 
     public List<String> getManiaBookName() {
@@ -262,5 +256,31 @@ public class SearchBookDetail {
 
     public void setReaderIsbn13(List<String> readerIsbn13) {
         this.readerIsbn13 = readerIsbn13;
+    }
+
+    @Override
+    public String toString() { // 로그 후에 삭제
+        return "SearchBookDetail{" +
+                "bookName='" + bookName + '\'' +
+                ", authors='" + authors + '\'' +
+                ", publisher='" + publisher + '\'' +
+                ", bookImageUrl='" + bookImageUrl + '\'' +
+                ", description='" + description + '\'' +
+                ", publication_year='" + publication_year + '\'' +
+                ", isbn13='" + isbn13 + '\'' +
+                ", vol='" + vol + '\'' +
+                ", class_no='" + class_no + '\'' +
+                ", class_nm='" + class_nm + '\'' +
+                ", loanCnt='" + loanCnt + '\'' +
+                ", month='" + month + '\'' +
+                ", loanHistoryCnt='" + loanHistoryCnt + '\'' +
+                ", ranking='" + ranking + '\'' +
+                ", age='" + age + '\'' +
+                ", gender='" + gender + '\'' +
+                ", loanGrpsCnt='" + loanGrpsCnt + '\'' +
+                ", loanGrpsRanking='" + loanGrpsRanking + '\'' +
+                ", word='" + word + '\'' +
+                ", weight='" + weight + '\'' +
+                '}';
     }
 }

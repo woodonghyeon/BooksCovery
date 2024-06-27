@@ -26,6 +26,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.androidteamproject.ApiData.CompositeSearchBookDetail;
 import com.example.androidteamproject.ApiData.DataBase;
 import com.example.androidteamproject.ApiData.HttpConnection;
 import com.example.androidteamproject.ApiData.SearchBookDetail;
@@ -143,11 +144,12 @@ public class FragmentBookDetail extends Fragment {
     private void fetchBookDetail(String isbn13, TextView bookNameTextView, TextView authorsTextView, TextView descriptionTextView, ImageView bookImageView, TextView publisherTextView, TextView publicationYearTextView, TextView isbnTextView, TextView classNoTextView, TextView classNmTextView, TextView loanCntTextView, TextView ageTextView, TextView wordTextView) {
         String url = "http://data4library.kr/api/usageAnalysisList?authKey=" + API_KEY + "&isbn13=" + isbn13 + "&format=json";
 
-        HttpConnection.getInstance(getContext()).getDetailBook(url, new HttpConnection.HttpResponseCallback<SearchBookDetail>() {
+        HttpConnection.getInstance(getContext()).getDetailBook(url, new HttpConnection.HttpResponseCallback<CompositeSearchBookDetail>() {
             @Override
-            public void onSuccess(SearchBookDetail bookDetail) {
+            public void onSuccess(CompositeSearchBookDetail responseData) {
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
+                        SearchBookDetail bookDetail = responseData.getBookDetail();
                         // 로그 추가하여 데이터 확인
                         System.out.println("Book Detail: " + bookDetail.toString());
 
@@ -305,11 +307,11 @@ public class FragmentBookDetail extends Fragment {
                 }
             }
         });
-    }
+    } // end of fetchBookDetail
 
     private void getManiaRecBookItems() {
         
-    }
+    } // end of getManiaRecBookItems
 
     public void setupManiaViewPager(List<String> bookNames, List<String> imageUrls, List<String> isbn13s) {
         if(imageUrls == null || imageUrls.isEmpty()) {
@@ -348,7 +350,7 @@ public class FragmentBookDetail extends Fragment {
                 super.onPageSelected(position);
             }
         });
-    }
+    } // end of setupViewPager
 
     private static class KeywordWithWeight {
         String word;
