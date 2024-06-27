@@ -8,16 +8,29 @@ public class SearchBookDetail {
     private List<String> month, loanHistoryCnt, ranking;
     private List<String> age, gender, loanGrpsCnt, loanGrpsRanking;
     private List<String> word, weight;
-    private List<String> maniaBookName, maniaIsbn13, readerBookName, readerIsbn13;
+    private List<String> maniaIsbn13List, readerIsbn13List;
+    private String maniaBookName, maniaAuthor, maniaImageUrl, maniaIsbn13;
+    private String readerBookName, readerAuthor, readerImageUrl, readerIsbn13;
 
     public SearchBookDetail(String isbn13) {
         this.isbn13 = isbn13;
     }
 
-    public SearchBookDetail(List<String> maniaBookName, List<String> maniaIsbn13, List<String> readerBookName, List<String> readerIsbn13) {
+    public SearchBookDetail(List<String> maniaIsbn13, List<String> readerIsbn13) {
+        this.maniaIsbn13List = maniaIsbn13;
+        this.readerIsbn13List = readerIsbn13;
+    }
+
+    public SearchBookDetail(String maniaBookName, String maniaAuthor, String maniaImageUrl, String maniaIsbn13) {
         this.maniaBookName = maniaBookName;
+        this.maniaAuthor = maniaAuthor;
+        this.maniaImageUrl = maniaImageUrl;
         this.maniaIsbn13 = maniaIsbn13;
+    }
+
+    public SearchBookDetail(String readerBookName, String readerImageUrl, String readerIsbn13) {
         this.readerBookName = readerBookName;
+        this.readerImageUrl = readerImageUrl;
         this.readerIsbn13 = readerIsbn13;
     }
 
@@ -226,38 +239,45 @@ public class SearchBookDetail {
         this.book_count = book_count;
     }
 
-    public List<String> getManiaBookName() {
+    public String getManiaBookName() {
         return maniaBookName;
     }
 
-    public void setManiaBookName(List<String> maniaBookName) {
+    public void setManiaBookName(String maniaBookName) {
         this.maniaBookName = maniaBookName;
     }
 
-    public List<String> getManiaIsbn13() {
-        return maniaIsbn13;
+    public String getManiaAuthor() {
+        return maniaAuthor;
     }
 
-    public void setManiaIsbn13(List<String> maniaIsbn13) {
-        this.maniaIsbn13 = maniaIsbn13;
+    public void setManiaAuthor(String maniaAuthor) {
+        this.maniaAuthor = maniaAuthor;
     }
 
-    public List<String> getReaderBookName() {
-        return readerBookName;
+    public String getManiaImageUrl() {
+        return maniaImageUrl;
     }
 
-    public void setReaderBookName(List<String> readerBookName) {
-        this.readerBookName = readerBookName;
+    public void setManiaImageUrl(String maniaImageUrl) {
+        this.maniaImageUrl = maniaImageUrl;
     }
 
-    public List<String> getReaderIsbn13() {
-        return readerIsbn13;
+    public List<String> getManiaIsbn13List() {
+        return maniaIsbn13List;
     }
 
-    public void setReaderIsbn13(List<String> readerIsbn13) {
-        this.readerIsbn13 = readerIsbn13;
+    public void setManiaIsbn13List(List<String> maniaIsbn13List) {
+        this.maniaIsbn13List = maniaIsbn13List;
     }
 
+    public List<String> getReaderIsbn13List() {
+        return readerIsbn13List;
+    }
+
+    public void setReaderIsbn13List(List<String> readerIsbn13List) {
+        this.readerIsbn13List = readerIsbn13List;
+    }
     @Override
     public String toString() { // 로그 후에 삭제
         return "SearchBookDetail{" +
@@ -282,5 +302,45 @@ public class SearchBookDetail {
                 ", word='" + word + '\'' +
                 ", weight='" + weight + '\'' +
                 '}';
+    }
+
+    public String getManiaIsbn13() {
+        return maniaIsbn13;
+    }
+
+    public void setManiaIsbn13(String maniaIsbn13) {
+        this.maniaIsbn13 = maniaIsbn13;
+    }
+
+    public String getReaderBookName() {
+        return readerBookName;
+    }
+
+    public void setReaderBookName(String readerBookName) {
+        this.readerBookName = readerBookName;
+    }
+
+    public String getReaderAuthor() {
+        return readerAuthor;
+    }
+
+    public void setReaderAuthor(String readerAuthor) {
+        this.readerAuthor = readerAuthor;
+    }
+
+    public String getReaderImageUrl() {
+        return readerImageUrl;
+    }
+
+    public void setReaderImageUrl(String readerImageUrl) {
+        this.readerImageUrl = readerImageUrl;
+    }
+
+    public String getReaderIsbn13() {
+        return readerIsbn13;
+    }
+
+    public void setReaderIsbn13(String readerIsbn13) {
+        this.readerIsbn13 = readerIsbn13;
     }
 }

@@ -44,6 +44,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -63,8 +64,9 @@ public class FragmentBookDetail extends Fragment {
     private LineChart lineChart;
     private ToggleButton toggle_bookmark;
     private static String API_KEY;
-    private ViewPager2 maniaBookPager;
+    private ViewPager2 maniaBookPager, readerBookPager;
     private ManiaBookAdapter maniaBookAdapter;
+    private ReaderBookAdapter readerBookAdapter;
 
     DataBase dataBase = new DataBase();
     SessionManager sessionManager;
@@ -113,6 +115,7 @@ public class FragmentBookDetail extends Fragment {
         TextView wordTextView = view.findViewById(R.id.tv_detail_word);
         toggle_bookmark = view.findViewById(R.id.toggle_bookmark);
         lineChart = view.findViewById(R.id.line_chart);
+        maniaBookPager = view.findViewById(R.id.maniaBooks_viewpager);
 
         // 로깅 추가
         System.out.println("FragmentBookDetail onCreateView: " + bookName + ", " + authors + ", " + imageUrl);
@@ -292,6 +295,14 @@ public class FragmentBookDetail extends Fragment {
                         } else {
                             bookImageView.setImageResource(R.drawable.ic_error); // Placeholder 이미지 설정
                         }
+                        
+                        // 마니아, 다독자 정보 가져오기
+                        List<String> maniaIsbn13 = responseData.getManiaReaderBookDetail().getManiaIsbn13List();
+                        List<String> readerIsbn13 = responseData.getManiaReaderBookDetail().getReaderIsbn13List();
+
+                        getManiaRecBookItems(maniaIsbn13);
+                        getReaderRecBookItems(readerIsbn13);
+
                         checkFavoriteStatus();
                     });
                 }
@@ -309,11 +320,34 @@ public class FragmentBookDetail extends Fragment {
         });
     } // end of fetchBookDetail
 
-    private void getManiaRecBookItems() {
-        
+    private void getManiaRecBookItems(List<String> isbn13List) {
+        HttpConnection.getInstance(getContext()).getManiaRecBook(isbn13List, "json", new HttpConnection.HttpResponseCallback<List<SearchBookDetail>>() {
+            @Override
+            public void onSuccess(List<SearchBookDetail> maniaBooks) {
+                getActivity().runOnUiThread(() -> {
+                    List<String> bookNames = new ArrayList<>();
+                    List<String> imageUrls = new ArrayList<>();
+                    List<String> isbn13s = new ArrayList<>();
+                    List<String> authors = new ArrayList<>();
+
+                    for (SearchBookDetail book : maniaBooks) {
+                        bookNames.add(book.getManiaBookName());
+                        authors.add(book.getManiaAuthor());
+                        imageUrls.add(book.getManiaImageUrl());
+                        isbn13s.add(book.getManiaIsbn13());
+                    }
+                    setupManiaViewPager(bookNames, authors, imageUrls, isbn13s);
+                });
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                e.printStackTrace();
+            }
+        });
     } // end of getManiaRecBookItems
 
-    public void setupManiaViewPager(List<String> bookNames, List<String> imageUrls, List<String> isbn13s) {
+    public void setupManiaViewPager(List<String> bookNames, List<String> authors, List<String> imageUrls, List<String> isbn13s) {
         if(imageUrls == null || imageUrls.isEmpty()) {
             // 이미지 없는 경우 처리
             return;
@@ -343,6 +377,72 @@ public class FragmentBookDetail extends Fragment {
                 super.onPageScrolled(position, positionOffset, positionOffsetPixels);
                 if (positionOffsetPixels == 0) {
                     maniaBookPager.setCurrentItem(position);
+                }
+            }
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+            }
+        });
+    } // end of setupViewPager
+
+    private void getReaderRecBookItems(List<String> isbn13List) {
+        HttpConnection.getInstance(getContext()).getManiaRecBook(isbn13List, "json", new HttpConnection.HttpResponseCallback<List<SearchBookDetail>>() {
+            @Override
+            public void onSuccess(List<SearchBookDetail> maniaBooks) {
+                getActivity().runOnUiThread(() -> {
+                    List<String> bookNames = new ArrayList<>();
+                    List<String> imageUrls = new ArrayList<>();
+                    List<String> isbn13s = new ArrayList<>();
+                    List<String> authors = new ArrayList<>();
+
+                    for (SearchBookDetail book : maniaBooks) {
+                        bookNames.add(book.getManiaBookName());
+                        authors.add(book.getManiaAuthor());
+                        imageUrls.add(book.getManiaImageUrl());
+                        isbn13s.add(book.getManiaIsbn13());
+                    }
+                    setupReaderViewPager(bookNames, authors, imageUrls, isbn13s);
+                });
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                e.printStackTrace();
+            }
+        });
+    } // end of getManiaRecBookItems
+
+    public void setupReaderViewPager(List<String> bookNames, List<String> authors, List<String> imageUrls, List<String> isbn13s) {
+        if(imageUrls == null || imageUrls.isEmpty()) {
+            // 이미지 없는 경우 처리
+            return;
+        }
+        // 이미지 URL 있는 경우 설정
+        if(getView() == null) {
+            return;
+        }
+        readerBookPager = getView().findViewById(R.id.readerBooks_viewpager);
+        readerBookAdapter = new ReaderBookAdapter(requireActivity(), bookNames, imageUrls, isbn13s);
+        readerBookPager.setAdapter(readerBookAdapter);
+        readerBookPager.setCurrentItem(1000);
+        readerBookPager.setOffscreenPageLimit(10);
+
+        int startPos = imageUrls.size() / 2;
+        readerBookPager.setCurrentItem(startPos);
+
+        int pageMarginPx = getResources().getDimensionPixelOffset(R.dimen.maniaBookPageMargin);
+        int pagerWidth = getResources().getDimensionPixelOffset(R.dimen.maniaBookPageWidth);
+        int screenWidth = getResources().getDisplayMetrics().widthPixels;
+        int offsetPx = screenWidth - pageMarginPx - pagerWidth;
+
+        readerBookPager.setPageTransformer((page, position) -> page.setTranslationX(position * -offsetPx));
+        readerBookPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+                if (positionOffsetPixels == 0) {
+                    readerBookPager.setCurrentItem(position);
                 }
             }
             @Override
