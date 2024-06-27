@@ -403,7 +403,7 @@ public class HttpConnection {
     } // end of hotTrend
 
     // 상세보기
-    public void getDetailBook(String url, final HttpResponseCallback<SearchBookDetail> callback) {
+    public void getDetailBook(String url, final HttpResponseCallback<CompositeSearchBookDetail> callback) {
         Request request = new Request.Builder().url(url).build();
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -494,12 +494,11 @@ public class HttpConnection {
                             bookName, authors, publisher, bookImageUrl, description, publication_year, isbn13, vol, class_no, class_nm, loanCnt,
                             month, loanHistoryCnt, ranking, age, gender, loanGrpsCnt, loanGrpsRanking, word, weight
                     );
-
                     SearchBookDetail maniaReaderBookDetail = new SearchBookDetail(maniaBookName, maniaIsbn13, readerBookName, readerIsbn13);
-
+                    // 객체 두개를 복합 객체로 만들어서 반환 -> callback.onSuccess(); 메소드가 객체를 한 번만 반환할 수 있어서.
+                    CompositeSearchBookDetail compositeSearchBookDetail = new CompositeSearchBookDetail(bookDetail, maniaReaderBookDetail);
                     // 콜백을 통해 성공적인 응답 처리 (BookDetail 객체 전달)
-                    callback.onSuccess(bookDetail);
-                    callback.onSuccess(maniaReaderBookDetail);
+                    callback.onSuccess(compositeSearchBookDetail);
                 } catch (JSONException e) {
                     // JSON 파싱 중 예외가 발생한 경우 콜백을 통해 실패 처리
                     callback.onFailure(e);
