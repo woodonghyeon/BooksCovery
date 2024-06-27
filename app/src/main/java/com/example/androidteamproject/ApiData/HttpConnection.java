@@ -2,6 +2,8 @@ package com.example.androidteamproject.ApiData;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+
 import com.example.androidteamproject.R;
 
 import org.json.JSONArray;
@@ -10,6 +12,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -472,20 +475,16 @@ public class HttpConnection {
 
                     // 마니아, 다독자 isbn13 추출
                     JSONArray maniaRecBooks = responseBody.getJSONObject("response").getJSONArray("maniaRecBooks");
-                    List<String> maniaBookName = new ArrayList<>();
                     List<String> maniaIsbn13 = new ArrayList<>();
                     for (int i = 0; i < maniaRecBooks.length(); i++) {
                         JSONObject maniaBook = maniaRecBooks.getJSONObject(i).getJSONObject("book");
-                        maniaBookName.add(maniaBook.getString("bookname"));
                         maniaIsbn13.add(maniaBook.getString("isbn13"));
                     }
 
                     JSONArray readerRecBooks = responseBody.getJSONObject("response").getJSONArray("readerRecBooks");
-                    List<String> readerBookName = new ArrayList<>();
                     List<String> readerIsbn13 = new ArrayList<>();
                     for (int i = 0; i < readerRecBooks.length(); i++) {
                         JSONObject readerBook = readerRecBooks.getJSONObject(i).getJSONObject("book");
-                        readerBookName.add(readerBook.getString("bookname"));
                         readerIsbn13.add(readerBook.getString("isbn13"));
                     }
 
@@ -494,7 +493,7 @@ public class HttpConnection {
                             bookName, authors, publisher, bookImageUrl, description, publication_year, isbn13, vol, class_no, class_nm, loanCnt,
                             month, loanHistoryCnt, ranking, age, gender, loanGrpsCnt, loanGrpsRanking, word, weight
                     );
-                    SearchBookDetail maniaReaderBookDetail = new SearchBookDetail(maniaBookName, maniaIsbn13, readerBookName, readerIsbn13);
+                    SearchBookDetail maniaReaderBookDetail = new SearchBookDetail(maniaIsbn13, readerIsbn13);
                     // 객체 두개를 복합 객체로 만들어서 반환 -> callback.onSuccess(); 메소드가 객체를 한 번만 반환할 수 있어서.
                     CompositeSearchBookDetail compositeSearchBookDetail = new CompositeSearchBookDetail(bookDetail, maniaReaderBookDetail);
                     // 콜백을 통해 성공적인 응답 처리 (BookDetail 객체 전달)
@@ -507,8 +506,94 @@ public class HttpConnection {
         });
     } // end of getDetailBook
 
-    public void getManiaRecBook() {
+    // 마니아 도서 조회
+    public void getManiaRecBook(List<String> isbn13List, String format, HttpResponseCallback<List<SearchBookDetail>> callback) {
+        List<SearchBookDetail> maniaBooks = new ArrayList<>();
+        int totalIsbn13 = isbn13List.size();
+        for(String isbn13 : isbn13List) {
+            String url = BASE_URL + "srchDtlList?authKey=" + API_KEY + "&isbn13=" + isbn13 + "&format=" + format;
+            Request request = new Request.Builder().url(url).build();
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                    e.printStackTrace();
+                    callback.onFailure(e);
+                }
 
-    }
+                @Override
+                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                    try{
+                        if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+                        JSONObject responseBody = new JSONObject(response.body().string());
+                        JSONArray detailArray = responseBody.getJSONObject("response").getJSONArray("detail");
 
+                        synchronized (maniaBooks) {
+                            for (int i = 0; i < detailArray.length(); i++) {
+                                JSONObject book = detailArray.getJSONObject(i).getJSONObject("book");
+
+                                String bookName = book.getString("bookname");
+                                String authors = book.getString("authors");
+                                String bookImageUrl = book.getString("bookImageURL");
+                                String isbn13 = book.getString("isbn13");
+
+                                SearchBookDetail maniaBook = new SearchBookDetail(bookName, authors, bookImageUrl, isbn13);
+                                maniaBooks.add(maniaBook);
+                            }
+
+                            if (maniaBooks.size() == totalIsbn13) {
+                                callback.onSuccess(maniaBooks);
+                            }
+                        }
+                    } catch (JSONException e) {
+                        callback.onFailure(e);
+                    }
+                }
+            });
+        }
+    } // end of ManiaRecBook
+
+    // 다독자 도서 조회
+    public void getReaderRecBook(List<String> isbn13List, String format, HttpResponseCallback<List<SearchBookDetail>> callback) {
+        List<SearchBookDetail> readerBooks = new ArrayList<>();
+        int totalIsbn13 = isbn13List.size();
+        for(String isbn13 : isbn13List) {
+            String url = BASE_URL + "srchDtlList?authKey=" + API_KEY + "&isbn13=" + isbn13 + "&format=" + format;
+            Request request = new Request.Builder().url(url).build();
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                    e.printStackTrace();
+                    callback.onFailure(e);
+                }
+
+                @Override
+                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                    try{
+                        if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+                        JSONObject responseBody = new JSONObject(response.body().string());
+                        JSONArray detailArray = responseBody.getJSONObject("response").getJSONArray("detail");
+
+                        synchronized (readerBooks) {
+                            for (int i = 0; i < detailArray.length(); i++) {
+                                JSONObject book = detailArray.getJSONObject(i).getJSONObject("book");
+
+                                String bookName = book.getString("bookname");
+                                String bookImageUrl = book.getString("bookImageURL");
+                                String isbn13 = book.getString("isbn13");
+
+                                SearchBookDetail readerBook = new SearchBookDetail(bookName, bookImageUrl, isbn13);
+                                readerBooks.add(readerBook);
+                            }
+
+                            if (readerBooks.size() == totalIsbn13) {
+                                callback.onSuccess(readerBooks);
+                            }
+                        }
+                    } catch (JSONException e) {
+                        callback.onFailure(e);
+                    }
+                }
+            });
+        }
+    } // end of ManiaRecBook
 }
