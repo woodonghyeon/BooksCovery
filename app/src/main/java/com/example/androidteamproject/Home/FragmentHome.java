@@ -291,7 +291,7 @@ public class FragmentHome extends Fragment {
         int pageSize = 10; // 페이지 크기
         String format = "json"; // 응답 형식
 
-        HttpConnection.getInstance(getContext()).getLoanItems(startDt, endDt, from_age, to_age, pageNo, pageSize, format, new HttpConnection.HttpResponseCallback<List<SearchBook>>() {
+        HttpConnection.getInstance(getContext()).getLoanItems(startDt, endDt, from_age, to_age, pageNo, pageSize, new HttpConnection.HttpResponseCallback<List<SearchBook>>() {
             @Override
             public void onSuccess(List<SearchBook> books) {
                 if (getActivity() != null) {
@@ -423,7 +423,7 @@ public class FragmentHome extends Fragment {
         int pageSize = 10; // 페이지 크기 (예시)
         String format = "json"; // 응답 형식 (예시)
 
-        HttpConnection.getInstance(getContext()).getLoanItems(startDt, endDt, from_age, to_age, pageNo, pageSize, format, new HttpConnection.HttpResponseCallback<List<SearchBook>>() {
+        HttpConnection.getInstance(getContext()).getLoanItems(startDt, endDt, from_age, to_age, pageNo, pageSize, new HttpConnection.HttpResponseCallback<List<SearchBook>>() {
             @Override
             public void onSuccess(List<SearchBook> books) {
                 if (getActivity() != null) {
@@ -510,7 +510,7 @@ public class FragmentHome extends Fragment {
         String searchDt = getTime; // 시작 날짜
         String format = "json"; // 응답 형식 (예시)
 
-        HttpConnection.getInstance(getContext()).getHotTrend(searchDt, format, new HttpConnection.HttpResponseCallback<List<SearchBook>>() {
+        HttpConnection.getInstance(getContext()).getHotTrend(searchDt, new HttpConnection.HttpResponseCallback<List<SearchBook>>() {
             @Override
             public void onSuccess(List<SearchBook> books) {
                 if (getActivity() != null) {

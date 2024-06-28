@@ -159,7 +159,7 @@ public class FragmentSearch extends Fragment {
 
     // 키워드 검색 API 호출 메서드
     private void getResponseApiKeyword() {
-        HttpConnection.getInstance(getContext()).getKeyword("json", new HttpConnection.HttpResponseCallback() {
+        HttpConnection.getInstance(getContext()).getKeyword(new HttpConnection.HttpResponseCallback() {
             @Override
             public void onSuccess(Object responseData) {
                 if (getActivity() != null) {
