@@ -6,4 +6,8 @@
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">image.aladin.co.kr</domain>
     </domain-config>
+    <!-- 로컬 호스트에 대한 명확한 트래픽 허용 -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">10.0.2.2</domain>
+    </domain-config>
 </network-security-config>

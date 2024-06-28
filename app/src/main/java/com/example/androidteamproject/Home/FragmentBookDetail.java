@@ -63,7 +63,6 @@ public class FragmentBookDetail extends Fragment {
     private int bookId;
     private LineChart lineChart;
     private ToggleButton toggle_bookmark;
-    private static String API_KEY;
     private ViewPager2 maniaBookPager, readerBookPager;
     private ManiaBookAdapter maniaBookAdapter;
     private ReaderBookAdapter readerBookAdapter;
@@ -99,7 +98,6 @@ public class FragmentBookDetail extends Fragment {
         View view = inflater.inflate(R.layout.fragment_book_detail, container, false);
         Context context = getContext();
         sessionManager = new SessionManager(context);
-        API_KEY = context.getString(R.string.sub_api_key);
 
         ImageView bookImageView = view.findViewById(R.id.iv_detail_book_image);
         TextView bookNameTextView = view.findViewById(R.id.tv_detail_book_name);
@@ -145,9 +143,7 @@ public class FragmentBookDetail extends Fragment {
     }
 
     private void fetchBookDetail(String isbn13, TextView bookNameTextView, TextView authorsTextView, TextView descriptionTextView, ImageView bookImageView, TextView publisherTextView, TextView publicationYearTextView, TextView isbnTextView, TextView classNoTextView, TextView classNmTextView, TextView loanCntTextView, TextView ageTextView, TextView wordTextView) {
-        String url = "http://data4library.kr/api/usageAnalysisList?authKey=" + API_KEY + "&isbn13=" + isbn13 + "&format=json";
-
-        HttpConnection.getInstance(getContext()).getDetailBook(url, new HttpConnection.HttpResponseCallback<CompositeSearchBookDetail>() {
+        HttpConnection.getInstance(getContext()).getDetailBook(isbn13, new HttpConnection.HttpResponseCallback<CompositeSearchBookDetail>() {
             @Override
             public void onSuccess(CompositeSearchBookDetail responseData) {
                 if (getActivity() != null) {
@@ -321,7 +317,7 @@ public class FragmentBookDetail extends Fragment {
     } // end of fetchBookDetail
 
     private void getManiaRecBookItems(List<String> isbn13List) {
-        HttpConnection.getInstance(getContext()).getManiaRecBook(isbn13List, "json", new HttpConnection.HttpResponseCallback<List<SearchBookDetail>>() {
+        HttpConnection.getInstance(getContext()).getManiaRecBook(isbn13List, new HttpConnection.HttpResponseCallback<List<SearchBookDetail>>() {
             @Override
             public void onSuccess(List<SearchBookDetail> maniaBooks) {
                 getActivity().runOnUiThread(() -> {
@@ -387,7 +383,7 @@ public class FragmentBookDetail extends Fragment {
     } // end of setupViewPager
 
     private void getReaderRecBookItems(List<String> isbn13List) {
-        HttpConnection.getInstance(getContext()).getManiaRecBook(isbn13List, "json", new HttpConnection.HttpResponseCallback<List<SearchBookDetail>>() {
+        HttpConnection.getInstance(getContext()).getReaderRecBook(isbn13List, new HttpConnection.HttpResponseCallback<List<SearchBookDetail>>() {
             @Override
             public void onSuccess(List<SearchBookDetail> maniaBooks) {
                 getActivity().runOnUiThread(() -> {
