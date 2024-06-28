@@ -32,11 +32,11 @@ public class HttpConnection {
 
     private HttpConnection(Context context) {
         client = new OkHttpClient.Builder()
-                .connectTimeout(30, TimeUnit.SECONDS)
-                .readTimeout(30, TimeUnit.SECONDS)
-                .writeTimeout(30, TimeUnit.SECONDS)
+                .connectTimeout(5, TimeUnit.MINUTES)
+                .readTimeout(5, TimeUnit.MINUTES)
+                .writeTimeout(5, TimeUnit.MINUTES)
                 .build();
-        API_KEY = context.getString(R.string.second_api_key);
+        API_KEY = context.getString(R.string.sub_api_key);
     }
 
     public static HttpConnection getInstance(Context context) {
@@ -583,6 +583,7 @@ public class HttpConnection {
                                 JSONObject book = detailArray.getJSONObject(i).getJSONObject("book");
 
                                 String bookName = book.getString("bookname");
+                                String authors = book.getString("authors");
                                 String bookImageUrl = book.getString("bookImageURL");
                                 String isbn13 = book.getString("isbn13");
 
