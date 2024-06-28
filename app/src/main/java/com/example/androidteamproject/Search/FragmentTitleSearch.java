@@ -105,7 +105,7 @@ public class FragmentTitleSearch extends Fragment {
         String format = "json";
         boolean tf = true;
 
-        HttpConnection.getInstance(getContext()).bookSearchTitle(title, pageNo, pageSize, tf, format, new HttpConnection.HttpResponseCallback<List<SearchBookTitle>>() {
+        HttpConnection.getInstance(getContext()).bookSearchTitle(title, pageNo, pageSize, tf, new HttpConnection.HttpResponseCallback<List<SearchBookTitle>>() {
             @Override
             public void onSuccess(List<SearchBookTitle> books) {
                 if (getActivity() != null) {

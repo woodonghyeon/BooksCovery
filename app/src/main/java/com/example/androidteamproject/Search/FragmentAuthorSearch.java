@@ -105,7 +105,7 @@ public class FragmentAuthorSearch extends Fragment {
         String format = "json";
         boolean tf = true;
 
-        HttpConnection.getInstance(getContext()).bookSearchAuthor(author, pageNo, pageSize, tf, format, new HttpConnection.HttpResponseCallback<List<SearchBookAuthor>>() {
+        HttpConnection.getInstance(getContext()).bookSearchAuthor(author, pageNo, pageSize, tf, new HttpConnection.HttpResponseCallback<List<SearchBookAuthor>>() {
             @Override
             public void onSuccess(List<SearchBookAuthor> books) {
                 if (getActivity() != null) {

@@ -25,8 +25,7 @@ import okhttp3.Response;
 
 public class HttpConnection {
 
-    private static final String BASE_URL = "http://data4library.kr/api/";
-    private static String API_KEY;
+    private static final String BASE_URL = "http://10.0.2.2/api/";
     private static HttpConnection instance;
     private OkHttpClient client;
 
@@ -36,7 +35,6 @@ public class HttpConnection {
                 .readTimeout(5, TimeUnit.MINUTES)
                 .writeTimeout(5, TimeUnit.MINUTES)
                 .build();
-        API_KEY = context.getString(R.string.sub_api_key);
     }
 
     public static HttpConnection getInstance(Context context) {
@@ -51,12 +49,8 @@ public class HttpConnection {
         void onFailure(Exception e);
     }
 
-    public void getKeyword(String format, final HttpResponseCallback callback) {
-        LocalDate currentDate = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
-        String date = currentDate.format(formatter);
-
-        String url = BASE_URL + "monthlyKeywords?authKey=" + API_KEY + "&month=" + date + "&format=" + format;
+    public void getKeyword(final HttpResponseCallback callback) {
+        String url = BASE_URL + "keyword";
         Request request = new Request.Builder().url(url).build();
 
         client.newCall(request).enqueue(new Callback() {
@@ -78,8 +72,8 @@ public class HttpConnection {
         });
     }
 
-    public void bookSearchKeyword(String word, int pageNo, int pageSize, boolean tf, String format, final HttpResponseCallback callback) {
-        String url = BASE_URL + "srchBooks?authKey=" + API_KEY + "&keyword=" + word + "&pageNo=" + pageNo + "&pageSize=" + pageSize + "&exactMatch=" + tf + "&format=" + format;
+    public void bookSearchKeyword(String word, int pageNo, int pageSize, boolean tf, final HttpResponseCallback callback) {
+        String url = BASE_URL + "search?keyword=" + word + "&pageNo=" + pageNo + "&pageSize=" + pageSize + "&exactMatch=" + tf;
         Request request = new Request.Builder().url(url).build();
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -93,56 +87,47 @@ public class HttpConnection {
                 try {
                     // 응답이 성공적이지 않은 경우 예외를 던짐
                     if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-
                     // 응답 본문을 JSON 객체로 변환
                     JSONObject responseBody = new JSONObject(response.body().string());
-
                     // JSON 객체에서 "response" 객체를 가져와서 "docs" 배열을 추출
                     JSONArray docs = responseBody.getJSONObject("response").getJSONArray("docs");
 
                     // SearchBookKeyword 객체를 저장할 리스트 초기화
                     List<SearchBookKeyword> books = new ArrayList<>();
-
                     // docs 배열을 순회하며 각 문서에서 정보를 추출
                     for (int i = 0; i < docs.length(); i++) {
                         // 각 문서(doc) 객체를 가져옴
                         JSONObject doc = docs.getJSONObject(i).getJSONObject("doc");
-
                         // 책 이름(bookname)을 가져옴
                         String bookName = doc.getString("bookname");
-
                         // 책 이미지 URL(bookImageURL)을 가져옴
                         String bookImageUrl = doc.getString("bookImageURL");
-
                         // 저자(authors)를 가져옴
                         String authors = doc.getString("authors");
-
                         // 출판사를 가져옴
                         String publisher = doc.getString("publisher");
-
                         // 출판년도를 가져옴
                         String publication_year = doc.getString("publication_year");
                         String isbn13 = doc.getString("isbn13");
-
                         // 책 정보를 담은 SearchBookKeyword 객체 생성
                         SearchBookKeyword book = new SearchBookKeyword(isbn13, bookName, authors, bookImageUrl, publisher, publication_year);
-
                         // 생성한 SearchBookKeyword 객체를 리스트에 추가
                         books.add(book);
                     }
-
                     // 콜백을 통해 성공적인 응답 처리 (책 리스트 전달)
                     callback.onSuccess(books);
                 } catch (JSONException e) {
                     // JSON 파싱 중 예외가 발생한 경우 콜백을 통해 실패 처리
                     callback.onFailure(e);
+                } finally {
+                    response.close();
                 }
             }
         });
     } // end of booksearchKeyword
 
-    public void bookSearchAuthor(String author, int pageNo, int pageSize, boolean tf, String format, final HttpResponseCallback callback) {
-        String url = BASE_URL + "srchBooks?authKey=" + API_KEY + "&author=" + author + "&pageNo=" + pageNo + "&pageSize=" + pageSize + "&exactMatch=" + tf + "&format=" + format;
+    public void bookSearchAuthor(String author, int pageNo, int pageSize, boolean tf, final HttpResponseCallback callback) {
+        String url = BASE_URL + "search?author=" + author + "&pageNo=" + pageNo + "&pageSize=" + pageSize + "&exactMatch=" + tf;
         Request request = new Request.Builder().url(url).build();
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -156,56 +141,47 @@ public class HttpConnection {
                 try {
                     // 응답이 성공적이지 않은 경우 예외를 던짐
                     if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-
                     // 응답 본문을 JSON 객체로 변환
                     JSONObject responseBody = new JSONObject(response.body().string());
-
                     // JSON 객체에서 "response" 객체를 가져와서 "docs" 배열을 추출
                     JSONArray docs = responseBody.getJSONObject("response").getJSONArray("docs");
 
                     // SearchBookTitle 객체를 저장할 리스트 초기화
                     List<SearchBookAuthor> books = new ArrayList<>();
-
                     // docs 배열을 순회하며 각 문서에서 정보를 추출
                     for (int i = 0; i < docs.length(); i++) {
                         // 각 문서(doc) 객체를 가져옴
                         JSONObject doc = docs.getJSONObject(i).getJSONObject("doc");
-
                         // 책 이름(bookname)을 가져옴
                         String bookName = doc.getString("bookname");
-
                         // 책 이미지 URL(bookImageURL)을 가져옴
                         String bookImageUrl = doc.getString("bookImageURL");
-
                         // 저자(authors)를 가져옴
                         String authors = doc.getString("authors");
-
                         // 출판사를 가져옴
                         String publisher = doc.getString("publisher");
-
                         // 출판년도를 가져옴
                         String publication_year = doc.getString("publication_year");
                         String isbn13 = doc.getString("isbn13");
-
                         // 책 정보를 담은 SearchBookKeyword 객체 생성
                         SearchBookAuthor book = new SearchBookAuthor(isbn13, bookName, authors, bookImageUrl, publisher, publication_year);
-
                         // 생성한 SearchBookKeyword 객체를 리스트에 추가
                         books.add(book);
                     }
-
                     // 콜백을 통해 성공적인 응답 처리 (책 리스트 전달)
                     callback.onSuccess(books);
                 } catch (JSONException e) {
                     // JSON 파싱 중 예외가 발생한 경우 콜백을 통해 실패 처리
                     callback.onFailure(e);
+                } finally {
+                    response.close();
                 }
             }
         });
     } // end of booksearchAuthor
 
-    public void bookSearchTitle(String title, int pageNo, int pageSize, boolean tf, String format, final HttpResponseCallback callback) {
-        String url = BASE_URL + "srchBooks?authKey=" + API_KEY + "&title=" + title + "&pageNo=" + pageNo + "&pageSize=" + pageSize + "&exactMatch=" + tf + "&format=" + format;
+    public void bookSearchTitle(String title, int pageNo, int pageSize, boolean tf, final HttpResponseCallback callback) {
+        String url = BASE_URL + "search?title=" + title + "&pageNo=" + pageNo + "&pageSize=" + pageSize + "&exactMatch=" + tf;
         Request request = new Request.Builder().url(url).build();
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -219,71 +195,58 @@ public class HttpConnection {
                 try {
                     // 응답이 성공적이지 않은 경우 예외를 던짐
                     if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-
                     // 응답 본문을 JSON 객체로 변환
                     JSONObject responseBody = new JSONObject(response.body().string());
-
                     // JSON 객체에서 "response" 객체를 가져와서 "docs" 배열을 추출
                     JSONArray docs = responseBody.getJSONObject("response").getJSONArray("docs");
 
                     // SearchBookTitle 객체를 저장할 리스트 초기화
                     List<SearchBookTitle> books = new ArrayList<>();
-
                     // docs 배열을 순회하며 각 문서에서 정보를 추출
                     for (int i = 0; i < docs.length(); i++) {
                         // 각 문서(doc) 객체를 가져옴
                         JSONObject doc = docs.getJSONObject(i).getJSONObject("doc");
-
                         // isbn13자리를 가져옴
                         String isbn = doc.getString("isbn13");
-
                         // 책 이름(bookname)을 가져옴
                         String bookName = doc.getString("bookname");
-
                         // 책 이미지 URL(bookImageURL)을 가져옴
                         String bookImageUrl = doc.getString("bookImageURL");
-
                         // 저자(authors)를 가져옴
                         String authors = doc.getString("authors");
-
                         // 출판사를 가져옴
                         String publisher = doc.getString("publisher");
-
                         // 출판년도를 가져옴
                         String publication_year = doc.getString("publication_year");
-
                         // 책 정보를 담은 SearchBookTitle 객체 생성
                         SearchBookTitle book = new SearchBookTitle(isbn ,bookName, authors, bookImageUrl, publisher, publication_year);
-
                         // 생성한 SearchBookTitle 객체를 리스트에 추가
                         books.add(book);
                     }
-
                     // 콜백을 통해 성공적인 응답 처리 (책 리스트 전달)
                     callback.onSuccess(books);
                 } catch (JSONException e) {
                     // JSON 파싱 중 예외가 발생한 경우 콜백을 통해 실패 처리
                     callback.onFailure(e);
+                } finally {
+                    response.close();
                 }
             }
         });
     } // end of booksearchTitle
 
     // LoanItems -> 대출 많은 도서를 뽑아옴
-    public void getLoanItems(String startDt, String endDt, String from_age, String to_age, int pageNo, int pageSize, String format, HttpResponseCallback<List<SearchBook>> callback) {
-        String url = BASE_URL + "loanItemSrch?authKey=" + API_KEY
-                + "&startDt=" + startDt
+    public void getLoanItems(String startDt, String endDt, String from_age, String to_age, int pageNo, int pageSize, HttpResponseCallback<List<SearchBook>> callback) {
+        String url = BASE_URL + "popular"
+                + "?startDt=" + startDt
                 + "&endDt=" + endDt
                 + "&from_age=" + from_age
                 + "&to_age=" + to_age
                 + "&pageNo=" + pageNo
-                + "&pageSize=" + pageSize
-                + "&format=" + format;
+                + "&pageSize=" + pageSize;
 
         OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder()
-                .url(url)
-                .build();
+        Request request = new Request.Builder().url(url).build();
 
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -292,66 +255,50 @@ public class HttpConnection {
             }
 
             @Override
-            // HTTP 응답을 처리하는 메서드
             public void onResponse(Call call, Response response) throws IOException {
                 try {
                     // 응답이 성공적이지 않은 경우 예외를 던짐
                     if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-
                     // 응답 본문을 JSON 객체로 변환
-                    JSONObject responseBody = new JSONObject(response.body().string());
-
-                    // JSON 객체에서 "response" 객체를 가져와서 "docs" 배열을 추출
-                    JSONArray docs = responseBody.getJSONObject("response").getJSONArray("docs");
-
+                    JSONArray docs = new JSONArray(response.body().string());
                     // SearchBook 객체를 저장할 리스트 초기화
                     List<SearchBook> books = new ArrayList<>();
-
                     // docs 배열을 순회하며 각 문서에서 정보를 추출
                     for (int i = 0; i < docs.length(); i++) {
                         // 각 문서(doc) 객체를 가져옴
-                        JSONObject doc = docs.getJSONObject(i).getJSONObject("doc");
-
+                        JSONObject doc = docs.getJSONObject(i);
                         // 주제분류명(class_nm)을 가져옴
                         String class_nm = doc.getString("class_nm");
-
                         // 책 이름(bookname)을 가져옴
                         String bookName = doc.getString("bookname");
-
                         // 책 이미지 URL(bookImageURL)을 가져옴
                         String bookImageUrl = doc.getString("bookImageURL");
-
                         // 저자(authors)를 가져옴
                         String authors = doc.getString("authors");
                         String isbn13 = doc.getString("isbn13");
-
                         // 책 정보를 담은 SearchBook 객체 생성
                         SearchBook book = new SearchBook(class_nm, bookName, authors, bookImageUrl, isbn13);
-
                         // 생성한 SearchBook 객체를 리스트에 추가
                         books.add(book);
                     }
-
                     // 콜백을 통해 성공적인 응답 처리 (책 리스트 전달)
                     callback.onSuccess(books);
                 } catch (JSONException e) {
                     // JSON 파싱 중 예외가 발생한 경우 콜백을 통해 실패 처리
                     callback.onFailure(e);
+                } finally {
+                    response.close();
                 }
             }
         });
     } // end of LoanItems
 
     // LoanItems -> 대출 많은 도서를 뽑아옴 후에 수정 예정
-    public void getHotTrend(String searchDt, String format, HttpResponseCallback<List<SearchBook>> callback) {
-        String url = BASE_URL + "loanItemSrch?authKey=" + API_KEY
-                + "&searchDt=" + searchDt
-                + "&format=" + format;
+    public void getHotTrend(String searchDt, HttpResponseCallback<List<SearchBook>> callback) {
+        String url = BASE_URL + "increase?searchDt=" + searchDt;
 
         OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder()
-                .url(url)
-                .build();
+        Request request = new Request.Builder().url(url).build();
 
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -365,53 +312,52 @@ public class HttpConnection {
                 try {
                     // 응답이 성공적이지 않은 경우 예외를 던짐
                     if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-
                     // 응답 본문을 JSON 객체로 변환
                     JSONObject responseBody = new JSONObject(response.body().string());
-
-                    // JSON 객체에서 "response" 객체를 가져와서 "docs" 배열을 추출
-                    JSONArray docs = responseBody.getJSONObject("response").getJSONArray("docs");
+                    // JSON 객체에서 "response" 객체를 가져옴
+                    JSONObject responseObject = responseBody.getJSONObject("response");
+                    JSONArray results = responseObject.getJSONArray("results");
 
                     // SearchBook 객체를 저장할 리스트 초기화
                     List<SearchBook> books = new ArrayList<>();
+                    // results 배열을 순회하며 각 결과에서 docs 배열을 추출
+                    for (int i = 0; i < results.length(); i++) {
+                        JSONObject resultObject = results.getJSONObject(i).getJSONObject("result");
+                        JSONArray docs = resultObject.getJSONArray("docs");
 
-                    // docs 배열을 순회하며 각 문서에서 정보를 추출
-                    for (int i = 0; i < docs.length(); i++) {
-                        // 각 문서(doc) 객체를 가져옴
-                        JSONObject doc = docs.getJSONObject(i).getJSONObject("doc");
-
-                        // 주제분류명(class_nm)을 가져옴
-                        String class_nm = doc.getString("class_nm");
-
-                        // 책 이름(bookname)을 가져옴
-                        String bookName = doc.getString("bookname");
-
-                        // 책 이미지 URL(bookImageURL)을 가져옴
-                        String bookImageUrl = doc.getString("bookImageURL");
-
-                        // 저자(authors)를 가져옴
-                        String authors = doc.getString("authors");
-                        String isbn13 = doc.getString("isbn13");
-
-                        // 책 정보를 담은 SearchBook 객체 생성
-                        SearchBook book = new SearchBook(class_nm, bookName, authors, bookImageUrl, isbn13);
-
-                        // 생성한 SearchBook 객체를 리스트에 추가
-                        books.add(book);
+                        // docs 배열을 순회하며 각 문서에서 정보를 추출
+                        for (int j = 0; j < docs.length(); j++) {
+                            JSONObject doc = docs.getJSONObject(j).getJSONObject("doc");
+                            // 주제분류명(class_nm)을 가져옴
+                            String class_nm = doc.getString("class_nm");
+                            // 책 이름(bookname)을 가져옴
+                            String bookName = doc.getString("bookname");
+                            // 책 이미지 URL(bookImageURL)을 가져옴
+                            String bookImageUrl = doc.getString("bookImageURL");
+                            // 저자(authors)를 가져옴
+                            String authors = doc.getString("authors");
+                            String isbn13 = doc.getString("isbn13");
+                            // 책 정보를 담은 SearchBook 객체 생성
+                            SearchBook book = new SearchBook(class_nm, bookName, authors, bookImageUrl, isbn13);
+                            // 생성한 SearchBook 객체를 리스트에 추가
+                            books.add(book);
+                        }
                     }
-
                     // 콜백을 통해 성공적인 응답 처리 (책 리스트 전달)
                     callback.onSuccess(books);
                 } catch (JSONException e) {
                     // JSON 파싱 중 예외가 발생한 경우 콜백을 통해 실패 처리
                     callback.onFailure(e);
+                } finally {
+                    response.close();
                 }
             }
         });
     } // end of hotTrend
 
     // 상세보기
-    public void getDetailBook(String url, final HttpResponseCallback<CompositeSearchBookDetail> callback) {
+    public void getDetailBook(String isbn13, final HttpResponseCallback<CompositeSearchBookDetail> callback) {
+        String url = BASE_URL + "books/" + isbn13;
         Request request = new Request.Builder().url(url).build();
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -506,17 +452,19 @@ public class HttpConnection {
                 } catch (JSONException e) {
                     // JSON 파싱 중 예외가 발생한 경우 콜백을 통해 실패 처리
                     callback.onFailure(e);
+                } finally {
+                    response.close();
                 }
             }
         });
     } // end of getDetailBook
 
     // 마니아 도서 조회
-    public void getManiaRecBook(List<String> isbn13List, String format, HttpResponseCallback<List<SearchBookDetail>> callback) {
+    public void getManiaRecBook(List<String> isbn13List, HttpResponseCallback<List<SearchBookDetail>> callback) {
         List<SearchBookDetail> maniaBooks = new ArrayList<>();
         int totalIsbn13 = isbn13List.size();
         for(String isbn13 : isbn13List) {
-            String url = BASE_URL + "srchDtlList?authKey=" + API_KEY + "&isbn13=" + isbn13 + "&format=" + format;
+            String url = BASE_URL + "mania?isbn=" + isbn13;
             Request request = new Request.Builder().url(url).build();
             client.newCall(request).enqueue(new Callback() {
                 @Override
@@ -530,11 +478,11 @@ public class HttpConnection {
                     try{
                         if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
                         JSONObject responseBody = new JSONObject(response.body().string());
-                        JSONArray detailArray = responseBody.getJSONObject("response").getJSONArray("detail");
+                        JSONArray docsArray = responseBody.getJSONObject("response").getJSONArray("docs");
 
                         synchronized (maniaBooks) {
-                            for (int i = 0; i < detailArray.length(); i++) {
-                                JSONObject book = detailArray.getJSONObject(i).getJSONObject("book");
+                            for (int i = 0; i < docsArray.length(); i++) {
+                                JSONObject book = docsArray.getJSONObject(i).getJSONObject("book");
 
                                 String bookName = book.getString("bookname");
                                 String authors = book.getString("authors");
@@ -551,6 +499,8 @@ public class HttpConnection {
                         }
                     } catch (JSONException e) {
                         callback.onFailure(e);
+                    } finally {
+                        response.close();
                     }
                 }
             });
@@ -558,11 +508,11 @@ public class HttpConnection {
     } // end of ManiaRecBook
 
     // 다독자 도서 조회
-    public void getReaderRecBook(List<String> isbn13List, String format, HttpResponseCallback<List<SearchBookDetail>> callback) {
+    public void getReaderRecBook(List<String> isbn13List, HttpResponseCallback<List<SearchBookDetail>> callback) {
         List<SearchBookDetail> readerBooks = new ArrayList<>();
         int totalIsbn13 = isbn13List.size();
         for(String isbn13 : isbn13List) {
-            String url = BASE_URL + "srchDtlList?authKey=" + API_KEY + "&isbn13=" + isbn13 + "&format=" + format;
+            String url = BASE_URL + "reader?isbn=" + isbn13;
             Request request = new Request.Builder().url(url).build();
             client.newCall(request).enqueue(new Callback() {
                 @Override
@@ -573,21 +523,21 @@ public class HttpConnection {
 
                 @Override
                 public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                    try{
+                    try {
                         if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
                         JSONObject responseBody = new JSONObject(response.body().string());
-                        JSONArray detailArray = responseBody.getJSONObject("response").getJSONArray("detail");
+                        JSONArray docsArray = responseBody.getJSONObject("response").getJSONArray("docs");
 
                         synchronized (readerBooks) {
-                            for (int i = 0; i < detailArray.length(); i++) {
-                                JSONObject book = detailArray.getJSONObject(i).getJSONObject("book");
+                            for (int i = 0; i < docsArray.length(); i++) {
+                                JSONObject book = docsArray.getJSONObject(i).getJSONObject("book");
 
                                 String bookName = book.getString("bookname");
                                 String authors = book.getString("authors");
                                 String bookImageUrl = book.getString("bookImageURL");
                                 String isbn13 = book.getString("isbn13");
 
-                                SearchBookDetail readerBook = new SearchBookDetail(bookName, bookImageUrl, isbn13);
+                                SearchBookDetail readerBook = new SearchBookDetail(bookName, authors, bookImageUrl, isbn13);
                                 readerBooks.add(readerBook);
                             }
 
@@ -597,9 +547,11 @@ public class HttpConnection {
                         }
                     } catch (JSONException e) {
                         callback.onFailure(e);
+                    } finally {
+                        response.close();
                     }
                 }
             });
         }
-    } // getReaderRecBook
+    } // end of getReaderRecBook
 }
