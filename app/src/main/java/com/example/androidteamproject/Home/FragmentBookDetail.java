@@ -99,7 +99,7 @@ public class FragmentBookDetail extends Fragment {
         View view = inflater.inflate(R.layout.fragment_book_detail, container, false);
         Context context = getContext();
         sessionManager = new SessionManager(context);
-        API_KEY = context.getString(R.string.second_api_key);
+        API_KEY = context.getString(R.string.sub_api_key);
 
         ImageView bookImageView = view.findViewById(R.id.iv_detail_book_image);
         TextView bookNameTextView = view.findViewById(R.id.tv_detail_book_name);
@@ -357,7 +357,7 @@ public class FragmentBookDetail extends Fragment {
             return;
         }
         maniaBookPager = getView().findViewById(R.id.maniaBooks_viewpager);
-        maniaBookAdapter = new ManiaBookAdapter(requireActivity(), bookNames, imageUrls, isbn13s);
+        maniaBookAdapter = new ManiaBookAdapter(requireActivity(), bookNames, authors, imageUrls, isbn13s, this::showBookDetail);
         maniaBookPager.setAdapter(maniaBookAdapter);
         maniaBookPager.setCurrentItem(1000);
         maniaBookPager.setOffscreenPageLimit(10);
@@ -423,7 +423,7 @@ public class FragmentBookDetail extends Fragment {
             return;
         }
         readerBookPager = getView().findViewById(R.id.readerBooks_viewpager);
-        readerBookAdapter = new ReaderBookAdapter(requireActivity(), bookNames, imageUrls, isbn13s);
+        readerBookAdapter = new ReaderBookAdapter(requireActivity(), bookNames, authors, imageUrls, isbn13s, this::showBookDetail);
         readerBookPager.setAdapter(readerBookAdapter);
         readerBookPager.setCurrentItem(1000);
         readerBookPager.setOffscreenPageLimit(10);
@@ -514,5 +514,25 @@ public class FragmentBookDetail extends Fragment {
                 });
             }
         }).start();
+    }
+
+    // showBookDetail
+    private void showBookDetail(String isbn13, String bookName, String authors, String imageUrl) {
+        // 새로운 FragmentBookDetail 인스턴스를 생성하고 필요한 데이터를 전달
+        FragmentBookDetail fragment = FragmentBookDetail.newInstance(isbn13, bookName, authors, imageUrl);
+
+        // FragmentTransaction을 통해 프래그먼트를 관리
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+
+        // 현재 프래그먼트를 가져와서 숨김
+        Fragment currentFragment = getParentFragmentManager().findFragmentById(R.id.ly_home);
+        if (currentFragment != null) {
+            transaction.hide(currentFragment);
+        }
+
+        // 새로운 프래그먼트를 추가
+        transaction.add(R.id.ly_home, fragment);
+        transaction.addToBackStack(null); // 백스택에 추가하여 뒤로가기 버튼을 눌렀을 때 이전 프래그먼트로 돌아갈 수 있음
+        transaction.commit();
     }
 }
