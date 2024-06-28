@@ -11,8 +11,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -51,7 +52,11 @@ public class HttpConnection {
     }
 
     public void getKeyword(String format, final HttpResponseCallback callback) {
-        String url = BASE_URL + "monthlyKeywords?authKey=" + API_KEY + "&month=2024-05" + "&format=" + format;
+        LocalDate currentDate = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+        String date = currentDate.format(formatter);
+
+        String url = BASE_URL + "monthlyKeywords?authKey=" + API_KEY + "&month=" + date + "&format=" + format;
         Request request = new Request.Builder().url(url).build();
 
         client.newCall(request).enqueue(new Callback() {
@@ -595,5 +600,5 @@ public class HttpConnection {
                 }
             });
         }
-    } // end of ManiaRecBook
+    } // getReaderRecBook
 }
