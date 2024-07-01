@@ -236,14 +236,14 @@ public class HttpConnection {
     } // end of booksearchTitle
 
     // LoanItems -> 대출 많은 도서를 뽑아옴
-    public void getLoanItems(String startDt, String endDt, String from_age, String to_age, int pageNo, int pageSize, HttpResponseCallback<List<SearchBook>> callback) {
+    public void getLoanItems(int pageNo, int pageSize, String startDt, String endDt, String from_age, String to_age, HttpResponseCallback<List<SearchBook>> callback) {
         String url = BASE_URL + "popular"
-                + "?startDt=" + startDt
+                + "?pageNo=" + pageNo
+                + "&pageSize=" + pageSize
+                + "&startDt=" + startDt
                 + "&endDt=" + endDt
                 + "&from_age=" + from_age
-                + "&to_age=" + to_age
-                + "&pageNo=" + pageNo
-                + "&pageSize=" + pageSize;
+                + "&to_age=" + to_age;
 
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(url).build();
@@ -258,7 +258,8 @@ public class HttpConnection {
             public void onResponse(Call call, Response response) throws IOException {
                 try {
                     // 응답이 성공적이지 않은 경우 예외를 던짐
-                    if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+                    if (!response.isSuccessful()) throw new IOException("(LoanItem)Unexpected code " + response);
+                    System.out.println("월간 인기도서 : " + response );
                     // 응답 본문을 JSON 객체로 변환
                     JSONArray docs = new JSONArray(response.body().string());
                     // SearchBook 객체를 저장할 리스트 초기화
@@ -268,16 +269,16 @@ public class HttpConnection {
                         // 각 문서(doc) 객체를 가져옴
                         JSONObject doc = docs.getJSONObject(i);
                         // 주제분류명(class_nm)을 가져옴
-                        String class_nm = doc.getString("class_nm");
+                        String class_no = doc.getString("class_no");
                         // 책 이름(bookname)을 가져옴
                         String bookName = doc.getString("bookname");
                         // 책 이미지 URL(bookImageURL)을 가져옴
-                        String bookImageUrl = doc.getString("bookImageURL");
+                        String bookImageUrl = doc.getString("book_image_URL");
                         // 저자(authors)를 가져옴
                         String authors = doc.getString("authors");
-                        String isbn13 = doc.getString("isbn13");
+                        String isbn13 = doc.getString("isbn");
                         // 책 정보를 담은 SearchBook 객체 생성
-                        SearchBook book = new SearchBook(class_nm, bookName, authors, bookImageUrl, isbn13);
+                        SearchBook book = new SearchBook(class_no, bookName, authors, bookImageUrl, isbn13);
                         // 생성한 SearchBook 객체를 리스트에 추가
                         books.add(book);
                     }
