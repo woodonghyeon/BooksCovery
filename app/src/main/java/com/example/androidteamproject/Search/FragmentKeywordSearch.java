@@ -101,11 +101,9 @@ public class FragmentKeywordSearch extends Fragment {
     private void getResponseApiBookSearch() {
         String keyword = mParam1;
         int pageNo = 1;
-        int pageSize = 100;
-        String format = "json";
-        boolean tf = true;
+        int pageSize = 20;
 
-        HttpConnection.getInstance(getContext()).bookSearchKeyword(keyword, pageNo, pageSize, tf, new HttpConnection.HttpResponseCallback<List<SearchBookKeyword>>() {
+        HttpConnection.getInstance(getContext()).bookSearchKeyword(keyword, pageNo, pageSize, new HttpConnection.HttpResponseCallback<List<SearchBookKeyword>>() {
             @Override
             public void onSuccess(List<SearchBookKeyword> books) {
                 if (getActivity() != null) {

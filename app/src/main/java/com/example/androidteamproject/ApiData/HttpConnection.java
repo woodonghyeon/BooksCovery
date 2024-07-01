@@ -1,6 +1,7 @@
 package com.example.androidteamproject.ApiData;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -26,6 +27,7 @@ import okhttp3.Response;
 public class HttpConnection {
 
     private static final String BASE_URL = "***REMOVED***/api/";
+    // 10.0.2.2는 안드로이드 애뮬레이터에서 로컬호스틀 참조할 때 쓰는 IP 주소
     private static HttpConnection instance;
     private OkHttpClient client;
 
@@ -72,8 +74,8 @@ public class HttpConnection {
         });
     }
 
-    public void bookSearchKeyword(String word, int pageNo, int pageSize, boolean tf, final HttpResponseCallback callback) {
-        String url = BASE_URL + "search?keyword=" + word + "&pageNo=" + pageNo + "&pageSize=" + pageSize + "&exactMatch=" + tf;
+    public void bookSearchTitle(String bookname, int pageNo, int pageSize, final HttpResponseCallback callback) {
+        String url = BASE_URL + "search?bookname=" + bookname + "&pageNo=" + pageNo + "&pageSize=" + pageSize;
         Request request = new Request.Builder().url(url).build();
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -92,12 +94,14 @@ public class HttpConnection {
                     // JSON 객체에서 "response" 객체를 가져와서 "docs" 배열을 추출
                     JSONArray docs = responseBody.getJSONObject("response").getJSONArray("docs");
 
-                    // SearchBookKeyword 객체를 저장할 리스트 초기화
-                    List<SearchBookKeyword> books = new ArrayList<>();
+                    // SearchBookTitle 객체를 저장할 리스트 초기화
+                    List<SearchBookTitle> books = new ArrayList<>();
                     // docs 배열을 순회하며 각 문서에서 정보를 추출
                     for (int i = 0; i < docs.length(); i++) {
                         // 각 문서(doc) 객체를 가져옴
                         JSONObject doc = docs.getJSONObject(i).getJSONObject("doc");
+                        // isbn13자리를 가져옴
+                        String isbn = doc.getString("isbn13");
                         // 책 이름(bookname)을 가져옴
                         String bookName = doc.getString("bookname");
                         // 책 이미지 URL(bookImageURL)을 가져옴
@@ -108,10 +112,11 @@ public class HttpConnection {
                         String publisher = doc.getString("publisher");
                         // 출판년도를 가져옴
                         String publication_year = doc.getString("publication_year");
-                        String isbn13 = doc.getString("isbn13");
-                        // 책 정보를 담은 SearchBookKeyword 객체 생성
-                        SearchBookKeyword book = new SearchBookKeyword(isbn13, bookName, authors, bookImageUrl, publisher, publication_year);
-                        // 생성한 SearchBookKeyword 객체를 리스트에 추가
+                        // 권수를 받아옴
+                        String vol = doc.getString("vol");
+                        // 책 정보를 담은 SearchBookTitle 객체 생성
+                        SearchBookTitle book = new SearchBookTitle(isbn ,bookName, authors, bookImageUrl, publisher, publication_year);
+                        // 생성한 SearchBookTitle 객체를 리스트에 추가
                         books.add(book);
                     }
                     // 콜백을 통해 성공적인 응답 처리 (책 리스트 전달)
@@ -124,10 +129,11 @@ public class HttpConnection {
                 }
             }
         });
-    } // end of booksearchKeyword
+    } // end of booksearchTitle
 
-    public void bookSearchAuthor(String author, int pageNo, int pageSize, boolean tf, final HttpResponseCallback callback) {
-        String url = BASE_URL + "search?author=" + author + "&pageNo=" + pageNo + "&pageSize=" + pageSize + "&exactMatch=" + tf;
+    // 책
+    public void bookSearchAuthor(String authors, int pageNo, int pageSize, final HttpResponseCallback callback) {
+        String url = BASE_URL + "search?authors=" + authors + "&pageNo=" + pageNo + "&pageSize=" + pageSize;
         Request request = new Request.Builder().url(url).build();
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -180,8 +186,8 @@ public class HttpConnection {
         });
     } // end of booksearchAuthor
 
-    public void bookSearchTitle(String title, int pageNo, int pageSize, boolean tf, final HttpResponseCallback callback) {
-        String url = BASE_URL + "search?title=" + title + "&pageNo=" + pageNo + "&pageSize=" + pageSize + "&exactMatch=" + tf;
+    public void bookSearchKeyword(String keyword, int pageNo, int pageSize, final HttpResponseCallback callback) {
+        String url = BASE_URL + "search?keyword=" + keyword + "&pageNo=" + pageNo + "&pageSize=" + pageSize;
         Request request = new Request.Builder().url(url).build();
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -193,47 +199,47 @@ public class HttpConnection {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 try {
-                    // 응답이 성공적이지 않은 경우 예외를 던짐
                     if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-                    // 응답 본문을 JSON 객체로 변환
-                    JSONObject responseBody = new JSONObject(response.body().string());
-                    // JSON 객체에서 "response" 객체를 가져와서 "docs" 배열을 추출
-                    JSONArray docs = responseBody.getJSONObject("response").getJSONArray("docs");
 
-                    // SearchBookTitle 객체를 저장할 리스트 초기화
-                    List<SearchBookTitle> books = new ArrayList<>();
-                    // docs 배열을 순회하며 각 문서에서 정보를 추출
+                    String responseBodyString = response.body().string();
+                    Log.d("API_CALL", "Response Body: " + responseBodyString); // 응답 본문 로그 출력
+
+                    JSONObject responseBody = new JSONObject(responseBodyString);
+
+                    // "response" 객체가 존재하는지 확인
+                    if (!responseBody.has("response")) {
+                        throw new JSONException("No value for response");
+                    }
+                    JSONObject responseObj = responseBody.getJSONObject("response");
+
+                    // "docs" 배열이 존재하는지 확인
+                    if (!responseObj.has("docs")) {
+                        throw new JSONException("No value for docs");
+                    }
+                    JSONArray docs = responseObj.getJSONArray("docs");
+
+                    List<SearchBookKeyword> books = new ArrayList<>();
                     for (int i = 0; i < docs.length(); i++) {
-                        // 각 문서(doc) 객체를 가져옴
                         JSONObject doc = docs.getJSONObject(i).getJSONObject("doc");
-                        // isbn13자리를 가져옴
-                        String isbn = doc.getString("isbn13");
-                        // 책 이름(bookname)을 가져옴
                         String bookName = doc.getString("bookname");
-                        // 책 이미지 URL(bookImageURL)을 가져옴
                         String bookImageUrl = doc.getString("bookImageURL");
-                        // 저자(authors)를 가져옴
                         String authors = doc.getString("authors");
-                        // 출판사를 가져옴
                         String publisher = doc.getString("publisher");
-                        // 출판년도를 가져옴
                         String publication_year = doc.getString("publication_year");
-                        // 책 정보를 담은 SearchBookTitle 객체 생성
-                        SearchBookTitle book = new SearchBookTitle(isbn ,bookName, authors, bookImageUrl, publisher, publication_year);
-                        // 생성한 SearchBookTitle 객체를 리스트에 추가
+                        String isbn13 = doc.getString("isbn13");
+
+                        SearchBookKeyword book = new SearchBookKeyword(isbn13, bookName, authors, bookImageUrl, publisher, publication_year);
                         books.add(book);
                     }
-                    // 콜백을 통해 성공적인 응답 처리 (책 리스트 전달)
                     callback.onSuccess(books);
                 } catch (JSONException e) {
-                    // JSON 파싱 중 예외가 발생한 경우 콜백을 통해 실패 처리
                     callback.onFailure(e);
                 } finally {
                     response.close();
                 }
             }
         });
-    } // end of booksearchTitle
+    } // end of booksearchKeyword
 
     // LoanItems -> 대출 많은 도서를 뽑아옴
     public void getLoanItems(int pageNo, int pageSize, String startDt, String endDt, String from_age, String to_age, HttpResponseCallback<List<SearchBook>> callback) {
