@@ -86,13 +86,32 @@ public class FragmentHome extends Fragment {
 
         return view;
     } // end of onCreateView
-
     private void CurrentEventSettingImg(View view) {
-        // 가로 슬라이드 뷰 Fragment
+        // 이미지 URL을 가져와서 설정
+        new Thread(() -> {
+            ImageScraper scraper = new ImageScraper();
+            List<String> latestPostUrls = scraper.scrapeLatestPostUrls(10); // 최신 10개의 게시글 URL 가져오기
+            System.out.println("최신 게시글 URL: " + latestPostUrls);
+            if (latestPostUrls.isEmpty()) {
+                System.out.println("최신 게시글 URL을 가져오지 못했습니다. 셀렉터나 URL을 확인하세요.");
+                return;
+            }
+            List<String> imageUrls = scraper.scrapeImagesFromPosts(latestPostUrls); // 게시글에서 이미지 URL 가져오기
+            System.out.println("이벤트 이미지 URL: " + imageUrls);
+            if (imageUrls.isEmpty()) {
+                System.out.println("이미지 URL을 가져오지 못했습니다. 셀렉터나 URL을 확인하세요.");
+                return;
+            }
+            getActivity().runOnUiThread(() -> setupCurrentEventViewPager(view, imageUrls));
+        }).start();
+    }
+
+    private void setupCurrentEventViewPager(View view, List<String> imageUrls) {
+        Log.d("FragmentHome", "Setting up ViewPager with image URLs: " + imageUrls);
 
         // 첫 번째 ViewPager2
         currentEventPager = view.findViewById(R.id.event_viewpager);
-        homePagerAdapter = new CurrentEventAdapter(requireActivity(), currentEventNum);
+        homePagerAdapter = new CurrentEventAdapter(requireActivity(), imageUrls);
         currentEventPager.setAdapter(homePagerAdapter);
         currentEventPager.setCurrentItem(1000);
         currentEventPager.setOffscreenPageLimit(3);
@@ -164,16 +183,18 @@ public class FragmentHome extends Fragment {
                         List<Integer> loanCount = new ArrayList<>();
                         List<Integer> bookCount = new ArrayList<>();
 
-                        for (SearchBookDetail book : popularBooks) {
-                            bookName.add(book.getBookName());
-                            authors.add(book.getAuthors());
-                            imageUrl.add(book.getBookImageUrl());
-                            isbn13.add(book.getIsbn13());
-                            publisher.add(book.getPublisher());
-                            publicationYear.add(book.getPublication_year());
-                            classNo.add(book.getClass_no());
-                            loanCount.add(book.getLoanCnt());
-                            bookCount.add(book.getBook_count());
+                        synchronized (popularBooks) {
+                            for (SearchBookDetail book : popularBooks) {
+                                bookName.add(book.getBookName());
+                                authors.add(book.getAuthors());
+                                imageUrl.add(book.getBookImageUrl());
+                                isbn13.add(book.getIsbn13());
+                                publisher.add(book.getPublisher());
+                                publicationYear.add(book.getPublication_year());
+                                classNo.add(book.getClass_no());
+                                loanCount.add(book.getLoanCnt());
+                                bookCount.add(book.getBook_count());
+                            }
                         }
 
                         setupPopularBooksViewPager(bookName, authors, imageUrl, isbn13);
