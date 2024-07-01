@@ -143,7 +143,10 @@ public class FragmentBookDetail extends Fragment {
     }
 
     private void fetchBookDetail(String isbn13, TextView bookNameTextView, TextView authorsTextView, TextView descriptionTextView, ImageView bookImageView, TextView publisherTextView, TextView publicationYearTextView, TextView isbnTextView, TextView classNoTextView, TextView classNmTextView, TextView loanCntTextView, TextView ageTextView, TextView wordTextView) {
-        HttpConnection.getInstance(getContext()).getDetailBook(isbn13, new HttpConnection.HttpResponseCallback<CompositeSearchBookDetail>() {
+        Integer memberId = sessionManager.getMember();
+        Integer departmentId = sessionManager.getDepartmentId();
+
+        HttpConnection.getInstance(getContext()).getDetailBook(isbn13, memberId, departmentId, new HttpConnection.HttpResponseCallback<CompositeSearchBookDetail>() {
             @Override
             public void onSuccess(CompositeSearchBookDetail responseData) {
                 if (getActivity() != null) {

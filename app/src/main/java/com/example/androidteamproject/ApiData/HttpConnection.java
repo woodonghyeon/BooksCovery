@@ -356,8 +356,8 @@ public class HttpConnection {
     } // end of hotTrend
 
     // 상세보기
-    public void getDetailBook(String isbn13, final HttpResponseCallback<CompositeSearchBookDetail> callback) {
-        String url = BASE_URL + "books/" + isbn13;
+    public void getDetailBook(String isbn13, Integer memberId, Integer departmentId, final HttpResponseCallback<CompositeSearchBookDetail> callback) {
+        String url = BASE_URL + "books/" + isbn13 + "?member_id=" + memberId + "&department_id=" + departmentId;
         Request request = new Request.Builder().url(url).build();
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -370,6 +370,7 @@ public class HttpConnection {
             public void onResponse(Call call, Response response) throws IOException {
                 try {
                     if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+                    System.out.println("상세페이지 RESPONSE : " + response);
 
                     // JSON 응답을 파싱
                     JSONObject responseBody = new JSONObject(response.body().string());
