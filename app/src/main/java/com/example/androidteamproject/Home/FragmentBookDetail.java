@@ -171,8 +171,10 @@ public class FragmentBookDetail extends Fragment {
                         List<String> loanHistoryCnt = bookDetail.getLoanHistoryCnt();
 
                         List<Entry> entries = new ArrayList<>();
-                        for (int i = 0; i < month.size(); i++) {
-                            entries.add(new Entry(i, Float.parseFloat(loanHistoryCnt.get(i))));
+                        synchronized (month) {
+                            for (int i = 0; i < month.size(); i++) {
+                                entries.add(new Entry(i, Float.parseFloat(loanHistoryCnt.get(i))));
+                            }
                         }
 
                         LineDataSet dataSet = new LineDataSet(entries, "월별 대출 건수");
@@ -231,9 +233,11 @@ public class FragmentBookDetail extends Fragment {
                         List<String> loanGrpsCnt = bookDetail.getLoanGrpsCnt();
                         List<String> loanGrpsRanking = bookDetail.getLoanGrpsRanking();
                         StringBuilder ageBuilder = new StringBuilder();
-                        for (int i = 0; i < age.size(); i++) {
-                            // ranking은 일단 생략함
-                            ageBuilder.append(i+1 + "위 - " + age.get(i)).append(" ").append(gender.get(i)).append(" : ").append(loanGrpsCnt.get(i)).append("권\n");
+                        synchronized (age) {
+                            for (int i = 0; i < age.size(); i++) {
+                                // ranking은 일단 생략함
+                                ageBuilder.append(i + 1 + "위 - " + age.get(i)).append(" ").append(gender.get(i)).append(" : ").append(loanGrpsCnt.get(i)).append("권\n");
+                            }
                         }
                         ageTextView.setText(ageBuilder.toString());
 
@@ -241,21 +245,24 @@ public class FragmentBookDetail extends Fragment {
                         List<String> word = bookDetail.getWord();
                         List<String> weight = bookDetail.getWeight();
                         List<KeywordWithWeight> keywords = new ArrayList<>();
-                        for (int i = 0; i < word.size(); i++) {
-                            keywords.add(new KeywordWithWeight(word.get(i), weight.get(i)));
+                        synchronized (word) {
+                            for (int i = 0; i < word.size(); i++) {
+                                keywords.add(new KeywordWithWeight(word.get(i), weight.get(i)));
+                            }
                         }
-
                         Collections.shuffle(keywords);
 
                         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
                         Random random = new Random();
-                        for (KeywordWithWeight kw : keywords) {
-                            int color = Color.rgb(random.nextInt(256), random.nextInt(256), random.nextInt(256));
-                            float size = 1.0f + (Float.parseFloat(kw.weight) / 10); // 가중치에 따라 크기를 조절합니다.
-                            SpannableString keywordSpan = new SpannableString(kw.word + " ");
-                            keywordSpan.setSpan(new ForegroundColorSpan(color), 0, keywordSpan.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            keywordSpan.setSpan(new RelativeSizeSpan(size), 0, keywordSpan.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            spannableStringBuilder.append(keywordSpan);
+                        synchronized (keywords) {
+                            for (KeywordWithWeight kw : keywords) {
+                                int color = Color.rgb(random.nextInt(256), random.nextInt(256), random.nextInt(256));
+                                float size = 1.0f + (Float.parseFloat(kw.weight) / 10); // 가중치에 따라 크기를 조절합니다.
+                                SpannableString keywordSpan = new SpannableString(kw.word + " ");
+                                keywordSpan.setSpan(new ForegroundColorSpan(color), 0, keywordSpan.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                keywordSpan.setSpan(new RelativeSizeSpan(size), 0, keywordSpan.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                spannableStringBuilder.append(keywordSpan);
+                            }
                         }
                         wordTextView.setText(spannableStringBuilder);
 
@@ -329,11 +336,13 @@ public class FragmentBookDetail extends Fragment {
                     List<String> isbn13s = new ArrayList<>();
                     List<String> authors = new ArrayList<>();
 
-                    for (SearchBookDetail book : maniaBooks) {
-                        bookNames.add(book.getManiaBookName());
-                        authors.add(book.getManiaAuthor());
-                        imageUrls.add(book.getManiaImageUrl());
-                        isbn13s.add(book.getManiaIsbn13());
+                    synchronized (maniaBooks) {
+                        for (SearchBookDetail book : maniaBooks) {
+                            bookNames.add(book.getManiaBookName());
+                            authors.add(book.getManiaAuthor());
+                            imageUrls.add(book.getManiaImageUrl());
+                            isbn13s.add(book.getManiaIsbn13());
+                        }
                     }
                     setupManiaViewPager(bookNames, authors, imageUrls, isbn13s);
                 });

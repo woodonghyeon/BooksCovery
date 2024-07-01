@@ -383,7 +383,7 @@ public class HttpConnection {
                     String publisher = book.getString("publisher");
                     String bookImageUrl = book.getString("bookImageURL");
                     String description = book.getString("description");
-                    int publication_year = book.getInt("publication_year");
+                    int publication_year = book.optInt("publication_year", 0);
                     String isbn13 = book.getString("isbn13");
                     String class_no = book.getString("class_no");
                     String class_nm = book.getString("class_nm");
