@@ -12,7 +12,6 @@
         android:layout_width="500dp"
         android:layout_height="530dp"
         android:scaleType="fitXY"
-        android:background="@drawable/radius_current_event_img"
-        android:src="@drawable/current_event_1"/>
+        android:background="@drawable/radius_current_event_img"/>
 
 </LinearLayout>
