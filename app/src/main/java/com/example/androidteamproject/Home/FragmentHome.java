@@ -1,6 +1,5 @@
 package com.example.androidteamproject.Home;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -291,7 +290,7 @@ public class FragmentHome extends Fragment {
         int pageSize = 10; // 페이지 크기
         String format = "json"; // 응답 형식
 
-        HttpConnection.getInstance(getContext()).getLoanItems(startDt, endDt, from_age, to_age, pageNo, pageSize, new HttpConnection.HttpResponseCallback<List<SearchBook>>() {
+        HttpConnection.getInstance(getContext()).getLoanItems(pageNo, pageSize, startDt, endDt, from_age, to_age, new HttpConnection.HttpResponseCallback<List<SearchBook>>() {
             @Override
             public void onSuccess(List<SearchBook> books) {
                 if (getActivity() != null) {
@@ -423,7 +422,7 @@ public class FragmentHome extends Fragment {
         int pageSize = 10; // 페이지 크기 (예시)
         String format = "json"; // 응답 형식 (예시)
 
-        HttpConnection.getInstance(getContext()).getLoanItems(startDt, endDt, from_age, to_age, pageNo, pageSize, new HttpConnection.HttpResponseCallback<List<SearchBook>>() {
+        HttpConnection.getInstance(getContext()).getLoanItems(pageNo, pageSize, startDt, endDt, from_age, to_age, new HttpConnection.HttpResponseCallback<List<SearchBook>>() {
             @Override
             public void onSuccess(List<SearchBook> books) {
                 if (getActivity() != null) {
