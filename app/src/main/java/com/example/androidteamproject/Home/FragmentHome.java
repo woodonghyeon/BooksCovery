@@ -24,12 +24,16 @@ import com.example.androidteamproject.ApiData.SearchBookDetail;
 import com.example.androidteamproject.R;
 import com.example.androidteamproject.ApiData.SearchBook;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Response;
 
 public class FragmentHome extends Fragment {
 
@@ -166,10 +170,21 @@ public class FragmentHome extends Fragment {
     }
 
     private void fetchPopularBooks(int departmentId) {
-        new Thread(() -> {
-            DataBase db = new DataBase();
-            try {
-                List<SearchBookDetail> popularBooks = db.getPopularBooks(departmentId);
+        DataBase db = new DataBase();
+        db.getPopularBooks(departmentId, new okhttp3.Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.e("fetchPopularBooks", "Error fetching popular books", e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    Log.e("fetchPopularBooks", "Unexpected response code: " + response.code());
+                    return;
+                }
+
+                List<SearchBookDetail> popularBooks = db.parsePopularBooksResponse(response);
 
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
@@ -200,11 +215,9 @@ public class FragmentHome extends Fragment {
                         setupPopularBooksViewPager(bookName, authors, imageUrl, isbn13);
                     });
                 }
-            } catch (SQLException e) {
-                e.printStackTrace();
             }
-        }).start();
-    }
+        });
+    } // end of fetchPopularBook
 
     private void setupPopularBooksViewPager(List<String> bookNames, List<String> authors, List<String> imageUrls, List<String> isbn13s) {
         if (imageUrls == null || imageUrls.isEmpty()) {
