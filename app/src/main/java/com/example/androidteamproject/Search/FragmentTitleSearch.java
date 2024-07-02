@@ -99,13 +99,11 @@ public class FragmentTitleSearch extends Fragment {
     }
 
     private void getResponseApiBookSearch() {
-        String title = mParam1;
+        String bookname = mParam1;
         int pageNo = 1;
-        int pageSize = 100;
-        String format = "json";
-        boolean tf = true;
+        int pageSize = 20;
 
-        HttpConnection.getInstance(getContext()).bookSearchTitle(title, pageNo, pageSize, tf, new HttpConnection.HttpResponseCallback<List<SearchBookTitle>>() {
+        HttpConnection.getInstance(getContext()).bookSearchTitle(bookname, pageNo, pageSize, new HttpConnection.HttpResponseCallback<List<SearchBookTitle>>() {
             @Override
             public void onSuccess(List<SearchBookTitle> books) {
                 if (getActivity() != null) {
