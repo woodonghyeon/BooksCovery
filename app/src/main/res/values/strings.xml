@@ -1,8 +1,10 @@
 <resources>
     <string name="app_name">AndroidTeamProject</string>
-    <string name="api_key">***REMOVED***</string>
-    <string name="second_api_key">***REMOVED***</string>
-    <string name="sub_api_key">***REMOVED***</string>
+    <string name="api_key1">***REMOVED***</string>
+    <string name="api_key2">***REMOVED***</string>
+    <string name="api_key3">***REMOVED***</string>
+    <string name="api_key4">***REMOVED***</string>
+    <string name="api_key5">***REMOVED***</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string-array name="gender_array">
