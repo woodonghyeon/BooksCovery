@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ImageScraper {
-
     private static final String BASE_URL = "http://lib.yjc.ac.kr/WebYJC/Aspx/board/";
     private static final String LIST_URL = BASE_URL + "boardlist.aspx?tbname=1view&SearchType=&searchtext=&startpage=1";
 
