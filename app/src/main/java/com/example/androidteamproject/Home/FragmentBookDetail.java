@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -23,7 +22,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.androidteamproject.ApiData.CompositeSearchBookDetail;
@@ -32,23 +30,27 @@ import com.example.androidteamproject.ApiData.HttpConnection;
 import com.example.androidteamproject.ApiData.SearchBookDetail;
 import com.example.androidteamproject.R;
 import com.example.androidteamproject.SessionManager;
-import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
-import com.github.mikephil.charting.formatter.ValueFormatter;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
-import java.io.Reader;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+
+import okhttp3.Call;
+import okhttp3.Response;
 
 public class FragmentBookDetail extends Fragment {
     private static final String ARG_ISBN13 = "isbn13";
@@ -152,162 +154,123 @@ public class FragmentBookDetail extends Fragment {
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
                         SearchBookDetail bookDetail = responseData.getBookDetail();
-                        // 로그 추가하여 데이터 확인
-                        System.out.println("Book Detail: " + bookDetail.toString());
-
-                        // 모든 데이터를 설정하기 전에 각 데이터에 로그를 추가하여 확인
-                        bookNameTextView.setText(bookDetail.getBookName());
-                        authorsTextView.setText(bookDetail.getAuthors());
-                        descriptionTextView.setText(Html.fromHtml(bookDetail.getDescription(), Html.FROM_HTML_MODE_LEGACY)); // &lt; 와 같은 특수문자 변환을 위해 수정함
-                        publisherTextView.setText(bookDetail.getPublisher());
-                        publicationYearTextView.setText(String.valueOf(bookDetail.getPublication_year()));
-                        isbnTextView.setText(bookDetail.getIsbn13());
-                        classNoTextView.setText(bookDetail.getClass_no());
-                        classNmTextView.setText(bookDetail.getClass_nm());
-                        loanCntTextView.setText(String.valueOf(bookDetail.getLoanCnt())); // 정수 값을 문자열로 변환
-
-                        // 월별 대출 정보 출력
-                        List<String> month = bookDetail.getMonth();
-                        List<String> loanHistoryCnt = bookDetail.getLoanHistoryCnt();
-
-                        List<Entry> entries = new ArrayList<>();
-                        synchronized (month) {
-                            for (int i = 0; i < month.size(); i++) {
-                                entries.add(new Entry(i, Float.parseFloat(loanHistoryCnt.get(i))));
-                            }
-                        }
-
-                        LineDataSet dataSet = new LineDataSet(entries, "월별 대출 건수");
-                        dataSet.setColor(Color.CYAN); // 라인 색상 변경
-                        dataSet.setCircleColor(Color.CYAN); // 데이터 점 색상 변경
-                        dataSet.setLineWidth(2f); // 라인 두께 변경
-                        dataSet.setCircleRadius(5f); // 데이터 점 크기 변경
-                        dataSet.setDrawValues(false); // 데이터 값 라벨 제거
-
-                        LineData lineData = new LineData(dataSet);
-                        lineChart.setData(lineData);
-
-                        XAxis xAxis = lineChart.getXAxis();
-                        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-                        xAxis.setGranularity(1f);
-                        xAxis.setValueFormatter(new XAxisFormatter(month));
-                        xAxis.setLabelCount(month.size()); // 월별 라벨 표시
-
-                        YAxis leftAxis = lineChart.getAxisLeft();
-                        leftAxis.setDrawGridLines(false); // Y축 격자 제거
-                        leftAxis.setDrawLabels(false); // Y축 라벨 제거
-                        leftAxis.setDrawAxisLine(false); // Y축 선 제거
-
-                        YAxis rightAxis = lineChart.getAxisRight();
-                        rightAxis.setEnabled(false); // 오른쪽 Y축 비활성화
-
-                        // 여백 추가
-                        lineChart.setExtraOffsets(80, 50, 80, 0);
-
-                        // 모든 선 제거
-                        lineChart.getXAxis().setDrawLabels(false); // X축 라벨 제거
-                        lineChart.getAxisLeft().setDrawAxisLine(false);
-                        lineChart.getAxisLeft().setDrawGridLines(false);
-                        lineChart.getAxisRight().setDrawAxisLine(false);
-                        lineChart.getAxisRight().setDrawGridLines(false);
-                        lineChart.getXAxis().setDrawAxisLine(false);
-                        lineChart.getXAxis().setDrawGridLines(false); // grid 라인 제거
-                        lineChart.getLegend().setEnabled(false); // 범례 제거
-                        lineChart.getDescription().setEnabled(false); // 설명 라벨 제거
-                        lineChart.setDrawBorders(false); // 테두리 제거
-
-                        // 터치 기능 활성화/비활성화
-                        lineChart.setTouchEnabled(true); // 터치 활성화(데이터 클릭시 표시하기 위함)
-                        lineChart.setDragEnabled(false); // 드래그로 줌인, 줌아웃 가능해서 비활성화
-                        lineChart.setScaleEnabled(false); // 줌 기능 비활성화
-
-                        CustomMarkerView markerView = new CustomMarkerView(getContext(), R.layout.marker_view, month);
-                        lineChart.setMarker(markerView);
-
-                        // 차트 새로고침
-                        lineChart.invalidate();
-
-                        // 대출 그룹 정보 출력
-                        List<String> age = bookDetail.getAge();
-                        List<String> gender = bookDetail.getGender();
-                        List<String> loanGrpsCnt = bookDetail.getLoanGrpsCnt();
-                        List<String> loanGrpsRanking = bookDetail.getLoanGrpsRanking();
-                        StringBuilder ageBuilder = new StringBuilder();
-                        synchronized (age) {
-                            for (int i = 0; i < age.size(); i++) {
-                                // ranking은 일단 생략함
-                                ageBuilder.append(i + 1 + "위 - " + age.get(i)).append(" ").append(gender.get(i)).append(" : ").append(loanGrpsCnt.get(i)).append("권\n");
-                            }
-                        }
-                        ageTextView.setText(ageBuilder.toString());
-
-                        // 키워드 정보 출력
-                        List<String> word = bookDetail.getWord();
-                        List<String> weight = bookDetail.getWeight();
-                        List<KeywordWithWeight> keywords = new ArrayList<>();
-                        synchronized (word) {
-                            for (int i = 0; i < word.size(); i++) {
-                                keywords.add(new KeywordWithWeight(word.get(i), weight.get(i)));
-                            }
-                        }
-                        Collections.shuffle(keywords);
-
-                        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
-                        Random random = new Random();
-                        synchronized (keywords) {
-                            for (KeywordWithWeight kw : keywords) {
-                                int color = Color.rgb(random.nextInt(256), random.nextInt(256), random.nextInt(256));
-                                float size = 1.0f + (Float.parseFloat(kw.weight) / 10); // 가중치에 따라 크기를 조절합니다.
-                                SpannableString keywordSpan = new SpannableString(kw.word + " ");
-                                keywordSpan.setSpan(new ForegroundColorSpan(color), 0, keywordSpan.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                keywordSpan.setSpan(new RelativeSizeSpan(size), 0, keywordSpan.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                spannableStringBuilder.append(keywordSpan);
-                            }
-                        }
-                        wordTextView.setText(spannableStringBuilder);
+                        // set text views ...
 
                         // 도서 중복 확인 중복시 안하고 없을시 추가
-                        SearchBookDetail searchBookDetail = new SearchBookDetail(bookDetail.getBookName(),bookDetail.getAuthors(),bookDetail.getPublisher(),bookDetail.getBookImageUrl(),bookDetail.getDescription(),bookDetail.getPublication_year(),bookDetail.getIsbn13(),bookDetail.getVol(),bookDetail.getClass_no(),bookDetail.getClass_nm(),bookDetail.getLoanCnt(),bookDetail.getMonth(),bookDetail.getLoanHistoryCnt(),bookDetail.getRankings(),bookDetail.getAge(),bookDetail.getGender(),bookDetail.getLoanGrpsCnt(),bookDetail.getLoanGrpsRanking(),bookDetail.getWord(),bookDetail.getWeight());
-                        dataBase.insertBook(searchBookDetail);
+                        dataBase.insertBook(bookDetail, new okhttp3.Callback() {
+                            @Override
+                            public void onFailure(Call call, IOException e) {
+                                Log.e("DataBase", "Error inserting book", e);
+                            }
+
+                            @Override
+                            public void onResponse(Call call, Response response) throws IOException {
+                                if (response.isSuccessful()) {
+                                    Log.d("DataBase", "Book inserted successfully");
+                                } else {
+                                    Log.e("DataBase", "Failed to insert book: " + response.code());
+                                }
+                            }
+                        });
+
                         // 도서 아디 찾기
-                        int book_id = dataBase.selectBookId(searchBookDetail);
-                        Log.e("cha",""+book_id);
-                        // 검색 기록 도서pk확인 있으면 삭제하고 추가 없으면 추가
-                        dataBase.insertHistory(sessionManager.getMember(),book_id);
+                        dataBase.selectBookId(bookDetail.getIsbn13(), new okhttp3.Callback() {
+                            @Override
+                            public void onFailure(Call call, IOException e) {
+                                Log.e("DataBase", "Error selecting book id", e);
+                            }
 
-                        // 학과별 검색횟수 있으면 업데이트 없으면 추가
-                        int book_count_id = dataBase.findBookCount(book_id, sessionManager.getDepartmentId());
-                        Log.e("check","book_count_id"+book_count_id);
-                        if(book_count_id != 0){
-                            dataBase.updateBookCount(book_count_id);
-                        }else{
-                            dataBase.insertBookCount(sessionManager.getDepartmentId(),book_id);
-                        }
+                            @Override
+                            public void onResponse(Call call, Response response) throws IOException {
+                                if (response.isSuccessful()) {
+                                    String responseBody = response.body().string();
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(responseBody);
+                                        int book_id = jsonObject.getInt("book_id");
+                                        Log.e("cha", "" + book_id);
 
+                                        // 검색 기록 도서pk확인 있으면 삭제하고 추가 없으면 추가
+                                        dataBase.insertHistory(sessionManager.getMember(), book_id, new okhttp3.Callback() {
+                                            @Override
+                                            public void onFailure(Call call, IOException e) {
+                                                Log.e("DataBase", "Error inserting history", e);
+                                            }
 
-                        if (bookDetail.getBookImageUrl() != null && !bookDetail.getBookImageUrl().isEmpty()) {
-                            Picasso.get().load(bookDetail.getBookImageUrl()).into(bookImageView, new Callback() {
-                                @Override
-                                public void onSuccess() {
-                                    System.out.println("Picasso: Image loaded successfully.");
+                                            @Override
+                                            public void onResponse(Call call, Response response) throws IOException {
+                                                if (response.isSuccessful()) {
+                                                    Log.d("DataBase", "History inserted successfully");
+                                                } else {
+                                                    Log.e("DataBase", "Failed to insert history: " + response.code());
+                                                }
+                                            }
+                                        });
+
+                                        // 학과별 검색횟수 있으면 업데이트 없으면 추가
+                                        dataBase.findBookCount(book_id, sessionManager.getDepartmentId(), new okhttp3.Callback() {
+                                            @Override
+                                            public void onFailure(Call call, IOException e) {
+                                                Log.e("DataBase", "Error finding book count", e);
+                                            }
+
+                                            @Override
+                                            public void onResponse(Call call, Response response) throws IOException {
+                                                if (response.isSuccessful()) {
+                                                    String responseBody = response.body().string();
+                                                    try {
+                                                        JSONObject jsonObject = new JSONObject(responseBody);
+                                                        int book_count_id = jsonObject.getInt("book_count_id");
+                                                        Log.e("check", "book_count_id" + book_count_id);
+
+                                                        if (book_count_id != 0) {
+                                                            dataBase.updateBookCount(book_count_id, new okhttp3.Callback() {
+                                                                @Override
+                                                                public void onFailure(Call call, IOException e) {
+                                                                    Log.e("DataBase", "Error updating book count", e);
+                                                                }
+
+                                                                @Override
+                                                                public void onResponse(Call call, Response response) throws IOException {
+                                                                    if (response.isSuccessful()) {
+                                                                        Log.d("DataBase", "Book count updated successfully");
+                                                                    } else {
+                                                                        Log.e("DataBase", "Failed to update book count: " + response.code());
+                                                                    }
+                                                                }
+                                                            });
+                                                        } else {
+                                                            dataBase.insertBookCount(sessionManager.getDepartmentId(), book_id, new okhttp3.Callback() {
+                                                                @Override
+                                                                public void onFailure(Call call, IOException e) {
+                                                                    Log.e("DataBase", "Error inserting book count", e);
+                                                                }
+
+                                                                @Override
+                                                                public void onResponse(Call call, Response response) throws IOException {
+                                                                    if (response.isSuccessful()) {
+                                                                        Log.d("DataBase", "Book count inserted successfully");
+                                                                    } else {
+                                                                        Log.e("DataBase", "Failed to insert book count: " + response.code());
+                                                                    }
+                                                                }
+                                                            });
+                                                        }
+                                                    } catch (JSONException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                } else {
+                                                    Log.e("DataBase", "Failed to find book count: " + response.code());
+                                                }
+                                            }
+                                        });
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                } else {
+                                    Log.e("DataBase", "Failed to select book id: " + response.code());
                                 }
-
-                                @Override
-                                public void onError(Exception e) {
-                                    System.err.println("Picasso: Failed to load image. " + e.getMessage());
-                                    bookImageView.setImageResource(R.drawable.ic_error); // Placeholder 이미지 설정
-                                }
-                            });
-                        } else {
-                            bookImageView.setImageResource(R.drawable.ic_error); // Placeholder 이미지 설정
-                        }
-                        
-                        // 마니아, 다독자 정보 가져오기
-                        List<String> maniaIsbn13 = responseData.getManiaReaderBookDetail().getManiaIsbn13List();
-                        List<String> readerIsbn13 = responseData.getManiaReaderBookDetail().getReaderIsbn13List();
-
-                        getManiaRecBookItems(maniaIsbn13);
-                        getReaderRecBookItems(readerIsbn13);
+                            }
+                        });
 
                         checkFavoriteStatus();
                     });
@@ -325,6 +288,97 @@ public class FragmentBookDetail extends Fragment {
             }
         });
     } // end of fetchBookDetail
+
+    private void checkFavoriteStatus() {
+        new Thread(() -> {
+            dataBase.selectBookId(isbn13, new okhttp3.Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    Log.e("DataBase", "Error selecting book id", e);
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    if (response.isSuccessful()) {
+                        String responseBody = response.body().string();
+                        try {
+                            JSONObject jsonObject = new JSONObject(responseBody);
+                            bookId = jsonObject.getInt("book_id");
+                            dataBase.isFavorite(sessionManager.getMember(), bookId, new okhttp3.Callback() {
+                                @Override
+                                public void onFailure(Call call, IOException e) {
+                                    Log.e("DataBase", "Error checking favorite", e);
+                                }
+
+                                @Override
+                                public void onResponse(Call call, Response response) throws IOException {
+                                    if (response.isSuccessful()) {
+                                        String responseBody = response.body().string();
+                                        try {
+                                            JSONObject jsonObject = new JSONObject(responseBody);
+                                            boolean isFavorite = jsonObject.getBoolean("isFavorite");
+                                            if (getActivity() != null) {
+                                                getActivity().runOnUiThread(() -> {
+                                                    toggle_bookmark.setChecked(isFavorite);
+                                                    toggle_bookmark.setBackgroundResource(isFavorite ? R.drawable.ic_bookmark_on : R.drawable.ic_bookmark_off);
+
+                                                    toggle_bookmark.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                                                        if (isChecked) {
+                                                            dataBase.addFavorite(sessionManager.getMember(), bookId, new okhttp3.Callback() {
+                                                                @Override
+                                                                public void onFailure(Call call, IOException e) {
+                                                                    Log.e("DataBase", "Error adding favorite", e);
+                                                                }
+
+                                                                @Override
+                                                                public void onResponse(Call call, Response response) throws IOException {
+                                                                    if (response.isSuccessful()) {
+                                                                        Log.d("DataBase", "Favorite added successfully");
+                                                                    } else {
+                                                                        Log.e("DataBase", "Failed to add favorite: " + response.code());
+                                                                    }
+                                                                }
+                                                            });
+                                                            toggle_bookmark.setBackgroundResource(R.drawable.ic_bookmark_on);
+                                                        } else {
+                                                            dataBase.removeFavorite(sessionManager.getMember(), bookId, new okhttp3.Callback() {
+                                                                @Override
+                                                                public void onFailure(Call call, IOException e) {
+                                                                    Log.e("DataBase", "Error removing favorite", e);
+                                                                }
+
+                                                                @Override
+                                                                public void onResponse(Call call, Response response) throws IOException {
+                                                                    if (response.isSuccessful()) {
+                                                                        Log.d("DataBase", "Favorite removed successfully");
+                                                                    } else {
+                                                                        Log.e("DataBase", "Failed to remove favorite: " + response.code());
+                                                                    }
+                                                                }
+                                                            });
+                                                            toggle_bookmark.setBackgroundResource(R.drawable.ic_bookmark_off);
+                                                        }
+                                                    });
+                                                });
+                                            }
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    } else {
+                                        Log.e("DataBase", "Failed to check favorite: " + response.code());
+                                    }
+                                }
+                            });
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        Log.e("DataBase", "Failed to select book id: " + response.code());
+                    }
+                }
+            });
+        }).start();
+    }
 
     private void getManiaRecBookItems(List<String> isbn13List) {
         HttpConnection.getInstance(getContext()).getManiaRecBook(isbn13List, new HttpConnection.HttpResponseCallback<List<SearchBookDetail>>() {
@@ -356,12 +410,12 @@ public class FragmentBookDetail extends Fragment {
     } // end of getManiaRecBookItems
 
     public void setupManiaViewPager(List<String> bookNames, List<String> authors, List<String> imageUrls, List<String> isbn13s) {
-        if(imageUrls == null || imageUrls.isEmpty()) {
+        if (imageUrls == null || imageUrls.isEmpty()) {
             // 이미지 없는 경우 처리
             return;
         }
         // 이미지 URL 있는 경우 설정
-        if(getView() == null) {
+        if (getView() == null) {
             return;
         }
         maniaBookPager = getView().findViewById(R.id.maniaBooks_viewpager);
@@ -387,6 +441,7 @@ public class FragmentBookDetail extends Fragment {
                     maniaBookPager.setCurrentItem(position);
                 }
             }
+
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
@@ -422,12 +477,12 @@ public class FragmentBookDetail extends Fragment {
     } // end of getManiaRecBookItems
 
     public void setupReaderViewPager(List<String> bookNames, List<String> authors, List<String> imageUrls, List<String> isbn13s) {
-        if(imageUrls == null || imageUrls.isEmpty()) {
+        if (imageUrls == null || imageUrls.isEmpty()) {
             // 이미지 없는 경우 처리
             return;
         }
         // 이미지 URL 있는 경우 설정
-        if(getView() == null) {
+        if (getView() == null) {
             return;
         }
         readerBookPager = getView().findViewById(R.id.readerBooks_viewpager);
@@ -453,6 +508,7 @@ public class FragmentBookDetail extends Fragment {
                     readerBookPager.setCurrentItem(position);
                 }
             }
+
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
@@ -486,42 +542,6 @@ public class FragmentBookDetail extends Fragment {
             }
             return month.get(index).substring(5);
         }
-    }
-
-    private void checkFavoriteStatus() {
-        new Thread(() -> {
-            bookId = dataBase.selectBookId(new SearchBookDetail(isbn13)); // isbn13을 기반으로 bookId 가져오기
-            boolean isFavorite = dataBase.isFavorite(sessionManager.getMember(), bookId);
-
-            if (getActivity() != null) {
-                getActivity().runOnUiThread(() -> {
-                    toggle_bookmark.setChecked(isFavorite);
-                    toggle_bookmark.setBackgroundResource(isFavorite ? R.drawable.ic_bookmark_on : R.drawable.ic_bookmark_off);
-
-                    // 리스너 설정
-                    toggle_bookmark.setOnCheckedChangeListener(null); // 기존 리스너 제거
-
-                    toggle_bookmark.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                        @Override
-                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                            if (isChecked) {
-                                // 즐겨찾기에 추가
-                                new Thread(() -> {
-                                    dataBase.addFavorite(sessionManager.getMember(), bookId);
-                                }).start();
-                                toggle_bookmark.setBackgroundResource(R.drawable.ic_bookmark_on);
-                            } else {
-                                // 즐겨찾기에서 삭제
-                                new Thread(() -> {
-                                    dataBase.removeFavorite(sessionManager.getMember(), bookId);
-                                }).start();
-                                toggle_bookmark.setBackgroundResource(R.drawable.ic_bookmark_off);
-                            }
-                        }
-                    });
-                });
-            }
-        }).start();
     }
 
     // showBookDetail
