@@ -62,7 +62,7 @@ public class ReaderBookImageFragment extends Fragment {
             isbn13s = getArguments().getString(ARG_ISBN13);
         }
 
-        if (imageUrls.isEmpty()) {
+        if (imageUrls != null || imageUrls.isEmpty()) {
             readerBookImg.setImageResource(R.drawable.ic_error);
         } else {
             Picasso.get().load(imageUrls).into(readerBookImg);
