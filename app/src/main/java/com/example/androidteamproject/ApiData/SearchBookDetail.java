@@ -12,6 +12,9 @@ public class SearchBookDetail {
     private String maniaBookName, maniaAuthor, maniaImageUrl, maniaIsbn13;
     private String readerBookName, readerAuthor, readerImageUrl, readerIsbn13;
 
+    public SearchBookDetail() {
+    }
+
     public SearchBookDetail(String isbn13) {
         this.isbn13 = isbn13;
     }
