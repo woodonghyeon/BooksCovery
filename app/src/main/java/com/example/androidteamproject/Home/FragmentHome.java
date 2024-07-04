@@ -90,6 +90,7 @@ public class FragmentHome extends Fragment {
 
         return view;
     } // end of onCreateView
+
     private void CurrentEventSettingImg(View view) {
         // 이미지 URL을 가져와서 설정
         new Thread(() -> {
@@ -169,6 +170,7 @@ public class FragmentHome extends Fragment {
         });
     }
 
+    // 학과 인기 도서
     private void fetchPopularBooks(int departmentId) {
         DataBase db = new DataBase();
         db.getPopularBooks(departmentId, new okhttp3.Callback() {
@@ -185,6 +187,8 @@ public class FragmentHome extends Fragment {
                 }
 
                 List<SearchBookDetail> popularBooks = db.parsePopularBooksResponse(response);
+                System.out.println("학과별 인기도서 response : " + response);
+                System.out.println("학과별 인기도서 popularBooks : " + popularBooks);
 
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {

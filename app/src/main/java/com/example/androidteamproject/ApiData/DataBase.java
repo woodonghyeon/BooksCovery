@@ -5,11 +5,13 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -142,17 +144,42 @@ public class DataBase {
         postRequest(BASE_URL + "/favorite/remove", json, callback);
     }
 
+    // 학과별 인기도서 데이터 요청
     public void getPopularBooks(int departmentId, Callback callback) {
         String url = BASE_URL + "/api/popular?departmentId=" + departmentId;
         Request request = new Request.Builder().url(url).build();
         client.newCall(request).enqueue(callback);
     }
 
+    // 학과별 인기도서 데이터 응답/파싱
     public List<SearchBookDetail> parsePopularBooksResponse(Response response) throws IOException {
         String jsonResponse = response.body().string();
-        Type listType = new TypeToken<List<SearchBookDetail>>() {}.getType();
-        return gson.fromJson(jsonResponse, listType);
-    }
+        List<SearchBookDetail> bookList = new ArrayList<>();
+
+        try {
+            JSONArray responseArray = new JSONArray(jsonResponse);
+            for (int i = 0; i < responseArray.length(); i++) {
+                JSONObject bookObject = responseArray.getJSONObject(i);
+
+                SearchBookDetail bookDetail = new SearchBookDetail();
+                bookDetail.setBookName(bookObject.optString("bookname", "N/A"));
+                bookDetail.setAuthors(bookObject.optString("authors", "N/A"));
+                bookDetail.setPublisher(bookObject.optString("publisher", "N/A"));
+                bookDetail.setPublication_year(bookObject.optInt("publication_year", 0));
+                bookDetail.setClass_no(bookObject.optString("class_no", "N/A"));
+                bookDetail.setLoanCnt(bookObject.optInt("loan_count", 0));
+                bookDetail.setBookImageUrl(bookObject.optString("book_image_URL", ""));
+                bookDetail.setIsbn13(bookObject.optString("isbn", "N/A"));
+
+                bookList.add(bookDetail);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return bookList;
+    } // end of parsePopularBooksResponse
+
 
     // 회원가입
     public void addMember(String name, String gender, String age, String department_id, String id, String password, String email, Callback callback) {
