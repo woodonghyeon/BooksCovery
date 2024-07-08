@@ -70,6 +70,7 @@ public class FragmentBookDetail extends Fragment {
 
     DataBase dataBase = new DataBase();
     SessionManager sessionManager;
+    private boolean isFragmentActive;
 
     public static FragmentBookDetail newInstance(String isbn13, String bookName, String authors, String imageUrl) {
         FragmentBookDetail fragment = new FragmentBookDetail();
@@ -139,9 +140,17 @@ public class FragmentBookDetail extends Fragment {
         bookNameTextView.setText(bookName != null ? bookName : "N/A");
         authorsTextView.setText(authors != null ? authors : "N/A");
 
+        isFragmentActive = true;
+
         fetchBookDetail(isbn13, bookNameTextView, authorsTextView, descriptionTextView, bookImageView, publisherTextView, publicationYearTextView, isbnTextView, classNoTextView, classNmTextView, loanCntTextView, ageTextView, wordTextView);
 
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        isFragmentActive = false;
+        super.onDestroyView();
     }
 
     private void fetchBookDetail(String isbn13, TextView bookNameTextView, TextView authorsTextView, TextView descriptionTextView, ImageView bookImageView, TextView publisherTextView, TextView publicationYearTextView, TextView isbnTextView, TextView classNoTextView, TextView classNmTextView, TextView loanCntTextView, TextView ageTextView, TextView wordTextView) {
@@ -151,7 +160,7 @@ public class FragmentBookDetail extends Fragment {
         HttpConnection.getInstance(getContext()).getDetailBook(isbn13, memberId, departmentId, new HttpConnection.HttpResponseCallback<CompositeSearchBookDetail>() {
             @Override
             public void onSuccess(CompositeSearchBookDetail responseData) {
-                if (getActivity() != null) {
+                if (isFragmentActive && getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
                         SearchBookDetail bookDetail = responseData.getBookDetail();
                         // 로그 추가하여 데이터 확인
@@ -418,7 +427,7 @@ public class FragmentBookDetail extends Fragment {
             @Override
             public void onFailure(Exception e) {
                 e.printStackTrace();
-                if (getActivity() != null) {
+                if (isFragmentActive && getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
                         descriptionTextView.setText("도서 상세 정보를 불러오지 못했습니다. 오류: " + e.getMessage());
                     });
@@ -458,7 +467,7 @@ public class FragmentBookDetail extends Fragment {
                                             try {
                                                 JSONObject jsonObject = new JSONObject(responseBody);
                                                 boolean isFavorite = jsonObject.getBoolean("isFavorite");
-                                                if (getActivity() != null) {
+                                                if (isFragmentActive && getActivity() != null) {
                                                     getActivity().runOnUiThread(() -> {
                                                         toggle_bookmark.setChecked(isFavorite);
                                                         toggle_bookmark.setBackgroundResource(isFavorite ? R.drawable.ic_bookmark_on : R.drawable.ic_bookmark_off);
@@ -522,26 +531,29 @@ public class FragmentBookDetail extends Fragment {
         }).start();
     } // end of checkFavoriteStatus
 
+    // 마니아
     private void getManiaRecBookItems(List<String> isbn13List) {
         HttpConnection.getInstance(getContext()).getManiaRecBook(isbn13List, new HttpConnection.HttpResponseCallback<List<SearchBookDetail>>() {
             @Override
             public void onSuccess(List<SearchBookDetail> maniaBooks) {
-                getActivity().runOnUiThread(() -> {
-                    List<String> bookNames = new ArrayList<>();
-                    List<String> imageUrls = new ArrayList<>();
-                    List<String> isbn13s = new ArrayList<>();
-                    List<String> authors = new ArrayList<>();
+                if (isFragmentActive && getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        List<String> bookNames = new ArrayList<>();
+                        List<String> imageUrls = new ArrayList<>();
+                        List<String> isbn13s = new ArrayList<>();
+                        List<String> authors = new ArrayList<>();
 
-                    synchronized (maniaBooks) {
-                        for (SearchBookDetail book : maniaBooks) {
-                            bookNames.add(book.getManiaBookName());
-                            authors.add(book.getManiaAuthor());
-                            imageUrls.add(book.getManiaImageUrl());
-                            isbn13s.add(book.getManiaIsbn13());
+                        synchronized (maniaBooks) {
+                            for (SearchBookDetail book : maniaBooks) {
+                                bookNames.add(book.getManiaBookName());
+                                authors.add(book.getManiaAuthor());
+                                imageUrls.add(book.getManiaImageUrl());
+                                isbn13s.add(book.getManiaIsbn13());
+                            }
                         }
-                    }
-                    setupManiaViewPager(bookNames, authors, imageUrls, isbn13s);
-                });
+                        setupManiaViewPager(bookNames, authors, imageUrls, isbn13s);
+                    });
+                }
             }
 
             @Override
@@ -551,6 +563,7 @@ public class FragmentBookDetail extends Fragment {
         });
     } // end of getManiaRecBookItems
 
+    // 마니아 ViewPager2
     public void setupManiaViewPager(List<String> bookNames, List<String> authors, List<String> imageUrls, List<String> isbn13s) {
         if (imageUrls == null || imageUrls.isEmpty()) {
             // 이미지 없는 경우 처리
@@ -591,24 +604,28 @@ public class FragmentBookDetail extends Fragment {
         });
     } // end of setupViewPager
 
+    // 다독자
     private void getReaderRecBookItems(List<String> isbn13List) {
         HttpConnection.getInstance(getContext()).getReaderRecBook(isbn13List, new HttpConnection.HttpResponseCallback<List<SearchBookDetail>>() {
             @Override
             public void onSuccess(List<SearchBookDetail> readerBooks) {
-                getActivity().runOnUiThread(() -> {
-                    List<String> bookNames = new ArrayList<>();
-                    List<String> imageUrls = new ArrayList<>();
-                    List<String> isbn13s = new ArrayList<>();
-                    List<String> authors = new ArrayList<>();
+                if (isFragmentActive && getActivity() != null) {
+                    System.out.println("다독자 readerBooks(FragmentBookDetail) : " + readerBooks);
+                    getActivity().runOnUiThread(() -> {
+                        List<String> bookNames = new ArrayList<>();
+                        List<String> imageUrls = new ArrayList<>();
+                        List<String> isbn13s = new ArrayList<>();
+                        List<String> authors = new ArrayList<>();
 
-                    for (SearchBookDetail book : readerBooks) {
-                        bookNames.add(book.getReaderBookName());
-                        authors.add(book.getReaderAuthor());
-                        imageUrls.add(book.getReaderImageUrl());
-                        isbn13s.add(book.getReaderIsbn13());
-                    }
-                    setupReaderViewPager(bookNames, authors, imageUrls, isbn13s);
-                });
+                        for (SearchBookDetail book : readerBooks) {
+                            bookNames.add(book.getReaderBookName());
+                            authors.add(book.getReaderAuthor());
+                            imageUrls.add(book.getReaderImageUrl());
+                            isbn13s.add(book.getReaderIsbn13());
+                        }
+                        setupReaderViewPager(bookNames, authors, imageUrls, isbn13s);
+                    });
+                }
             }
 
             @Override
@@ -618,6 +635,7 @@ public class FragmentBookDetail extends Fragment {
         });
     } // end of getReaderRecBookItems
 
+    // 다독자 ViewPager2
     public void setupReaderViewPager(List<String> bookNames, List<String> authors, List<String> imageUrls, List<String> isbn13s) {
         if (imageUrls == null || imageUrls.isEmpty()) {
             // 이미지 없는 경우 처리

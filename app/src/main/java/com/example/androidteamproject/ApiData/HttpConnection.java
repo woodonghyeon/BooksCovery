@@ -544,8 +544,9 @@ public class HttpConnection {
                                 String authors = book.getString("authors");
                                 String bookImageUrl = book.getString("bookImageURL");
                                 String isbn13 = book.getString("isbn13");
+                                boolean readerTF = true;
 
-                                SearchBookDetail readerBook = new SearchBookDetail(bookName, authors, bookImageUrl, isbn13);
+                                SearchBookDetail readerBook = new SearchBookDetail(bookName, authors, bookImageUrl, isbn13, readerTF);
                                 readerBooks.add(readerBook);
                             }
 
