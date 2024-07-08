@@ -53,11 +53,32 @@ public class DataBase {
         client.newCall(request).enqueue(callback);
     }
 
+    // PUT
+    private void putRequest(String url, Callback callback) {
+        Request request = new Request.Builder()
+                .url(url)
+                .put(RequestBody.create("", JSON))
+                .build();
+
+        client.newCall(request).enqueue(callback);
+    }
+
     // GET
     private void getRequest(String url, Callback callback) {
         Request request = new Request.Builder()
                 .url(url)
                 .get()
+                .build();
+
+        client.newCall(request).enqueue(callback);
+    }
+
+    // DELETE
+    private void deleteRequest(String url, String json, Callback callback) {
+        RequestBody body = RequestBody.create(json, JSON);
+        Request request = new Request.Builder()
+                .url(url)
+                .delete(body)
                 .build();
 
         client.newCall(request).enqueue(callback);
@@ -101,12 +122,7 @@ public class DataBase {
 
     // BookCount Update
     public void updateBookCount(int book_count_id, Callback callback) {
-        Request request = new Request.Builder()
-                .url(BASE_URL + "/book_count/update/" + book_count_id)
-                .put(RequestBody.create("", JSON))
-                .build();
-
-        client.newCall(request).enqueue(callback);
+        putRequest(BASE_URL + "/book_count/update/" + book_count_id, callback);
     }
 
     // BookCount Insert
@@ -120,8 +136,8 @@ public class DataBase {
     }
 
     // 즐겨찾기 확인
-    public void isFavorite(int member_id, int book_id, Callback callback) {
-        getRequest(BASE_URL + "/favorite/" + member_id + "/" + book_id, callback);
+    public void isFavorite(Integer member_id, Integer book_id, Callback callback) {
+        getRequest(BASE_URL + "/favorite?member_id=" + member_id + "&book_id=" + book_id, callback);
     }
 
     // 즐겨찾기 추가
@@ -131,17 +147,13 @@ public class DataBase {
         data.put("book_id", book_id);
 
         String json = gson.toJson(data);
-        postRequest(BASE_URL + "/favorite/add", json, callback);
+        postRequest(BASE_URL + "/favorite/" + book_id, json, callback);
     }
 
     // 즐겨찾기 삭제
     public void removeFavorite(int member_id, int book_id, Callback callback) {
-        Map<String, Integer> data = new HashMap<>();
-        data.put("member_id", member_id);
-        data.put("book_id", book_id);
-
-        String json = gson.toJson(data);
-        postRequest(BASE_URL + "/favorite/remove", json, callback);
+        String json = gson.toJson(new HashMap<>());
+        deleteRequest(BASE_URL + "/favorite/" + book_id, json, callback);
     }
 
     // 학과별 인기도서 데이터 요청
