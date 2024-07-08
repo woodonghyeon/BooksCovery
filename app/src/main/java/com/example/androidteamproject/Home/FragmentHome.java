@@ -318,7 +318,7 @@ public class FragmentHome extends Fragment {
         String getTime = mFormat.format(mDate); // 현재 날짜 가져오기
         Calendar calendar = Calendar.getInstance(); // 1주일 전 날짜 가져오기
         calendar.setTime(mDate);
-        calendar.add(Calendar.DAY_OF_YEAR, -7);
+        calendar.add(Calendar.DAY_OF_MONTH, -7);
 
         String startDt = mFormat.format(calendar.getTime()); // 시작 날짜
         String endDt = getTime; // 종료 날짜
@@ -450,7 +450,7 @@ public class FragmentHome extends Fragment {
         String getTime = mFormat.format(mDate); // 현재 날짜 가져오기
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(mDate);
-        calendar.set(Calendar.DAY_OF_MONTH, 1); // 1일을 의미
+        calendar.set(Calendar.DAY_OF_MONTH, -30); // 1일을 의미
 
         String startDt = mFormat.format(calendar.getTime()); // 시작 날짜
         String endDt = getTime; // 종료 날짜 (예시)
