@@ -464,6 +464,7 @@ public class FragmentBookDetail extends Fragment {
                                     public void onResponse(Call call, Response response) throws IOException {
                                         if (response.isSuccessful()) {
                                             String responseBody = response.body().string();
+                                            Log.d("isFavorite", " responseBody : " + responseBody);
                                             try {
                                                 JSONObject jsonObject = new JSONObject(responseBody);
                                                 boolean isFavorite = jsonObject.getBoolean("isFavorite");
@@ -477,15 +478,15 @@ public class FragmentBookDetail extends Fragment {
                                                                 dataBase.addFavorite(memberId, bookId, new okhttp3.Callback() {
                                                                     @Override
                                                                     public void onFailure(Call call, IOException e) {
-                                                                        Log.e("DataBase", "Error adding favorite", e);
+                                                                        Log.e("Favorite Add", "Error adding favorite", e);
                                                                     }
 
                                                                     @Override
                                                                     public void onResponse(Call call, Response response) throws IOException {
                                                                         if (response.isSuccessful()) {
-                                                                            Log.d("DataBase", "Favorite added successfully");
+                                                                            Log.d("Favorite Add", "Favorite added successfully");
                                                                         } else {
-                                                                            Log.e("DataBase", "Failed to add favorite: " + response.code());
+                                                                            Log.e("Favorite Add", "Failed to add favorite: " + response.code());
                                                                         }
                                                                     }
                                                                 });
@@ -494,15 +495,15 @@ public class FragmentBookDetail extends Fragment {
                                                                 dataBase.removeFavorite(memberId, bookId, new okhttp3.Callback() {
                                                                     @Override
                                                                     public void onFailure(Call call, IOException e) {
-                                                                        Log.e("DataBase", "Error removing favorite", e);
+                                                                        Log.e("Favorite Remove", "Error removing favorite", e);
                                                                     }
 
                                                                     @Override
                                                                     public void onResponse(Call call, Response response) throws IOException {
                                                                         if (response.isSuccessful()) {
-                                                                            Log.d("DataBase", "Favorite removed successfully");
+                                                                            Log.d("Favorite Remove", "Favorite removed successfully");
                                                                         } else {
-                                                                            Log.e("DataBase", "Failed to remove favorite: " + response.code());
+                                                                            Log.e("Favorite Remove", "Failed to remove favorite: " + response.code());
                                                                         }
                                                                     }
                                                                 });
@@ -515,7 +516,7 @@ public class FragmentBookDetail extends Fragment {
                                                 e.printStackTrace();
                                             }
                                         } else {
-                                            Log.e("DataBase", "Failed to check favorite: " + response.code());
+                                            Log.e("Favorite Check", "Failed to check favorite: " + response.code());
                                         }
                                     }
                                 });
@@ -610,7 +611,6 @@ public class FragmentBookDetail extends Fragment {
             @Override
             public void onSuccess(List<SearchBookDetail> readerBooks) {
                 if (isFragmentActive && getActivity() != null) {
-                    System.out.println("다독자 readerBooks(FragmentBookDetail) : " + readerBooks);
                     getActivity().runOnUiThread(() -> {
                         List<String> bookNames = new ArrayList<>();
                         List<String> imageUrls = new ArrayList<>();
