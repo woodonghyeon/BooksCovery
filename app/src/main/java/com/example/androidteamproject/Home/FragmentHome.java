@@ -14,6 +14,7 @@ import android.os.Handler;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
@@ -107,7 +108,10 @@ public class FragmentHome extends Fragment {
                 System.out.println("이미지 URL을 가져오지 못했습니다. 셀렉터나 URL을 확인하세요.");
                 return;
             }
-            getActivity().runOnUiThread(() -> setupCurrentEventViewPager(view, imageUrls));
+            FragmentActivity activity = getActivity();
+            if (activity != null) {
+                activity.runOnUiThread(() -> setupCurrentEventViewPager(view, imageUrls));
+            }
         }).start();
     }
 
