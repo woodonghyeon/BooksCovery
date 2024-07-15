@@ -28,6 +28,7 @@ import okhttp3.Response;
 
 public class DataBase {
     private static final String BASE_URL = "***REMOVED***"; // 서버 URL
+//    private static final String BASE_URL = "***REMOVED***"; // 서버 URL
     private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     private OkHttpClient client;
     private Gson gson;
@@ -136,9 +137,11 @@ public class DataBase {
     }
 
     // 즐겨찾기 확인
-    public void isFavorite(Integer member_id, Integer book_id, Callback callback) {
-        getRequest(BASE_URL + "/favorite?member_id=" + member_id + "&book_id=" + book_id, callback);
+    public void isFavorite(int memberId, int bookId, Callback callback) {
+        String url = BASE_URL + "/favorite?memberId=" + memberId + "&bookId=" + bookId;
+        getRequest(url, callback);
     }
+
 
     // 즐겨찾기 추가
     public void addFavorite(int member_id, int book_id, Callback callback) {
@@ -227,7 +230,7 @@ public class DataBase {
     }
 
     // 로그인 아이디 중복체크
-    public void checkIdDuplicate(String id, Callback callback) { 
+    public void checkIdDuplicate(String id, Callback callback) {
         String url = BASE_URL + "/join/check_id";
         RequestBody formBody = new FormBody.Builder()
                 .add("id", id)
@@ -240,4 +243,10 @@ public class DataBase {
 
         client.newCall(request).enqueue(callback);
     }
+
+    // 세션에서 member_id 가져오기
+    public void getMemberId(Callback callback) {
+        getRequest(BASE_URL + "/session/member_id", callback);
+    }
+
 }

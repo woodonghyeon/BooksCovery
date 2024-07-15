@@ -36,6 +36,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.google.gson.JsonIOException;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -99,7 +100,6 @@ public class FragmentBookDetail extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_book_detail, container, false);
         Context context = getContext();
-        sessionManager = new SessionManager(context);
 
         ImageView bookImageView = view.findViewById(R.id.iv_detail_book_image);
         TextView bookNameTextView = view.findViewById(R.id.tv_detail_book_name);
@@ -142,19 +142,42 @@ public class FragmentBookDetail extends Fragment {
 
         isFragmentActive = true;
 
-        fetchBookDetail(isbn13, bookNameTextView, authorsTextView, descriptionTextView, bookImageView, publisherTextView, publicationYearTextView, isbnTextView, classNoTextView, classNmTextView, loanCntTextView, ageTextView, wordTextView);
+        // 세션에서 memberId를 가져와서 fetchBookDetail 호출
+        dataBase.getMemberId(new okhttp3.Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.e("DataBase", "Error getting member ID", e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String responseBody = response.body().string();
+                    try {
+                        JSONObject jsonObject = new JSONObject(responseBody);
+                        Integer memberId = jsonObject.getInt("member_id");
+
+                        // memberId가져온 후 fetchBookDetail 호출
+                        getActivity().runOnUiThread(() -> {
+                            try {
+                                fetchBookDetail(isbn13, bookNameTextView, authorsTextView, descriptionTextView, bookImageView, publisherTextView, publicationYearTextView, isbnTextView, classNoTextView, classNmTextView, loanCntTextView, ageTextView, wordTextView, memberId);
+                            } catch (JsonIOException e) {
+                                Log.e("FragmentBookDetail", "JSON parsing error", e);
+                            }
+                        });
+                    } catch (JSONException e) {
+                        Log.e("DataBase", "Error parsing member ID", e);
+                    }
+                } else {
+                    Log.e("DataBase", "Failed to get member ID: " + response.code());
+                }
+            }
+        });
 
         return view;
     }
 
-    @Override
-    public void onDestroyView() {
-        isFragmentActive = false;
-        super.onDestroyView();
-    }
-
-    private void fetchBookDetail(String isbn13, TextView bookNameTextView, TextView authorsTextView, TextView descriptionTextView, ImageView bookImageView, TextView publisherTextView, TextView publicationYearTextView, TextView isbnTextView, TextView classNoTextView, TextView classNmTextView, TextView loanCntTextView, TextView ageTextView, TextView wordTextView) {
-        Integer memberId = sessionManager.getMember();
+    private void fetchBookDetail(String isbn13, TextView bookNameTextView, TextView authorsTextView, TextView descriptionTextView, ImageView bookImageView, TextView publisherTextView, TextView publicationYearTextView, TextView isbnTextView, TextView classNoTextView, TextView classNmTextView, TextView loanCntTextView, TextView ageTextView, TextView wordTextView, Integer memberId) {
         Integer departmentId = sessionManager.getDepartmentId();
 
         HttpConnection.getInstance(getContext()).getDetailBook(isbn13, memberId, departmentId, new HttpConnection.HttpResponseCallback<CompositeSearchBookDetail>() {
@@ -329,7 +352,7 @@ public class FragmentBookDetail extends Fragment {
                                             int book_id = jsonObject.getInt("book_id");
 
                                             // 검색 기록 도서pk확인 있으면 삭제하고 추가 없으면 추가
-                                            dataBase.insertHistory(sessionManager.getMember(), book_id, new okhttp3.Callback() {
+                                            dataBase.insertHistory(memberId, book_id, new okhttp3.Callback() {
                                                 @Override
                                                 public void onFailure(Call call, IOException e) {
                                                     Log.e("DataBase", "Error inserting history", e);
@@ -450,10 +473,12 @@ public class FragmentBookDetail extends Fragment {
                         String responseBody = response.body().string();
                         try {
                             JSONObject jsonObject = new JSONObject(responseBody);
+                            Log.d("isFavorite responseBody", responseBody);
                             if (jsonObject.isNull("book_id")) {
                                 Log.e("DataBase", "book_id is null");
                             } else {
                                 int bookId = jsonObject.getInt("book_id");
+                                Log.d("isFavorite book_id", String.valueOf(bookId));
                                 dataBase.isFavorite(memberId, bookId, new okhttp3.Callback() {
                                     @Override
                                     public void onFailure(Call call, IOException e) {
@@ -464,7 +489,6 @@ public class FragmentBookDetail extends Fragment {
                                     public void onResponse(Call call, Response response) throws IOException {
                                         if (response.isSuccessful()) {
                                             String responseBody = response.body().string();
-                                            Log.d("isFavorite", " responseBody : " + responseBody);
                                             try {
                                                 JSONObject jsonObject = new JSONObject(responseBody);
                                                 boolean isFavorite = jsonObject.getBoolean("isFavorite");
@@ -474,7 +498,7 @@ public class FragmentBookDetail extends Fragment {
                                                         toggle_bookmark.setBackgroundResource(isFavorite ? R.drawable.ic_bookmark_on : R.drawable.ic_bookmark_off);
 
                                                         toggle_bookmark.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                                                            if (isChecked) {
+                                                            if (isChecked && !isFavorite) {
                                                                 dataBase.addFavorite(memberId, bookId, new okhttp3.Callback() {
                                                                     @Override
                                                                     public void onFailure(Call call, IOException e) {
@@ -491,7 +515,7 @@ public class FragmentBookDetail extends Fragment {
                                                                     }
                                                                 });
                                                                 toggle_bookmark.setBackgroundResource(R.drawable.ic_bookmark_on);
-                                                            } else {
+                                                            } else if (!isChecked && isFavorite) {
                                                                 dataBase.removeFavorite(memberId, bookId, new okhttp3.Callback() {
                                                                     @Override
                                                                     public void onFailure(Call call, IOException e) {
