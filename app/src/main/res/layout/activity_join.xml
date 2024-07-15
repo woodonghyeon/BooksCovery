@@ -170,6 +170,14 @@
                 android:text="아이디"
                 android:textSize="20sp"
                 android:fontFamily="@font/suitebold"/>
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/bt_idcheck"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="아이디 중복 확인"
+                android:layout_marginEnd="15dp"
+                android:backgroundTint="#80C3F9"
+                android:fontFamily="@font/suitebold"/>
             <EditText
                 android:id="@+id/et_input_id"
                 android:layout_width="0dp"
