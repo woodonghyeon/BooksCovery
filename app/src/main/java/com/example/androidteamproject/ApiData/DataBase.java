@@ -225,4 +225,19 @@ public class DataBase {
 
         client.newCall(request).enqueue(callback);
     }
+
+    // 로그인 아이디 중복체크
+    public void checkIdDuplicate(String id, Callback callback) { 
+        String url = BASE_URL + "/join/check_id";
+        RequestBody formBody = new FormBody.Builder()
+                .add("id", id)
+                .build();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .post(formBody)
+                .build();
+
+        client.newCall(request).enqueue(callback);
+    }
 }

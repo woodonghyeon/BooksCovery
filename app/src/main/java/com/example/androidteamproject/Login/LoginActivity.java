@@ -33,7 +33,6 @@ public class LoginActivity extends Activity {
     ProgressDialog dialog;
     private EditText et_input_id;
     private EditText et_input_pwd;
-    SessionManager sessionManager;
     DataBase dataBase = new DataBase();
 
     @Override

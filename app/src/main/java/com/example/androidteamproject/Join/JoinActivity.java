@@ -23,17 +23,17 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 public class JoinActivity extends AppCompatActivity {
-    Button btJoin;
+    Button btJoin, btIdCheck;
     Spinner spinner_gender, et_input_department;
     String gender = "", department = "";
-    DataBase db;
+    DataBase dataBase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join);
 
-        db = new DataBase();
+        dataBase = new DataBase();
 
         EditText et_input_name = findViewById(R.id.et_input_name);
         spinner_gender = findViewById(R.id.spinner_gender);
@@ -42,8 +42,17 @@ public class JoinActivity extends AppCompatActivity {
         EditText et_input_email = findViewById(R.id.et_input_email);
         EditText et_input_id = findViewById(R.id.et_input_id);
         EditText et_input_pwd = findViewById(R.id.et_input_pwd);
-
         btJoin = findViewById(R.id.btJoin);
+        btIdCheck = findViewById(R.id.bt_idcheck);
+
+        btIdCheck.setOnClickListener(v -> {
+            String enteredId = et_input_id.getText().toString().trim();
+            if (!enteredId.isEmpty()) {
+                checkIdDuplicate(enteredId);
+            } else {
+                Toast.makeText(getApplicationContext(), "아이디를 입력하세요", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         btJoin.setOnClickListener(view -> {
             String name = et_input_name.getText().toString();
@@ -52,27 +61,7 @@ public class JoinActivity extends AppCompatActivity {
             String id = et_input_id.getText().toString();
             String pwd = et_input_pwd.getText().toString();
 
-            db.addMember(name, gender, age, department, id, pwd, email, new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    Log.e("JoinActivity", "Error sending data to server", e);
-                    runOnUiThread(() -> Toast.makeText(getApplicationContext(), "회원가입 실패: 서버와의 통신 오류", Toast.LENGTH_SHORT).show());
-                }
-
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    if (response.isSuccessful()) {
-                        Log.d("JoinActivity", "Data sent successfully");
-                        runOnUiThread(() -> {
-                            Toast.makeText(getApplicationContext(), "회원가입 성공", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(JoinActivity.this, LoginActivity.class));
-                        });
-                    } else {
-                        Log.e("JoinActivity", "Server returned error: " + response.code());
-                        runOnUiThread(() -> Toast.makeText(getApplicationContext(), "회원가입 실패: " + response.message(), Toast.LENGTH_SHORT).show());
-                    }
-                }
-            });
+            addMember(name, gender, age, department, id, pwd, email);
         });
 
         spinner_gender.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -94,6 +83,61 @@ public class JoinActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+    }
+
+    private void checkIdDuplicate(String id) {
+        dataBase.checkIdDuplicate(id, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.e("JoinActivity", "Error checking ID", e);
+                runOnUiThread(() -> Toast.makeText(getApplicationContext(), "아이디 중복 체크 실패: 서버와의 통신 오류", Toast.LENGTH_SHORT).show());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                runOnUiThread(() -> {
+                    try {
+                        if (response.isSuccessful()) {
+                            String responseBody = response.body().string();
+                            if (responseBody.contains("회원가입 가능한 아이디입니다.")) {
+                                Toast.makeText(getApplicationContext(), "사용 가능한 아이디입니다", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getApplicationContext(), "이미 사용 중인 아이디입니다", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(getApplicationContext(), "아이디 중복 체크 실패: " + response.message(), Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (IOException e) {
+                        Log.e("JoinActivity", "Error processing response", e);
+                        Toast.makeText(getApplicationContext(), "아이디 중복 체크 실패: 응답 처리 오류", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+    }
+
+    private void addMember(String name, String gender, String age, String department_id, String id, String password, String email) {
+        dataBase.addMember(name, gender, age, department_id, id, password, email, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.e("JoinActivity", "Error sending data to server", e);
+                runOnUiThread(() -> Toast.makeText(getApplicationContext(), "회원가입 실패: 서버와의 통신 오류", Toast.LENGTH_SHORT).show());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    Log.d("JoinActivity", "Data sent successfully");
+                    runOnUiThread(() -> {
+                        Toast.makeText(getApplicationContext(), "회원가입 성공", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(JoinActivity.this, LoginActivity.class));
+                    });
+                } else {
+                    Log.e("JoinActivity", "Server returned error: " + response.code());
+                    runOnUiThread(() -> Toast.makeText(getApplicationContext(), "회원가입 실패: " + response.message(), Toast.LENGTH_SHORT).show());
+                }
             }
         });
     }
