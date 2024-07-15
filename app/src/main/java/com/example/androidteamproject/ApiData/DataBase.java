@@ -244,6 +244,17 @@ public class DataBase {
         client.newCall(request).enqueue(callback);
     }
 
+    // 로그아웃 요청
+    public void logout(Callback callback) {
+        String url = BASE_URL + "/logout";
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .build();
+
+        client.newCall(request).enqueue(callback);
+    }
+
     // 세션에서 member_id 가져오기
     public void getMemberId(Callback callback) {
         getRequest(BASE_URL + "/session/member_id", callback);
