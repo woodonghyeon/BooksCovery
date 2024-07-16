@@ -209,7 +209,13 @@ public class FragmentSetting extends Fragment {
     }
 
     private void fetchMemberInfo() {
+        EditText et_input_password = passwordDialog.findViewById(R.id.et_input_password);
+
         int memberId = sessionManager.getMemberId();
+        pwd = String.valueOf(et_input_password.getText());
+        Log.d("fetchMemberInfo", String.valueOf(memberId));
+        Log.d("fetchMemberInfo", pwd);
+
         dataBase.getModify(memberId, pwd, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
