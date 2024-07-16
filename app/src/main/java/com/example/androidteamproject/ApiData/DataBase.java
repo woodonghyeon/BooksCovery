@@ -263,7 +263,7 @@ public class DataBase {
 
     // 세션에서 회원 정보 수정 데이터 가져오기
     public void getModify(Integer member_id, String password, Callback callback) {
-        String url = BASE_URL + "/join/m/modify" + "?member_id" + member_id + "&password" + password;
+        String url = BASE_URL + "/join/m/modify?member_id=" + member_id + "&password=" + password;
         Request request = new Request.Builder().url(url).build();
         client.newCall(request).enqueue(callback);
     }
