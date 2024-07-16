@@ -2,6 +2,7 @@ package com.example.androidteamproject.ApiData;
 
 import android.util.Log;
 
+import com.example.androidteamproject.R;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -213,12 +214,10 @@ public class DataBase {
 
     // 로그인
     public void login(String id, String password, Callback callback) {
-        String url = BASE_URL + "/login";
+        String url = BASE_URL + "/m/login";
         RequestBody formBody = new FormBody.Builder()
                 .add("id", id)
                 .add("password", password)
-                .add("toURL", "")
-                .add("rememberId", "false")
                 .build();
 
         Request request = new Request.Builder()
@@ -257,7 +256,16 @@ public class DataBase {
 
     // 세션에서 member_id 가져오기
     public void getMemberId(Callback callback) {
-        getRequest(BASE_URL + "/session/member_id", callback);
+        String url = BASE_URL + "/session/member_id";
+        Request request = new Request.Builder().url(url).build();
+        client.newCall(request).enqueue(callback);
+    }
+
+    // 세션에서 회원 정보 수정 데이터 가져오기
+    public void getModify(Integer member_id, String password, Callback callback) {
+        String url = BASE_URL + "/join/m/modify" + "?member_id" + member_id + "&password" + password;
+        Request request = new Request.Builder().url(url).build();
+        client.newCall(request).enqueue(callback);
     }
 
 }

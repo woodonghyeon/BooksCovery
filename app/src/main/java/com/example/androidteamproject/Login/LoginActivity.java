@@ -3,10 +3,8 @@ package com.example.androidteamproject.Login;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -33,6 +31,7 @@ public class LoginActivity extends Activity {
     ProgressDialog dialog;
     private EditText et_input_id;
     private EditText et_input_pwd;
+    SessionManager sessionManager;
     DataBase dataBase = new DataBase();
 
     @Override
@@ -49,6 +48,8 @@ public class LoginActivity extends Activity {
 
         et_input_id = findViewById(R.id.et_input_id);
         et_input_pwd = findViewById(R.id.et_input_pwd);
+
+        sessionManager = new SessionManager(getApplicationContext());
 
         bt_login.setOnClickListener(view -> {
             showProgressDialog();
@@ -67,20 +68,38 @@ public class LoginActivity extends Activity {
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
-                    runOnUiThread(() -> {
-                        if (dialog != null && dialog.isShowing()) {
-                            dialog.dismiss();
-                        }
-                    });
                     if (response.isSuccessful()) {
+                        String responseBodyString = response.body().string(); // 네트워크 작업
                         runOnUiThread(() -> {
-                            Toast.makeText(getApplicationContext(), "로그인 성공", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                            startActivity(intent);
-                            finish();
+                            if (dialog != null && dialog.isShowing()) {
+                                dialog.dismiss();
+                            }
+                            try {
+                                JSONObject responseBody = new JSONObject(responseBodyString);
+                                System.out.println("responseBody = " + responseBody);
+
+                                int member_id = responseBody.getInt("member_id");
+                                int department_id = responseBody.getInt("department_id");
+                                String name = responseBody.getString("name");
+                                String id = responseBody.getString("id");
+
+                                sessionManager.createLoginSession(member_id, name, department_id, id);
+
+                                Toast.makeText(getApplicationContext(), "로그인 성공", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                                startActivity(intent);
+                                finish();
+                            } catch (JSONException e) {
+                                throw new RuntimeException(e);
+                            }
                         });
                     } else {
-                        runOnUiThread(() -> Toast.makeText(getApplicationContext(), "로그인 실패: " + response.message(), Toast.LENGTH_SHORT).show());
+                        runOnUiThread(() -> {
+                            if (dialog != null && dialog.isShowing()) {
+                                dialog.dismiss();
+                            }
+                            Toast.makeText(getApplicationContext(), "로그인 실패: " + response.message(), Toast.LENGTH_SHORT).show();
+                        });
                     }
                 }
             });

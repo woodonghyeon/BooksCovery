@@ -153,9 +153,11 @@ public class FragmentBookDetail extends Fragment {
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
                     String responseBody = response.body().string();
+                    Log.e("DataBase responseBody", responseBody);
                     try {
                         JSONObject jsonObject = new JSONObject(responseBody);
                         Integer memberId = jsonObject.getInt("member_id");
+                        Log.e("DataBase memberId", String.valueOf(memberId));
 
                         // memberId가져온 후 fetchBookDetail 호출
                         getActivity().runOnUiThread(() -> {
@@ -186,6 +188,7 @@ public class FragmentBookDetail extends Fragment {
                 if (isFragmentActive && getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
                         SearchBookDetail bookDetail = responseData.getBookDetail();
+                        System.out.println("fetchBookDetail memberId " + memberId);
                         // 로그 추가하여 데이터 확인
                         System.out.println("Book Detail: " + bookDetail.toString());
 
