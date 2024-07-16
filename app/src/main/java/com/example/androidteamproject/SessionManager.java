@@ -44,6 +44,7 @@ public class SessionManager {
         editor.putInt(KEY_AGE, age);
         editor.putInt(KEY_DEPARTMENT_ID, departmentId);
         editor.putString(KEY_EMAIL, email);
+        editor.commit(); // 누락된 commit() 추가
     }
 
     public boolean isLoggedIn() {
@@ -66,8 +67,8 @@ public class SessionManager {
         return pref.getString(KEY_ID, null);
     }
 
-    public String getAge() {
-        return pref.getString(KEY_AGE, null);
+    public int getAge() {
+        return pref.getInt(KEY_AGE, 0); // 수정: int로 반환
     }
 
     public String getEmail() {

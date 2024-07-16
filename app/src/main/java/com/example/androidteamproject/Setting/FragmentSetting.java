@@ -268,7 +268,7 @@ public class FragmentSetting extends Fragment {
         Button bt_modify_dialog = updateDialog.findViewById(R.id.bt_modify_dialog);
 
         et_input_name.setText(sessionManager.getName());
-        et_input_age.setText(String.valueOf(sessionManager.getAge()));
+        et_input_age.setText(String.valueOf(sessionManager.getAge())); // 수정된 부분
         et_input_email.setText(sessionManager.getEmail());
 
         ArrayAdapter<CharSequence> genderAdapter = ArrayAdapter.createFromResource(getContext(),
