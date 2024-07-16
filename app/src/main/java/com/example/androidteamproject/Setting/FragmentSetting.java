@@ -1,3 +1,4 @@
+// FragmentSetting.java
 package com.example.androidteamproject.Setting;
 
 import android.app.Dialog;
@@ -26,6 +27,9 @@ import com.example.androidteamproject.Login.LoginActivity;
 import com.example.androidteamproject.R;
 import com.example.androidteamproject.SessionManager;
 import com.example.androidteamproject.ThemeUtil;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -154,7 +158,8 @@ public class FragmentSetting extends Fragment {
                     showPasswordDialog(new Runnable() {
                         @Override
                         public void run() {
-                            showUpdateDialog();
+                            // 비밀번호 확인 후 서버에서 회원 정보 가져오기
+                            fetchMemberInfo();
                         }
                     });
                 }
@@ -189,8 +194,6 @@ public class FragmentSetting extends Fragment {
             @Override
             public void onClick(View v) {
                 pwd = String.valueOf(et_input_password.getText());
-                // 비밀번호 확인 로직을 서버로 옮기는 작업이 필요함
-                // 아래는 비밀번호 확인 후 onSuccess.run()을 실행하는 코드 예시입니다.
                 onSuccess.run();
                 passwordDialog.dismiss();
             }
@@ -203,6 +206,47 @@ public class FragmentSetting extends Fragment {
             float heightInPx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, heightInDp, getResources().getDisplayMetrics());
             window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, (int) heightInPx);
         }
+    }
+
+    private void fetchMemberInfo() {
+        int memberId = sessionManager.getMemberId();
+        dataBase.getModify(memberId, pwd, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.e("FragmentSetting", "Error fetching member info", e);
+                getActivity().runOnUiThread(() ->
+                        Toast.makeText(getActivity(), "서버와의 통신 오류", Toast.LENGTH_SHORT).show());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response.body().string());
+                        int member_id = jsonResponse.getInt("member_id");
+                        String name = jsonResponse.getString("name");
+                        String gender = jsonResponse.getString("gender");
+                        int age = jsonResponse.getInt("age");
+                        int departmentId = jsonResponse.getInt("department_id");
+                        String email = jsonResponse.getString("email");
+
+                        // SessionManager에 저장
+                        sessionManager.settingSession(member_id, name, gender, age, departmentId, email);
+
+                        getActivity().runOnUiThread(() -> showUpdateDialog());
+
+                    } catch (JSONException e) {
+                        Log.e("FragmentSetting", "JSON parsing error", e);
+                        getActivity().runOnUiThread(() ->
+                                Toast.makeText(getActivity(), "데이터 처리 오류", Toast.LENGTH_SHORT).show());
+                    }
+                } else {
+                    Log.e("FragmentSetting", "Server returned error: " + response.code());
+                    getActivity().runOnUiThread(() ->
+                            Toast.makeText(getActivity(), "비밀번호가 맞지 않습니다.", Toast.LENGTH_SHORT).show());
+                }
+            }
+        });
     }
 
     private void showUpdateDialog() {
