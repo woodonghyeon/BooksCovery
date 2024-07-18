@@ -51,7 +51,7 @@ public class FragmentSetting extends Fragment {
     // 회원 정보 수정에 필요한 것
     private SessionManager sessionManager;
     private String gender = "", department = "", pwd = null;
-    private Spinner spinner_gender, et_input_department;
+    private Spinner spinner_gender, spinner_department;
     private DataBase dataBase; // 데이터베이스 객체 추가
 
     public FragmentSetting() {
@@ -262,7 +262,7 @@ public class FragmentSetting extends Fragment {
         EditText et_input_name = updateDialog.findViewById(R.id.et_input_name);
         spinner_gender = updateDialog.findViewById(R.id.spinner_gender);
         EditText et_input_age = updateDialog.findViewById(R.id.et_input_age);
-        et_input_department = updateDialog.findViewById(R.id.spinner_department);
+        spinner_department = updateDialog.findViewById(R.id.spinner_department);
         EditText et_input_email = updateDialog.findViewById(R.id.et_input_email);
         EditText et_input_pwd = updateDialog.findViewById(R.id.et_input_pwd);
         Button bt_modify_dialog = updateDialog.findViewById(R.id.bt_modify_dialog);
@@ -279,7 +279,7 @@ public class FragmentSetting extends Fragment {
         ArrayAdapter<CharSequence> departmentAdapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.department_array, android.R.layout.simple_spinner_item);
         departmentAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        et_input_department.setAdapter(departmentAdapter);
+        spinner_department.setAdapter(departmentAdapter);
 
         String savedGender = sessionManager.getGender();
         if (savedGender != null) {
@@ -289,14 +289,40 @@ public class FragmentSetting extends Fragment {
 
         int savedDepartment = sessionManager.getDepartmentId();
         if (savedDepartment > 0) {
-            et_input_department.setSelection(savedDepartment - 1);
+            spinner_department.setSelection(savedDepartment - 1);
         }
 
         bt_modify_dialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 서버로 수정 요청을 보내는 로직 추가 필요
-                updateDialog.dismiss();
+                String name = et_input_name.getText().toString();
+                String age = et_input_age.getText().toString();
+                String email = et_input_email.getText().toString();
+                String password = et_input_pwd.getText().toString();
+                int department_id = Integer.parseInt(department); // department를 int로 변환
+
+                dataBase.modifyMember(name, gender, age, department_id, userid, password, email, new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Log.e("FragmentSetting", "Error modifying member info", e);
+                        getActivity().runOnUiThread(() ->
+                                Toast.makeText(getActivity(), "서버와의 통신 오류", Toast.LENGTH_SHORT).show());
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        if (response.isSuccessful()) {
+                            getActivity().runOnUiThread(() -> {
+                                Toast.makeText(getActivity(), "회원 정보가 수정되었습니다.", Toast.LENGTH_SHORT).show();
+                                updateDialog.dismiss();
+                            });
+                        } else {
+                            Log.e("FragmentSetting", "Server returned error: " + response.code());
+                            getActivity().runOnUiThread(() ->
+                                    Toast.makeText(getActivity(), "회원 정보 수정 실패: " + response.message(), Toast.LENGTH_SHORT).show());
+                        }
+                    }
+                });
             }
         });
 
@@ -311,7 +337,7 @@ public class FragmentSetting extends Fragment {
             }
         });
 
-        et_input_department.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinner_department.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 department = String.valueOf(id + 1);
