@@ -28,7 +28,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class DataBase {
-    private static final String BASE_URL = "***REMOVED***"; // 서버 URL
+    private static final String BASE_URL = "***REMOVED***"; // 로컬
 //    private static final String BASE_URL = "***REMOVED***"; // 서버 URL
     private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     private OkHttpClient client;
@@ -56,10 +56,11 @@ public class DataBase {
     }
 
     // PUT
-    private void putRequest(String url, Callback callback) {
+    private void putRequest(String url, String json, Callback callback) {
+        RequestBody body = RequestBody.create(json, JSON);
         Request request = new Request.Builder()
                 .url(url)
-                .put(RequestBody.create("", JSON))
+                .put(body)
                 .build();
 
         client.newCall(request).enqueue(callback);
@@ -122,9 +123,15 @@ public class DataBase {
         getRequest(BASE_URL + "/book_count/" + book_id + "/" + department_id, callback);
     }
 
-    // BookCount Update
+//    public void updateBookCount(int book_count_id, Callback callback) {
+//        putRequest(BASE_URL + "/book_count/update/" + book_count_id, callback);
+//    }
+    // 바꿨음 확인부탁 - 민욱
+// BookCount Update
     public void updateBookCount(int book_count_id, Callback callback) {
-        putRequest(BASE_URL + "/book_count/update/" + book_count_id, callback);
+        // 빈 JSON 객체를 생성
+        String json = "{}";
+        putRequest(BASE_URL + "/book_count/update/" + book_count_id, json, callback);
     }
 
     // BookCount Insert
@@ -266,6 +273,21 @@ public class DataBase {
         String url = BASE_URL + "/join/m/modify?member_id=" + member_id + "&password=" + password;
         Request request = new Request.Builder().url(url).build();
         client.newCall(request).enqueue(callback);
+    }
+
+    // 회원 정보 수정 요청
+    public void modifyMember(String name, String gender, String age, int department_id, String id, String password, String email, Callback callback) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("name", name);
+        data.put("gender", gender);
+        data.put("age", age);
+        data.put("department_id", department_id);
+        data.put("id", id);
+        data.put("password", password);
+        data.put("email", email);
+
+        String json = gson.toJson(data);
+        putRequest(BASE_URL + "/join/modify", json, callback);
     }
 
 }
