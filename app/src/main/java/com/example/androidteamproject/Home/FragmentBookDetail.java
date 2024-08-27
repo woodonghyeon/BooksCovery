@@ -100,6 +100,7 @@ public class FragmentBookDetail extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_book_detail, container, false);
         Context context = getContext();
+        sessionManager = new SessionManager(context);
 
         ImageView bookImageView = view.findViewById(R.id.iv_detail_book_image);
         TextView bookNameTextView = view.findViewById(R.id.tv_detail_book_name);
@@ -143,38 +144,22 @@ public class FragmentBookDetail extends Fragment {
         isFragmentActive = true;
 
         // 세션에서 memberId를 가져와서 fetchBookDetail 호출
-        dataBase.getMemberId(new okhttp3.Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Log.e("DataBase", "Error getting member ID", e);
-            }
+        int memberId = sessionManager.getMemberId();
+        if (memberId != 0) {
+            Log.e("DataBase memberId", String.valueOf(memberId));
 
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    String responseBody = response.body().string();
-                    Log.e("DataBase responseBody", responseBody);
-                    try {
-                        JSONObject jsonObject = new JSONObject(responseBody);
-                        Integer memberId = jsonObject.getInt("member_id");
-                        Log.e("DataBase memberId", String.valueOf(memberId));
-
-                        // memberId가져온 후 fetchBookDetail 호출
-                        getActivity().runOnUiThread(() -> {
-                            try {
-                                fetchBookDetail(isbn13, bookNameTextView, authorsTextView, descriptionTextView, bookImageView, publisherTextView, publicationYearTextView, isbnTextView, classNoTextView, classNmTextView, loanCntTextView, ageTextView, wordTextView, memberId);
-                            } catch (JsonIOException e) {
-                                Log.e("FragmentBookDetail", "JSON parsing error", e);
-                            }
-                        });
-                    } catch (JSONException e) {
-                        Log.e("DataBase", "Error parsing member ID", e);
-                    }
-                } else {
-                    Log.e("DataBase", "Failed to get member ID: " + response.code());
+            // memberId가져온 후 fetchBookDetail 호출
+            getActivity().runOnUiThread(() -> {
+                try {
+                    fetchBookDetail(isbn13, bookNameTextView, authorsTextView, descriptionTextView, bookImageView, publisherTextView, publicationYearTextView, isbnTextView, classNoTextView, classNmTextView, loanCntTextView, ageTextView, wordTextView, memberId);
+                } catch (JsonIOException e) {
+                    Log.e("FragmentBookDetail", "JSON parsing error", e);
                 }
-            }
-        });
+            });
+        } else {
+            Log.e("DataBase", "Member ID not found");
+        }
+
 
         return view;
     }
