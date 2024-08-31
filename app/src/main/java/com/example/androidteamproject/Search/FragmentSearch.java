@@ -12,6 +12,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.os.Handler;
+import android.widget.Toast;
+
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -165,16 +167,14 @@ public class FragmentSearch extends Fragment {
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
                         try {
-                            JSONObject json = new JSONObject(responseData.toString());
-                            JSONObject responseObject = json.getJSONObject("response");
-                            JSONArray keywordsArray = responseObject.getJSONArray("keywords");
+                            // 수정된 부분: JSONArray로 변환
+                            JSONArray jsonArray = new JSONArray(responseData.toString());
                             keywords = new ArrayList<>();
 
                             // API 응답에서 키워드를 추출하여 리스트에 추가
-                            for (int i = 0; i < keywordsArray.length(); i++) {
-                                JSONObject keywordObject = keywordsArray.getJSONObject(i);
-                                JSONObject keyword = keywordObject.getJSONObject("keyword");
-                                String word = keyword.getString("word");
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject keywordObject = jsonArray.getJSONObject(i);
+                                String word = keywordObject.getString("word");
                                 keywords.add(word);
                             }
 
@@ -184,7 +184,9 @@ public class FragmentSearch extends Fragment {
                             // 키워드를 사용하여 칩 추가
                             addChips();
                         } catch (JSONException e) {
+                            // JSON 파싱 중 예외가 발생할 경우 처리
                             e.printStackTrace();
+                            showError("데이터를 불러오는 중 오류가 발생했습니다. 다시 시도해주세요.");
                         }
                     });
                 }
@@ -194,11 +196,20 @@ public class FragmentSearch extends Fragment {
             public void onFailure(Exception e) {
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
-                        // 에러 처리 로직 추가
+                        // 네트워크 요청 실패 시 처리 로직 추가
+                        e.printStackTrace();
+                        showError("네트워크 오류가 발생했습니다. 인터넷 연결을 확인하고 다시 시도해주세요.");
                     });
                 }
             }
         });
+    }
+
+    // 사용자에게 오류 메시지를 표시하는 메서드
+    private void showError(String message) {
+        if (getContext() != null) {
+            Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+        }
     }
 
     // 키워드를 사용하여 칩을 추가하는 메서드
