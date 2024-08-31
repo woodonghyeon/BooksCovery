@@ -2,6 +2,7 @@ package com.example.androidteamproject;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 public class SessionManager {
 
@@ -9,11 +10,11 @@ public class SessionManager {
     private static final String IS_LOGIN = "IsLoggedIn";
     private static final String KEY_MEMBER_ID = "MemberId";
     private static final String KEY_NAME = "Name";
-    private static String KEY_GENDER = "Gender";
-    private static String KEY_AGE = "Age";
-    private static String KEY_DEPARTMENT_ID = "DepartmentId";
+    private static final String KEY_GENDER = "Gender";
+    private static final String KEY_AGE = "Age";
+    private static final String KEY_DEPARTMENT_ID = "DepartmentId";
     private static final String KEY_ID = "Id";
-    private static String KEY_EMAIL = "Email";
+    private static final String KEY_EMAIL = "Email";
 
     SharedPreferences pref;
     SharedPreferences.Editor editor;
@@ -34,6 +35,7 @@ public class SessionManager {
         editor.putInt(KEY_DEPARTMENT_ID, department_id);
         editor.putString(KEY_ID, id);
         editor.commit();
+        Log.d("SessionManager", "Login session created with member_id: " + member_id + ", department_id: " + department_id);
     }
 
     public void settingSession(int member_id, String name, String gender, int age, int departmentId, String email) {
@@ -44,7 +46,8 @@ public class SessionManager {
         editor.putInt(KEY_AGE, age);
         editor.putInt(KEY_DEPARTMENT_ID, departmentId);
         editor.putString(KEY_EMAIL, email);
-        editor.commit(); // 누락된 commit() 추가
+        editor.commit();
+        Log.d("SessionManager", "Session set with member_id: " + member_id + ", department_id: " + departmentId);
     }
 
     public boolean isLoggedIn() {
@@ -52,7 +55,9 @@ public class SessionManager {
     }
 
     public int getMemberId() {
-        return pref.getInt(KEY_MEMBER_ID, 0);
+        int memberId = pref.getInt(KEY_MEMBER_ID, 0);
+        Log.d("SessionManager", "Retrieved member_id: " + memberId);
+        return memberId;
     }
 
     public String getName() {
@@ -68,7 +73,7 @@ public class SessionManager {
     }
 
     public int getAge() {
-        return pref.getInt(KEY_AGE, 0); // 수정: int로 반환
+        return pref.getInt(KEY_AGE, 0);
     }
 
     public String getEmail() {
@@ -82,5 +87,7 @@ public class SessionManager {
     public void clearSession() {
         editor.clear();
         editor.commit();
+        Log.d("SessionManager", "Session cleared");
     }
 }
+

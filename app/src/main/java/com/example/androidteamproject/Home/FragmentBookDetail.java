@@ -40,6 +40,7 @@ import com.google.gson.JsonIOException;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -159,7 +160,6 @@ public class FragmentBookDetail extends Fragment {
         } else {
             Log.e("DataBase", "Member ID not found");
         }
-
 
         return view;
     }
@@ -332,87 +332,92 @@ public class FragmentBookDetail extends Fragment {
                                 if (response.isSuccessful()) {
                                     String responseBody = response.body().string();
                                     try {
-                                        JSONObject jsonObject = new JSONObject(responseBody);
-                                        // book_id가 null인지 확인
-                                        if (jsonObject.isNull("book_id")) {
-                                            Log.e("DataBase", "book_id is null");
+                                        if (responseBody.trim().startsWith("[")) {
+                                            // Empty or array response
+                                            handleEmptyBookIdResponse();
                                         } else {
-                                            int book_id = jsonObject.getInt("book_id");
+                                            JSONObject jsonObject = new JSONObject(responseBody);
+                                            // book_id가 null인지 확인
+                                            if (jsonObject.isNull("book_id")) {
+                                                Log.e("DataBase", "book_id is null");
+                                            } else {
+                                                int book_id = jsonObject.getInt("book_id");
 
-                                            // 검색 기록 도서pk확인 있으면 삭제하고 추가 없으면 추가
-                                            dataBase.insertHistory(memberId, book_id, new okhttp3.Callback() {
-                                                @Override
-                                                public void onFailure(Call call, IOException e) {
-                                                    Log.e("DataBase", "Error inserting history", e);
-                                                }
-
-                                                @Override
-                                                public void onResponse(Call call, Response response) throws IOException {
-                                                    if (response.isSuccessful()) {
-                                                        Log.d("DataBase", "History inserted successfully");
-                                                    } else {
-                                                        Log.e("DataBase", "Failed to insert history: " + response.code());
+                                                // 검색 기록 도서pk확인 있으면 삭제하고 추가 없으면 추가
+                                                dataBase.insertHistory(memberId, book_id, new okhttp3.Callback() {
+                                                    @Override
+                                                    public void onFailure(Call call, IOException e) {
+                                                        Log.e("DataBase", "Error inserting history", e);
                                                     }
-                                                }
-                                            });
 
-                                            // 학과별 검색횟수 있으면 업데이트 없으면 추가
-                                            dataBase.findBookCount(book_id, sessionManager.getDepartmentId(), new okhttp3.Callback() {
-                                                @Override
-                                                public void onFailure(Call call, IOException e) {
-                                                    Log.e("DataBase", "Error finding book count", e);
-                                                }
-
-                                                @Override
-                                                public void onResponse(Call call, Response response) throws IOException {
-                                                    if (response.isSuccessful()) {
-                                                        String responseBody = response.body().string();
-                                                        try {
-                                                            JSONObject jsonObject = new JSONObject(responseBody);
-                                                            int book_count_id = jsonObject.getInt("book_count_id");
-                                                            Log.e("check", "book_count_id" + book_count_id);
-
-                                                            if (book_count_id != 0) {
-                                                                dataBase.updateBookCount(book_count_id, new okhttp3.Callback() {
-                                                                    @Override
-                                                                    public void onFailure(Call call, IOException e) {
-                                                                        Log.e("DataBase", "Error updating book count", e);
-                                                                    }
-
-                                                                    @Override
-                                                                    public void onResponse(Call call, Response response) throws IOException {
-                                                                        if (response.isSuccessful()) {
-                                                                            Log.d("DataBase", "Book count updated successfully");
-                                                                        } else {
-                                                                            Log.e("DataBase", "Failed to update book count: " + response.code());
-                                                                        }
-                                                                    }
-                                                                });
-                                                            } else {
-                                                                dataBase.insertBookCount(sessionManager.getDepartmentId(), book_id, new okhttp3.Callback() {
-                                                                    @Override
-                                                                    public void onFailure(Call call, IOException e) {
-                                                                        Log.e("DataBase", "Error inserting book count", e);
-                                                                    }
-
-                                                                    @Override
-                                                                    public void onResponse(Call call, Response response) throws IOException {
-                                                                        if (response.isSuccessful()) {
-                                                                            Log.d("DataBase", "Book count inserted successfully");
-                                                                        } else {
-                                                                            Log.e("DataBase", "Failed to insert book count: " + response.code());
-                                                                        }
-                                                                    }
-                                                                });
-                                                            }
-                                                        } catch (JSONException e) {
-                                                            e.printStackTrace();
+                                                    @Override
+                                                    public void onResponse(Call call, Response response) throws IOException {
+                                                        if (response.isSuccessful()) {
+                                                            Log.d("DataBase", "History inserted successfully");
+                                                        } else {
+                                                            Log.e("DataBase", "Failed to insert history: " + response.code());
                                                         }
-                                                    } else {
-                                                        Log.e("DataBase", "Failed to find book count: " + response.code());
                                                     }
-                                                }
-                                            });
+                                                });
+
+                                                // 학과별 검색횟수 있으면 업데이트 없으면 추가
+                                                dataBase.findBookCount(book_id, sessionManager.getDepartmentId(), new okhttp3.Callback() {
+                                                    @Override
+                                                    public void onFailure(Call call, IOException e) {
+                                                        Log.e("DataBase", "Error finding book count", e);
+                                                    }
+
+                                                    @Override
+                                                    public void onResponse(Call call, Response response) throws IOException {
+                                                        if (response.isSuccessful()) {
+                                                            String responseBody = response.body().string();
+                                                            try {
+                                                                JSONObject jsonObject = new JSONObject(responseBody);
+                                                                int book_count_id = jsonObject.getInt("book_count_id");
+                                                                Log.e("check", "book_count_id" + book_count_id);
+
+                                                                if (book_count_id != 0) {
+                                                                    dataBase.updateBookCount(book_count_id, new okhttp3.Callback() {
+                                                                        @Override
+                                                                        public void onFailure(Call call, IOException e) {
+                                                                            Log.e("DataBase", "Error updating book count", e);
+                                                                        }
+
+                                                                        @Override
+                                                                        public void onResponse(Call call, Response response) throws IOException {
+                                                                            if (response.isSuccessful()) {
+                                                                                Log.d("DataBase", "Book count updated successfully");
+                                                                            } else {
+                                                                                Log.e("DataBase", "Failed to update book count: " + response.code());
+                                                                            }
+                                                                        }
+                                                                    });
+                                                                } else {
+                                                                    dataBase.insertBookCount(sessionManager.getDepartmentId(), book_id, new okhttp3.Callback() {
+                                                                        @Override
+                                                                        public void onFailure(Call call, IOException e) {
+                                                                            Log.e("DataBase", "Error inserting book count", e);
+                                                                        }
+
+                                                                        @Override
+                                                                        public void onResponse(Call call, Response response) throws IOException {
+                                                                            if (response.isSuccessful()) {
+                                                                                Log.d("DataBase", "Book count inserted successfully");
+                                                                            } else {
+                                                                                Log.e("DataBase", "Failed to insert book count: " + response.code());
+                                                                            }
+                                                                        }
+                                                                    });
+                                                                }
+                                                            } catch (JSONException e) {
+                                                                e.printStackTrace();
+                                                            }
+                                                        } else {
+                                                            Log.e("DataBase", "Failed to find book count: " + response.code());
+                                                        }
+                                                    }
+                                                });
+                                            }
                                         }
                                     } catch (JSONException e) {
                                         e.printStackTrace();
@@ -460,78 +465,86 @@ public class FragmentBookDetail extends Fragment {
                     if (response.isSuccessful()) {
                         String responseBody = response.body().string();
                         try {
-                            JSONObject jsonObject = new JSONObject(responseBody);
-                            Log.d("isFavorite responseBody", responseBody);
-                            if (jsonObject.isNull("book_id")) {
-                                Log.e("DataBase", "book_id is null");
-                            } else {
-                                int bookId = jsonObject.getInt("book_id");
-                                Log.d("isFavorite book_id", String.valueOf(bookId));
-                                dataBase.isFavorite(memberId, bookId, new okhttp3.Callback() {
-                                    @Override
-                                    public void onFailure(Call call, IOException e) {
-                                        Log.e("DataBase", "Error checking favorite", e);
-                                    }
-
-                                    @Override
-                                    public void onResponse(Call call, Response response) throws IOException {
-                                        if (response.isSuccessful()) {
-                                            String responseBody = response.body().string();
-                                            try {
-                                                JSONObject jsonObject = new JSONObject(responseBody);
-                                                boolean isFavorite = jsonObject.getBoolean("isFavorite");
-                                                if (isFragmentActive && getActivity() != null) {
-                                                    getActivity().runOnUiThread(() -> {
-                                                        toggle_bookmark.setChecked(isFavorite);
-                                                        toggle_bookmark.setBackgroundResource(isFavorite ? R.drawable.ic_bookmark_on : R.drawable.ic_bookmark_off);
-
-                                                        toggle_bookmark.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                                                            if (isChecked && !isFavorite) {
-                                                                dataBase.addFavorite(memberId, bookId, new okhttp3.Callback() {
-                                                                    @Override
-                                                                    public void onFailure(Call call, IOException e) {
-                                                                        Log.e("Favorite Add", "Error adding favorite", e);
-                                                                    }
-
-                                                                    @Override
-                                                                    public void onResponse(Call call, Response response) throws IOException {
-                                                                        if (response.isSuccessful()) {
-                                                                            Log.d("Favorite Add", "Favorite added successfully");
-                                                                        } else {
-                                                                            Log.e("Favorite Add", "Failed to add favorite: " + response.code());
-                                                                        }
-                                                                    }
-                                                                });
-                                                                toggle_bookmark.setBackgroundResource(R.drawable.ic_bookmark_on);
-                                                            } else if (!isChecked && isFavorite) {
-                                                                dataBase.removeFavorite(memberId, bookId, new okhttp3.Callback() {
-                                                                    @Override
-                                                                    public void onFailure(Call call, IOException e) {
-                                                                        Log.e("Favorite Remove", "Error removing favorite", e);
-                                                                    }
-
-                                                                    @Override
-                                                                    public void onResponse(Call call, Response response) throws IOException {
-                                                                        if (response.isSuccessful()) {
-                                                                            Log.d("Favorite Remove", "Favorite removed successfully");
-                                                                        } else {
-                                                                            Log.e("Favorite Remove", "Failed to remove favorite: " + response.code());
-                                                                        }
-                                                                    }
-                                                                });
-                                                                toggle_bookmark.setBackgroundResource(R.drawable.ic_bookmark_off);
-                                                            }
-                                                        });
-                                                    });
-                                                }
-                                            } catch (JSONException e) {
-                                                e.printStackTrace();
-                                            }
-                                        } else {
-                                            Log.e("Favorite Check", "Failed to check favorite: " + response.code());
-                                        }
-                                    }
+                            if (responseBody.trim().equals("[]") || responseBody.trim().equals("{}")) {
+                                Log.e("DataBase", "Empty or invalid response received for selectBookId");
+                                getActivity().runOnUiThread(() -> {
+                                    toggle_bookmark.setChecked(false);
+                                    toggle_bookmark.setBackgroundResource(R.drawable.ic_bookmark_off);
                                 });
+                            } else {
+                                JSONObject jsonObject = new JSONObject(responseBody);
+                                if (jsonObject.isNull("book_id")) {
+                                    Log.e("DataBase", "book_id is null");
+                                } else {
+                                    int bookId = jsonObject.getInt("book_id");
+                                    Log.d("isFavorite book_id", String.valueOf(bookId));
+
+                                    dataBase.isFavorite(memberId, bookId, new okhttp3.Callback() {
+                                        @Override
+                                        public void onFailure(Call call, IOException e) {
+                                            Log.e("DataBase", "Error checking favorite", e);
+                                        }
+
+                                        @Override
+                                        public void onResponse(Call call, Response response) throws IOException {
+                                            if (response.isSuccessful()) {
+                                                String responseBody = response.body().string();
+                                                try {
+                                                    JSONObject jsonObject = new JSONObject(responseBody);
+                                                    boolean isFavorite = jsonObject.optBoolean("isFavorite", false);
+                                                    if (isFragmentActive && getActivity() != null) {
+                                                        getActivity().runOnUiThread(() -> {
+                                                            toggle_bookmark.setChecked(isFavorite);
+                                                            toggle_bookmark.setBackgroundResource(isFavorite ? R.drawable.ic_bookmark_on : R.drawable.ic_bookmark_off);
+
+                                                            toggle_bookmark.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                                                                if (isChecked && !isFavorite) {
+                                                                    dataBase.addFavorite(memberId, bookId, new okhttp3.Callback() {
+                                                                        @Override
+                                                                        public void onFailure(Call call, IOException e) {
+                                                                            Log.e("Favorite Add", "Error adding favorite", e);
+                                                                        }
+
+                                                                        @Override
+                                                                        public void onResponse(Call call, Response response) throws IOException {
+                                                                            if (response.isSuccessful()) {
+                                                                                Log.d("Favorite Add", "Favorite added successfully");
+                                                                            } else {
+                                                                                Log.e("Favorite Add", "Failed to add favorite: " + response.code());
+                                                                            }
+                                                                        }
+                                                                    });
+                                                                    toggle_bookmark.setBackgroundResource(R.drawable.ic_bookmark_on);
+                                                                } else if (!isChecked && isFavorite) {
+                                                                    dataBase.removeFavorite(memberId, bookId, new okhttp3.Callback() { // 변경된 부분
+                                                                        @Override
+                                                                        public void onFailure(Call call, IOException e) {
+                                                                            Log.e("Favorite Remove", "Error removing favorite", e);
+                                                                        }
+
+                                                                        @Override
+                                                                        public void onResponse(Call call, Response response) throws IOException {
+                                                                            if (response.isSuccessful()) {
+                                                                                Log.d("Favorite Remove", "Favorite removed successfully");
+                                                                            } else {
+                                                                                Log.e("Favorite Remove", "Failed to remove favorite: " + response.code());
+                                                                            }
+                                                                        }
+                                                                    });
+                                                                    toggle_bookmark.setBackgroundResource(R.drawable.ic_bookmark_off);
+                                                                }
+                                                            });
+                                                        });
+                                                    }
+                                                } catch (JSONException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            } else {
+                                                Log.e("Favorite Check", "Failed to check favorite: " + response.code());
+                                            }
+                                        }
+                                    });
+                                }
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -543,6 +556,12 @@ public class FragmentBookDetail extends Fragment {
             });
         }).start();
     } // end of checkFavoriteStatus
+
+    private void handleEmptyBookIdResponse() {
+        // Handle cases where the response is empty or an array instead of a JSONObject
+        Log.e("DataBase", "Empty or array response received for selectBookId");
+        // You can add additional logic here if needed
+    }
 
     // 마니아
     private void getManiaRecBookItems(List<String> isbn13List) {

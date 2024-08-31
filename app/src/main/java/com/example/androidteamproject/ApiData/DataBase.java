@@ -77,11 +77,10 @@ public class DataBase {
     }
 
     // DELETE
-    private void deleteRequest(String url, String json, Callback callback) {
-        RequestBody body = RequestBody.create(json, JSON);
+        private void deleteRequest(String url, Callback callback) {
         Request request = new Request.Builder()
                 .url(url)
-                .delete(body)
+                .delete()
                 .build();
 
         client.newCall(request).enqueue(callback);
@@ -127,7 +126,7 @@ public class DataBase {
 //        putRequest(BASE_URL + "/book_count/update/" + book_count_id, callback);
 //    }
     // 바꿨음 확인부탁 - 민욱
-// BookCount Update
+    // BookCount Update
     public void updateBookCount(int book_count_id, Callback callback) {
         // 빈 JSON 객체를 생성
         String json = "{}";
@@ -146,26 +145,30 @@ public class DataBase {
 
     // 즐겨찾기 확인
     public void isFavorite(int memberId, int bookId, Callback callback) {
-        String url = BASE_URL + "/favorite?memberId=" + memberId + "&bookId=" + bookId;
+        String url = BASE_URL + "/m/favorite?memberId=" + memberId + "&bookId=" + bookId;
         getRequest(url, callback);
     }
 
-
     // 즐겨찾기 추가
     public void addFavorite(int member_id, int book_id, Callback callback) {
-        Map<String, Integer> data = new HashMap<>();
-        data.put("member_id", member_id);
-        data.put("book_id", book_id);
-
-        String json = gson.toJson(data);
-        postRequest(BASE_URL + "/favorite/" + book_id, json, callback);
+        String url = BASE_URL + "/m/favorite/" + book_id + "?memberId=" + member_id;
+        Request request = new Request.Builder()
+                .url(url)
+                .post(RequestBody.create("", JSON)) // POST 요청을 위한 빈 바디 사용
+                .build();
+        client.newCall(request).enqueue(callback);
     }
 
     // 즐겨찾기 삭제
     public void removeFavorite(int member_id, int book_id, Callback callback) {
-        String json = gson.toJson(new HashMap<>());
-        deleteRequest(BASE_URL + "/favorite/" + book_id, json, callback);
+        String url = BASE_URL + "/m/favorite?memberId=" + member_id + "&bookId=" + book_id;
+        Request request = new Request.Builder()
+                .url(url)
+                .delete() // HTTP DELETE 메서드 사용
+                .build();
+        client.newCall(request).enqueue(callback);
     }
+
 
     // 학과별 인기도서 데이터 요청
     public void getPopularBooks(int departmentId, Callback callback) {
