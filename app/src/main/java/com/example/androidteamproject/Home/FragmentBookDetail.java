@@ -558,9 +558,7 @@ public class FragmentBookDetail extends Fragment {
     } // end of checkFavoriteStatus
 
     private void handleEmptyBookIdResponse() {
-        // Handle cases where the response is empty or an array instead of a JSONObject
-        Log.e("DataBase", "Empty or array response received for selectBookId");
-        // You can add additional logic here if needed
+        Log.e("Favorite JSON Data", "Response Empty Data");
     }
 
     // 마니아
