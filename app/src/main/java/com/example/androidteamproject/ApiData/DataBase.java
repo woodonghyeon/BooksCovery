@@ -28,8 +28,8 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class DataBase {
-    private static final String BASE_URL = "***REMOVED***"; // 로컬
-//    private static final String BASE_URL = "***REMOVED***"; // 서버 URL
+//    private static final String BASE_URL = "***REMOVED***"; // 로컬
+    private static final String BASE_URL = "***REMOVED***"; // 서버 URL
     private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     private OkHttpClient client;
     private Gson gson;
@@ -122,10 +122,6 @@ public class DataBase {
         getRequest(BASE_URL + "/book_count/" + book_id + "/" + department_id, callback);
     }
 
-//    public void updateBookCount(int book_count_id, Callback callback) {
-//        putRequest(BASE_URL + "/book_count/update/" + book_count_id, callback);
-//    }
-    // 바꿨음 확인부탁 - 민욱
     // BookCount Update
     public void updateBookCount(int book_count_id, Callback callback) {
         // 빈 JSON 객체를 생성
@@ -145,13 +141,13 @@ public class DataBase {
 
     // 즐겨찾기 확인
     public void isFavorite(int memberId, int bookId, Callback callback) {
-        String url = BASE_URL + "/m/favorite?memberId=" + memberId + "&bookId=" + bookId;
+        String url = BASE_URL + "/m/favorite?member_id=" + memberId + "&book_id=" + bookId;
         getRequest(url, callback);
     }
 
     // 즐겨찾기 추가
     public void addFavorite(int member_id, int book_id, Callback callback) {
-        String url = BASE_URL + "/m/favorite/" + book_id + "?memberId=" + member_id;
+        String url = BASE_URL + "/m/favorite/" + book_id + "?member_id=" + member_id;
         Request request = new Request.Builder()
                 .url(url)
                 .post(RequestBody.create("", JSON)) // POST 요청을 위한 빈 바디 사용
@@ -161,12 +157,25 @@ public class DataBase {
 
     // 즐겨찾기 삭제
     public void removeFavorite(int member_id, int book_id, Callback callback) {
-        String url = BASE_URL + "/m/favorite?memberId=" + member_id + "&bookId=" + book_id;
+        String url = BASE_URL + "/m/favorite?member_id=" + member_id + "&book_id=" + book_id;
         Request request = new Request.Builder()
                 .url(url)
                 .delete() // HTTP DELETE 메서드 사용
                 .build();
         client.newCall(request).enqueue(callback);
+    }
+
+    // 즐겨찾기 기록(ALL) 가져오기
+    public void getFavoriteAll(int member_id, Callback callback) {
+        String url = BASE_URL + "/m/favorite/history?member_id=" + member_id;
+        getRequest(url, callback);
+    }
+
+    // 검색 기록(ALL) 가져오기
+    public void getSearchHistoryAll(int member_id, Callback callback) {
+        String url = BASE_URL + "/m/history?member_id=" + member_id;
+        Log.d("SearchHistoryAll", url);
+        getRequest(url, callback);
     }
 
 

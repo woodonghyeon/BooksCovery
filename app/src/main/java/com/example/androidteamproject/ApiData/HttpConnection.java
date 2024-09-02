@@ -26,8 +26,8 @@ import okhttp3.Response;
 
 public class HttpConnection {
 
-    private static final String BASE_URL = "***REMOVED***/api/";
 //    private static final String BASE_URL = "***REMOVED***/api/";
+    private static final String BASE_URL = "***REMOVED***/api/";
     // 10.0.2.2는 안드로이드 애뮬레이터에서 로컬호스틀 참조할 때 쓰는 IP 주소
     private static HttpConnection instance;
     private OkHttpClient client;

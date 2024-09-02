@@ -1,13 +1,10 @@
 package com.example.androidteamproject.History;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -20,18 +17,23 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.androidteamproject.ApiData.DataBase; // 서버와 통신하기 위해 DataBase 클래스 사용
 import com.example.androidteamproject.Home.FragmentBookDetail;
 import com.example.androidteamproject.SessionManager;
 import com.example.androidteamproject.R;
 import com.squareup.picasso.Picasso;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class FragmentHistory extends Fragment {
 
@@ -52,7 +54,7 @@ public class FragmentHistory extends Fragment {
     private List<String> isbn13;
 
     // 회원 ID와 체크 변수
-    private String id;
+    private int memberId;
     private int check;
 
     // 뷰와 어댑터
@@ -101,13 +103,19 @@ public class FragmentHistory extends Fragment {
         // 버튼 초기화 및 클릭 리스너 설정
         favorite = view.findViewById(R.id.favorite);
         search = view.findViewById(R.id.search);
-        favorite.setOnClickListener(view1 -> {check = 0; new getHistoryForDB().execute();});
-        search.setOnClickListener(view1 -> {check = 1; new getHistoryForDB().execute();});
+        favorite.setOnClickListener(view1 -> {
+            check = 0;
+            fetchFavoritesFromServer();  // 서버로부터 즐겨찾기 가져오기
+        });
+        search.setOnClickListener(view1 -> {
+            check = 1;
+            fetchSearchHistoryFromServer();  // 서버로부터 검색 기록 가져오기
+        });
 
         // 세션 데이터 가져오기
         Context context = getContext();
         SessionManager sessionManager = new SessionManager(context);
-        id = String.valueOf(sessionManager.getId());
+        memberId = sessionManager.getMemberId();
 
         // 기록에서 이미지 누르면 상세보기로 넘어가기
         list.setOnItemClickListener((parent, view1, position, id) -> {
@@ -123,6 +131,98 @@ public class FragmentHistory extends Fragment {
         });
 
         return view;
+    }
+
+    // 서버에서 즐겨찾기 가져오기
+    private void fetchFavoritesFromServer() {
+        DataBase db = new DataBase();
+        db.getFavoriteAll(memberId, new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                e.printStackTrace();
+                getActivity().runOnUiThread(() -> Toast.makeText(getContext(), "서버 요청 실패", Toast.LENGTH_SHORT).show());
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String jsonResponse = response.body().string();
+                    List<String>[] result = parseBookData(jsonResponse); // JSON 데이터를 파싱하여 리스트 배열로 변환
+                    updateUIWithData(result); // UI 업데이트
+                } else {
+                    getActivity().runOnUiThread(() -> Toast.makeText(getContext(), "서버 오류", Toast.LENGTH_SHORT).show());
+                }
+            }
+        });
+    }
+
+    // 서버에서 검색 기록 가져오기
+    private void fetchSearchHistoryFromServer() {
+        DataBase db = new DataBase();
+        db.getSearchHistoryAll(memberId, new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                e.printStackTrace();
+                getActivity().runOnUiThread(() -> Toast.makeText(getContext(), "서버 요청 실패", Toast.LENGTH_SHORT).show());
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String jsonResponse = response.body().string();
+                    List<String>[] result = parseBookData(jsonResponse); // JSON 데이터를 파싱하여 리스트 배열로 변환
+                    updateUIWithData(result); // UI 업데이트
+                } else {
+                    getActivity().runOnUiThread(() -> Toast.makeText(getContext(), "서버 오류", Toast.LENGTH_SHORT).show());
+                }
+            }
+        });
+    }
+
+    // JSON 데이터를 파싱하여 리스트 배열로 변환하는 메서드
+    private List<String>[] parseBookData(String jsonResponse) {
+        List<String> booknameTemp = new ArrayList<>();
+        List<String> authorsTemp = new ArrayList<>();
+        List<String> publisherTemp = new ArrayList<>();
+        List<String> bookImageURLTemp = new ArrayList<>();
+        List<String> isbn13Temp = new ArrayList<>();
+
+        try {
+            JSONArray jsonArray = new JSONArray(jsonResponse);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                booknameTemp.add(jsonObject.optString("bookname", ""));
+                authorsTemp.add(jsonObject.optString("authors", ""));
+                publisherTemp.add(jsonObject.optString("publisher", ""));
+                bookImageURLTemp.add(jsonObject.optString("book_image_URL", ""));
+                isbn13Temp.add(jsonObject.optString("isbn", ""));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return new List[]{booknameTemp, authorsTemp, publisherTemp, bookImageURLTemp, isbn13Temp};
+    }
+
+    // UI 업데이트 메서드
+    private void updateUIWithData(List<String>[] result) {
+        getActivity().runOnUiThread(() -> {
+            // 기존 데이터 지우기
+            bookname.clear();
+            authors.clear();
+            publisher.clear();
+            bookImageURL.clear();
+            isbn13.clear();
+
+            // 새 데이터 추가
+            bookname.addAll(result[0]);
+            authors.addAll(result[1]);
+            publisher.addAll(result[2]);
+            bookImageURL.addAll(result[3]);
+            isbn13.addAll(result[4]);
+
+            adapter.notifyDataSetChanged(); // 어댑터에 데이터 변경 알리기
+        });
     }
 
     // 리스트 뷰의 커스텀 어댑터
@@ -163,98 +263,6 @@ public class FragmentHistory extends Fragment {
             }
 
             return view;
-        }
-    }
-
-    // 데이터베이스에서 기록을 검색하는 AsyncTask
-    public class getHistoryForDB extends AsyncTask<Void, Void, List<String>[]> {
-        int member_id;
-
-        @Override
-        protected List<String>[] doInBackground(Void... voids) {
-            Connection conn = null;
-            PreparedStatement pstmt = null;
-            ResultSet rs = null;
-            String sql = "";
-
-            // 임시 목록에 데이터 저장
-            List<String> booknameTemp = new ArrayList<>();
-            List<String> authorsTemp = new ArrayList<>();
-            List<String> publisherTemp = new ArrayList<>();
-            List<String> bookImageURLTemp = new ArrayList<>();
-            List<String> isbn13Temp = new ArrayList<>();
-
-            try {
-                // JDBC 드라이버 로드
-                Class.forName("com.mysql.jdbc.Driver");
-                // 데이터베이스 연결
-                conn = DriverManager.getConnection("jdbc:mysql://10.0.2.2:3306/test", "root", "root");
-
-                // 회원 ID를 찾기 위한 쿼리 실행
-                sql = "Select * from member_info where id = ?";
-                pstmt = conn.prepareStatement(sql);
-                pstmt.setString(1, id);
-                rs = pstmt.executeQuery();
-
-                // 회원 ID 가져오기
-                if (rs.next()) {
-                    member_id = rs.getInt("member_id");
-                }
-
-                // 체크 값에 따라 쿼리 실행 (0은 즐겨찾기, 1은 검색 기록)
-                if(check == 0){
-                    sql = "Select * from favorite f join book b on f.book_id = b.book_id where f.member_id = ?";
-                }
-                else if(check == 1){
-                    sql = "Select * from search_history sh join book b on sh.book_id = b.book_id where sh.member_id = ? order by sh.search_history_id desc";
-                }
-
-                pstmt = conn.prepareStatement(sql);
-                pstmt.setInt(1, member_id);
-                rs = pstmt.executeQuery();
-
-                // 데이터 가져오고 임시 목록에 채우기
-                while (rs.next()) {
-                    booknameTemp.add(rs.getString("bookname"));
-                    authorsTemp.add(rs.getString("authors"));
-                    publisherTemp.add(rs.getString("publisher"));
-                    bookImageURLTemp.add(rs.getString("book_image_URL"));
-                    isbn13Temp.add(rs.getString("isbn"));
-                }
-                // 리소스 닫기
-                rs.close();
-                pstmt.close();
-                conn.close();
-            } catch (SQLException | ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-
-            // 가져온 데이터를 포함하는 목록 배열 반환
-            return new List[]{booknameTemp, authorsTemp, publisherTemp, bookImageURLTemp, isbn13Temp};
-        }
-
-        @Override
-        protected void onPostExecute(List<String>[] result) {
-            super.onPostExecute(result);
-
-            // 어댑터에 데이터 변경 알리기
-            if (adapter != null) {
-                // 기존 데이터 지우기
-                bookname.clear();
-                authors.clear();
-                publisher.clear();
-                bookImageURL.clear();
-                isbn13.clear();
-
-                // 새 데이터 추가
-                bookname.addAll(result[0]);
-                authors.addAll(result[1]);
-                publisher.addAll(result[2]);
-                bookImageURL.addAll(result[3]);
-                isbn13.addAll(result[4]);
-
-                adapter.notifyDataSetChanged();
-            }
         }
     }
 }
