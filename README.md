@@ -60,7 +60,7 @@ Spring Boot를 활용하여 'BooksCovery' 키오스크용 모바일 애플리케
 ## 📱 구현 화면
 <div>
   <img src="https://github.com/user-attachments/assets/6e66f36f-4d6d-4825-ba7c-fd5ef8ab7d70" width="250" height="400">
-  <img src="https://github.com/user-attachments/assets/c35b9427-33f6-4927-9205-01aef0836aa0" width="250" height="400">
+  <img src="https://github.com/user-attachments/assets/c35b9427-33f6-4927-9205-01aef0836aa0" width="250" height="400"> <br/>
   <img src="https://github.com/user-attachments/assets/195ce0df-4021-4b9e-aff7-a7d434963fa8" width="250" height="400">
   <img src="https://github.com/user-attachments/assets/3fc85c0d-58ad-4afd-8f76-0f7932efb9d5" width="250" height="400">
 </div>
