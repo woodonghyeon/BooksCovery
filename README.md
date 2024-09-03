@@ -69,4 +69,4 @@ Spring Boot를 활용하여 'BooksCovery' 키오스크용 모바일 애플리케
 ## 🔖 LINK
 #### [도서관 정보나루](https://www.data4library.kr/apiUtilization) <br/>
 #### [API 명세서](https://scientific-cotija-1b5.notion.site/BooksCovery-API-31e7c951daaf457a9bb94126fd2cccac?pvs=4) <br/>
-#### [웹 Github](https://github.com/gd095529/Weed)
+#### [웹(Spring Boot) Github](https://github.com/gd095529/Weed)
