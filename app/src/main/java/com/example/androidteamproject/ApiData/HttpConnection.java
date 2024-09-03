@@ -5,15 +5,13 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.example.androidteamproject.R;
+import com.example.androidteamproject.BuildConfig;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -25,10 +23,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class HttpConnection {
-
-//    private static final String BASE_URL = "***REMOVED***/api/";
-    private static final String BASE_URL = "***REMOVED***/api/";
-    // 10.0.2.2는 안드로이드 애뮬레이터에서 로컬호스틀 참조할 때 쓰는 IP 주소
+//    private static final String BASE_URL = BuildConfig.BASE_URL + "/api"; // 서버
+    private static final String BASE_URL = BuildConfig.LOCAL_BASE_URL + "/api"; // 로컬
     private static HttpConnection instance;
     private OkHttpClient client;
 
@@ -53,7 +49,7 @@ public class HttpConnection {
     }
 
     public void getKeyword(final HttpResponseCallback callback) {
-        String url = BASE_URL + "keyword";
+        String url = BASE_URL + "/keyword";
         Request request = new Request.Builder().url(url).build();
 
         client.newCall(request).enqueue(new Callback() {
@@ -76,7 +72,7 @@ public class HttpConnection {
     }
 
     public void bookSearchTitle(String bookname, int pageNo, int pageSize, final HttpResponseCallback callback) {
-        String url = BASE_URL + "search?bookname=" + bookname + "&pageNo=" + pageNo + "&pageSize=" + pageSize;
+        String url = BASE_URL + "/search?bookname=" + bookname + "&pageNo=" + pageNo + "&pageSize=" + pageSize;
         Request request = new Request.Builder().url(url).build();
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -134,7 +130,7 @@ public class HttpConnection {
 
     // 책
     public void bookSearchAuthor(String authors, int pageNo, int pageSize, final HttpResponseCallback callback) {
-        String url = BASE_URL + "search?authors=" + authors + "&pageNo=" + pageNo + "&pageSize=" + pageSize;
+        String url = BASE_URL + "/search?authors=" + authors + "&pageNo=" + pageNo + "&pageSize=" + pageSize;
         Request request = new Request.Builder().url(url).build();
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -188,7 +184,7 @@ public class HttpConnection {
     } // end of booksearchAuthor
 
     public void bookSearchKeyword(String keyword, int pageNo, int pageSize, final HttpResponseCallback callback) {
-        String url = BASE_URL + "search?keyword=" + keyword + "&pageNo=" + pageNo + "&pageSize=" + pageSize;
+        String url = BASE_URL + "/search?keyword=" + keyword + "&pageNo=" + pageNo + "&pageSize=" + pageSize;
         Request request = new Request.Builder().url(url).build();
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -244,7 +240,7 @@ public class HttpConnection {
 
     // LoanItems -> 대출 많은 도서를 뽑아옴
     public void getLoanItems(int pageNo, int pageSize, String startDt, String endDt, String from_age, String to_age, HttpResponseCallback<List<SearchBook>> callback) {
-        String url = BASE_URL + "popular"
+        String url = BASE_URL + "/popular"
                 + "?pageNo=" + pageNo
                 + "&pageSize=" + pageSize
                 + "&startDt=" + startDt
@@ -303,7 +299,7 @@ public class HttpConnection {
 
     // LoanItems -> 대출 많은 도서를 뽑아옴 후에 수정 예정
     public void getHotTrend(String searchDt, HttpResponseCallback<List<SearchBook>> callback) {
-        String url = BASE_URL + "increase?searchDt=" + searchDt;
+        String url = BASE_URL + "/increase?searchDt=" + searchDt;
 
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(url).build();
@@ -365,7 +361,7 @@ public class HttpConnection {
 
     // 상세보기
     public void getDetailBook(String isbn13, Integer memberId, Integer departmentId, final HttpResponseCallback<CompositeSearchBookDetail> callback) {
-        String url = BASE_URL + "books/" + isbn13 + "?member_id=" + memberId + "&department_id=" + departmentId;
+        String url = BASE_URL + "/books/" + isbn13 + "?member_id=" + memberId + "&department_id=" + departmentId;
         Request request = new Request.Builder().url(url).build();
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -473,7 +469,7 @@ public class HttpConnection {
         List<SearchBookDetail> maniaBooks = new ArrayList<>();
         int totalIsbn13 = isbn13List.size();
         for(String isbn13 : isbn13List) {
-            String url = BASE_URL + "mania?isbn=" + isbn13;
+            String url = BASE_URL + "/mania?isbn=" + isbn13;
             Request request = new Request.Builder().url(url).build();
             client.newCall(request).enqueue(new Callback() {
                 @Override
@@ -521,7 +517,7 @@ public class HttpConnection {
         List<SearchBookDetail> readerBooks = new ArrayList<>();
         int totalIsbn13 = isbn13List.size();
         for(String isbn13 : isbn13List) {
-            String url = BASE_URL + "reader?isbn=" + isbn13;
+            String url = BASE_URL + "/reader?isbn=" + isbn13;
             Request request = new Request.Builder().url(url).build();
             client.newCall(request).enqueue(new Callback() {
                 @Override
