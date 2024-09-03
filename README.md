@@ -43,7 +43,21 @@ Spring Boot를 활용하여 'BooksCovery' 키오스크용 모바일 애플리케
   <img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=for-the-badge&logo=Spring Boot&logoColor=black"> 
 </div>
 
-## 📀 API
-[도서관 정보나루](https://www.data4library.kr/apiUtilization)
+## 🔗 시스템 구성도
+![image](https://github.com/user-attachments/assets/3932f47f-b7ec-423b-b449-11ed2aac6c3c)
 
-수정중..
+## 🌟 기능 설명
++ 영진전문대학교 도서관에서 진행하는 이벤트 게시글의 이미지를 홈페이지에서 스크랩하여 메인 화면에 노출
++ 학과별 인기도서, 주간, 월간, 인기 급상승 도서 추천
++ 월간 추천 키워드 검색
++ 제목 / 작가 / 키워드 검색
++ 도서 상세 정보(대출 건수, 대출 연령, 키워드 등)
++ 즐겨찾기 기능
++ 즐겨찾기 / 검색 기록 조회
++ 도서마다 다독자, 마니아 추천 도서
++ 회원탈퇴, 회원 정보 수정, 테마(라이트, 다크)
+
+## 🔖 LINK
+#### [도서관 정보나루](https://www.data4library.kr/apiUtilization) <br/>
+#### [API 명세서](https://scientific-cotija-1b5.notion.site/BooksCovery-API-31e7c951daaf457a9bb94126fd2cccac?pvs=4) <br/>
+#### [웹 Github](https://github.com/gd095529/Weed)
