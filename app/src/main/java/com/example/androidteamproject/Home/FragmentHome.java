@@ -1,6 +1,5 @@
 package com.example.androidteamproject.Home;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +14,7 @@ import android.os.Handler;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
@@ -25,12 +25,16 @@ import com.example.androidteamproject.ApiData.SearchBookDetail;
 import com.example.androidteamproject.R;
 import com.example.androidteamproject.ApiData.SearchBook;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Response;
 
 public class FragmentHome extends Fragment {
 
@@ -89,11 +93,34 @@ public class FragmentHome extends Fragment {
     } // end of onCreateView
 
     private void CurrentEventSettingImg(View view) {
-        // 가로 슬라이드 뷰 Fragment
+        // 이미지 URL을 가져와서 설정
+        new Thread(() -> {
+            ImageScraper scraper = new ImageScraper();
+            List<String> latestPostUrls = scraper.scrapeLatestPostUrls(10); // 최신 10개의 게시글 URL 가져오기
+            System.out.println("최신 게시글 URL: " + latestPostUrls);
+            if (latestPostUrls.isEmpty()) {
+                System.out.println("최신 게시글 URL을 가져오지 못했습니다. 셀렉터나 URL을 확인하세요.");
+                return;
+            }
+            List<String> imageUrls = scraper.scrapeImagesFromPosts(latestPostUrls); // 게시글에서 이미지 URL 가져오기
+            System.out.println("이벤트 이미지 URL: " + imageUrls);
+            if (imageUrls.isEmpty()) {
+                System.out.println("이미지 URL을 가져오지 못했습니다. 셀렉터나 URL을 확인하세요.");
+                return;
+            }
+            FragmentActivity activity = getActivity();
+            if (activity != null) {
+                activity.runOnUiThread(() -> setupCurrentEventViewPager(view, imageUrls));
+            }
+        }).start();
+    }
+
+    private void setupCurrentEventViewPager(View view, List<String> imageUrls) {
+        Log.d("FragmentHome", "Setting up ViewPager with image URLs: " + imageUrls);
 
         // 첫 번째 ViewPager2
         currentEventPager = view.findViewById(R.id.event_viewpager);
-        homePagerAdapter = new CurrentEventAdapter(requireActivity(), currentEventNum);
+        homePagerAdapter = new CurrentEventAdapter(requireActivity(), imageUrls);
         currentEventPager.setAdapter(homePagerAdapter);
         currentEventPager.setCurrentItem(1000);
         currentEventPager.setOffscreenPageLimit(3);
@@ -147,11 +174,25 @@ public class FragmentHome extends Fragment {
         });
     }
 
+    // 학과 인기 도서
     private void fetchPopularBooks(int departmentId) {
-        new Thread(() -> {
-            DataBase db = new DataBase();
-            try {
-                List<SearchBookDetail> popularBooks = db.getPopularBooks(departmentId);
+        DataBase db = new DataBase();
+        db.getPopularBooks(departmentId, new okhttp3.Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.e("fetchPopularBooks", "Error fetching popular books", e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    Log.e("fetchPopularBooks", "Unexpected response code: " + response.code());
+                    return;
+                }
+
+                List<SearchBookDetail> popularBooks = db.parsePopularBooksResponse(response);
+                System.out.println("학과별 인기도서 response : " + response);
+                System.out.println("학과별 인기도서 popularBooks : " + popularBooks);
 
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
@@ -165,26 +206,26 @@ public class FragmentHome extends Fragment {
                         List<Integer> loanCount = new ArrayList<>();
                         List<Integer> bookCount = new ArrayList<>();
 
-                        for (SearchBookDetail book : popularBooks) {
-                            bookName.add(book.getBookName());
-                            authors.add(book.getAuthors());
-                            imageUrl.add(book.getBookImageUrl());
-                            isbn13.add(book.getIsbn13());
-                            publisher.add(book.getPublisher());
-                            publicationYear.add(book.getPublication_year());
-                            classNo.add(book.getClass_no());
-                            loanCount.add(book.getLoanCnt());
-                            bookCount.add(book.getBook_count());
+                        synchronized (popularBooks) {
+                            for (SearchBookDetail book : popularBooks) {
+                                bookName.add(book.getBookName());
+                                authors.add(book.getAuthors());
+                                imageUrl.add(book.getBookImageUrl());
+                                isbn13.add(book.getIsbn13());
+                                publisher.add(book.getPublisher());
+                                publicationYear.add(book.getPublication_year());
+                                classNo.add(book.getClass_no());
+                                loanCount.add(book.getLoanCnt());
+                                bookCount.add(book.getBook_count());
+                            }
                         }
 
                         setupPopularBooksViewPager(bookName, authors, imageUrl, isbn13);
                     });
                 }
-            } catch (SQLException e) {
-                e.printStackTrace();
             }
-        }).start();
-    }
+        });
+    } // end of fetchPopularBook
 
     private void setupPopularBooksViewPager(List<String> bookNames, List<String> authors, List<String> imageUrls, List<String> isbn13s) {
         if (imageUrls == null || imageUrls.isEmpty()) {
@@ -281,7 +322,7 @@ public class FragmentHome extends Fragment {
         String getTime = mFormat.format(mDate); // 현재 날짜 가져오기
         Calendar calendar = Calendar.getInstance(); // 1주일 전 날짜 가져오기
         calendar.setTime(mDate);
-        calendar.add(Calendar.DAY_OF_YEAR, -7);
+        calendar.add(Calendar.DAY_OF_MONTH, -7);
 
         String startDt = mFormat.format(calendar.getTime()); // 시작 날짜
         String endDt = getTime; // 종료 날짜
@@ -291,7 +332,7 @@ public class FragmentHome extends Fragment {
         int pageSize = 10; // 페이지 크기
         String format = "json"; // 응답 형식
 
-        HttpConnection.getInstance(getContext()).getLoanItems(startDt, endDt, from_age, to_age, pageNo, pageSize, format, new HttpConnection.HttpResponseCallback<List<SearchBook>>() {
+        HttpConnection.getInstance(getContext()).getLoanItems(pageNo, pageSize, startDt, endDt, from_age, to_age, new HttpConnection.HttpResponseCallback<List<SearchBook>>() {
             @Override
             public void onSuccess(List<SearchBook> books) {
                 if (getActivity() != null) {
@@ -413,7 +454,7 @@ public class FragmentHome extends Fragment {
         String getTime = mFormat.format(mDate); // 현재 날짜 가져오기
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(mDate);
-        calendar.set(Calendar.DAY_OF_MONTH, 1); // 1일을 의미
+        calendar.set(Calendar.DAY_OF_MONTH, -30); // 1일을 의미
 
         String startDt = mFormat.format(calendar.getTime()); // 시작 날짜
         String endDt = getTime; // 종료 날짜 (예시)
@@ -423,7 +464,7 @@ public class FragmentHome extends Fragment {
         int pageSize = 10; // 페이지 크기 (예시)
         String format = "json"; // 응답 형식 (예시)
 
-        HttpConnection.getInstance(getContext()).getLoanItems(startDt, endDt, from_age, to_age, pageNo, pageSize, format, new HttpConnection.HttpResponseCallback<List<SearchBook>>() {
+        HttpConnection.getInstance(getContext()).getLoanItems(pageNo, pageSize, startDt, endDt, from_age, to_age, new HttpConnection.HttpResponseCallback<List<SearchBook>>() {
             @Override
             public void onSuccess(List<SearchBook> books) {
                 if (getActivity() != null) {
@@ -510,7 +551,7 @@ public class FragmentHome extends Fragment {
         String searchDt = getTime; // 시작 날짜
         String format = "json"; // 응답 형식 (예시)
 
-        HttpConnection.getInstance(getContext()).getHotTrend(searchDt, format, new HttpConnection.HttpResponseCallback<List<SearchBook>>() {
+        HttpConnection.getInstance(getContext()).getHotTrend(searchDt, new HttpConnection.HttpResponseCallback<List<SearchBook>>() {
             @Override
             public void onSuccess(List<SearchBook> books) {
                 if (getActivity() != null) {

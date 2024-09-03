@@ -16,20 +16,24 @@ import com.squareup.picasso.Picasso;
 
 public class ManiaBookImageFragment extends Fragment {
     private static final String ARG_IMAGE_URL = "imageUrl";
+    private static final String ARG_AUTHORS = "authors";
     private static final String ARG_BOOKNAME = "bookName";
     private static final String ARG_ISBN13 = "isbn13";
     private String imageUrls;
+    private String authors;
     private String bookNames;
     private String isbn13s;
+    private ManiaBookAdapter.OnItemClickListener onItemClickListener;
 
-    public static ManiaBookImageFragment newInstance(String bookName, String imageUrl, String isbn13) {
+    public static ManiaBookImageFragment newInstance(String bookName, String authors, String imageUrl, String isbn13, ManiaBookAdapter.OnItemClickListener onItemClickListener) {
         ManiaBookImageFragment fragment = new ManiaBookImageFragment();
         Bundle args = new Bundle();
         args.putString(ARG_IMAGE_URL, imageUrl);
         args.putString(ARG_BOOKNAME, bookName);
+        args.putString(ARG_AUTHORS, authors);
         args.putString(ARG_ISBN13, isbn13);
         fragment.setArguments(args);
-//        fragment.setOnItemClickListener(onItemClickListener);
+        fragment.setOnItemClickListener(onItemClickListener);
         return fragment;
     }
 
@@ -52,24 +56,29 @@ public class ManiaBookImageFragment extends Fragment {
 
         if (getArguments() != null) {
             bookNames = getArguments().getString(ARG_BOOKNAME);
+            authors = getArguments().getString(ARG_AUTHORS);
             imageUrls = getArguments().getString(ARG_IMAGE_URL);
             isbn13s = getArguments().getString(ARG_ISBN13);
         }
 
-        Picasso.get().load(imageUrls).into(maniaBookImg);
+        if (imageUrls.isEmpty()) {
+            maniaBookImg.setImageResource(R.drawable.ic_error);
+        } else {
+            Picasso.get().load(imageUrls).into(maniaBookImg);
+        }
 
-//        maniaBookImg.setOnClickListener(v -> {
-//            if (onItemClickListener != null) {
-//                onItemClickListener.onItemClick(isbn13s, bookNames, imageUrls);
-//            }
-//        });
+        maniaBookImg.setOnClickListener(v -> {
+            if (onItemClickListener != null) {
+                onItemClickListener.onItemClick(isbn13s, bookNames, authors, imageUrls);
+            }
+        });
 
         maniaBookTitle.setText(bookNames);
 
         return view;
     }
 
-//    public void setOnItemClickListener(ManiaBookAdapter.OnItemClickListener onItemClickListener) {
-//        this.onItemClickListener = onItemClickListener;
-//    }
+    public void setOnItemClickListener(ManiaBookAdapter.OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
 }

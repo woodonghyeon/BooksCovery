@@ -11,6 +11,10 @@ public class SearchBookDetail {
     private List<String> maniaIsbn13List, readerIsbn13List;
     private String maniaBookName, maniaAuthor, maniaImageUrl, maniaIsbn13;
     private String readerBookName, readerAuthor, readerImageUrl, readerIsbn13;
+    private boolean readerTF = false;
+
+    public SearchBookDetail() {
+    }
 
     public SearchBookDetail(String isbn13) {
         this.isbn13 = isbn13;
@@ -28,8 +32,9 @@ public class SearchBookDetail {
         this.maniaIsbn13 = maniaIsbn13;
     }
 
-    public SearchBookDetail(String readerBookName, String readerImageUrl, String readerIsbn13) {
+    public SearchBookDetail(String readerBookName, String readerAuthor, String readerImageUrl, String readerIsbn13, boolean readerTF) {
         this.readerBookName = readerBookName;
+        this.readerAuthor = readerAuthor;
         this.readerImageUrl = readerImageUrl;
         this.readerIsbn13 = readerIsbn13;
     }
@@ -342,5 +347,13 @@ public class SearchBookDetail {
 
     public void setReaderIsbn13(String readerIsbn13) {
         this.readerIsbn13 = readerIsbn13;
+    }
+
+    public boolean isReaderTF() {
+        return readerTF;
+    }
+
+    public void setReaderTF(boolean readerTF) {
+        this.readerTF = readerTF;
     }
 }

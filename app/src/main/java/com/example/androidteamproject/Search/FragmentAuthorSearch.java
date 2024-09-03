@@ -101,13 +101,12 @@ public class FragmentAuthorSearch extends Fragment {
     private void getResponseApiBookSearch() {
         String author = mParam1;
         int pageNo = 1;
-        int pageSize = 100;
-        String format = "json";
-        boolean tf = true;
+        int pageSize = 20;
 
-        HttpConnection.getInstance(getContext()).bookSearchAuthor(author, pageNo, pageSize, tf, format, new HttpConnection.HttpResponseCallback<List<SearchBookAuthor>>() {
+        HttpConnection.getInstance(getContext()).bookSearchAuthor(author, pageNo, pageSize, new HttpConnection.HttpResponseCallback<List<SearchBookAuthor>>() {
             @Override
             public void onSuccess(List<SearchBookAuthor> books) {
+                Log.d("API_CALL", "Books received: " + books.size()); // 로그 추가
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
                         bookList.clear(); // 기존 데이터 초기화

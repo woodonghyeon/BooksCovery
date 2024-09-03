@@ -10,14 +10,18 @@ import java.util.List;
 public class ManiaBookAdapter extends FragmentStateAdapter {
     private final List<String> imageUrls;
     private final List<String> bookNames;
+    private final List<String> authors;
     private final List<String> isbn13s;
+    private OnItemClickListener onItemClickListener;
     private static final int MAX_VALUE = 2000; // 충분히 큰 값
 
-    public ManiaBookAdapter(FragmentActivity fa, List<String> bookNames, List<String> imageUrls, List<String> isbn13s) {
+    public ManiaBookAdapter(FragmentActivity fa, List<String> bookNames, List<String> authors, List<String> imageUrls, List<String> isbn13s, OnItemClickListener onItemClickListener) {
         super(fa);
         this.imageUrls = imageUrls;
         this.bookNames = bookNames;
+        this.authors = authors;
         this.isbn13s = isbn13s;
+        this.onItemClickListener = onItemClickListener;
     }
 
     @NonNull
@@ -25,7 +29,7 @@ public class ManiaBookAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         // 이미지 리소스 대신 URL을 전달하여 Fragment를 생성
         int index = position % imageUrls.size(); // 인덱스를 이미지 URL의 개수로 나눈 나머지로 계산
-        return ManiaBookImageFragment.newInstance(bookNames.get(index), imageUrls.get(index), isbn13s.get(index));
+        return ManiaBookImageFragment.newInstance(bookNames.get(index), authors.get(index), imageUrls.get(index), isbn13s.get(index), onItemClickListener);
     }
 
     @Override
@@ -35,7 +39,7 @@ public class ManiaBookAdapter extends FragmentStateAdapter {
     }
 
     public interface OnItemClickListener {
-        void onItemClick(String isbn13, String bookName, String imageUrl);
+        void onItemClick(String isbn13, String bookName, String authors, String imageUrl);
     }
 }
 

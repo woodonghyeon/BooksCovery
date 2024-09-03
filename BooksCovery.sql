@@ -1,20 +1,20 @@
 CREATE TABLE `department` (
 	`department_id`	int	NOT NULL AUTO_INCREMENT,
-	`department`	varchar(30)	NOT NULL unique,
+	`department` varchar(30) NOT NULL unique,
     PRIMARY KEY (`department_id`)
 );
 
 CREATE TABLE `member_info` (
-	`member_id`	int	NOT NULL auto_increment ,
+	`member_id`	int NOT NULL auto_increment ,
 	`name`	varchar(30)	NOT NULL,
-	`gender`	varchar(2) NOT NULL,
-	`age`	int	NOT NULL,
-	`department_id`	int	NULL,
-	`id`	varchar(30)	NOT NULL UNIQUE,
-	`password`	varchar(100)	NOT NULL,
-    `password_key` varchar(50) NOT NULL,
-	`email`	varchar(30)	NOT NULL,
-	`mode`	varchar(5)	NOT NULL,
+	`gender` varchar(2) NOT NULL,
+	`age` int NOT NULL,
+	`department_id` int default NULL,
+	`id` varchar(30) NOT NULL UNIQUE,
+	`password` varchar(100) NOT NULL,
+	`password_key` varchar(50) NOT NULL,
+	`email` varchar(30) NOT NULL unique,
+	`mode` varchar(5) NOT NULL,
     PRIMARY KEY (`member_id`),
     FOREIGN KEY (`department_id`) REFERENCES `department` (`department_id`) ON DELETE SET NULL ON UPDATE CASCADE
 );
@@ -23,18 +23,18 @@ CREATE TABLE `book` (
     `book_id` int NOT NULL auto_increment,
     `bookname`	varchar(200) NOT NULL,
 	`isbn`	bigint(13) NULL unique,
-    `authors`	varchar(30)	NULL,
-	`publisher`	varchar(30)	NULL,
+    `authors`	varchar(100) default NULL,
+	`publisher`	varchar(200) default NULL,
     `book_image_URL` varchar(500) NOT NULL,
-    `publication_year` int null,
-    `class_no` varchar(20) null,
-    `loan_count` int null,
+    `publication_year` int default null,
+    `class_no` varchar(20) default null,
+    `loan_count` int default null,
     PRIMARY KEY (`book_id`)
 );
 
 CREATE TABLE `search_history` (
-	`search_history_id`	int	NOT NULL AUTO_INCREMENT,
-	`member_id`	int	NOT NULL,
+	`search_history_id`	int NOT NULL AUTO_INCREMENT,
+	`member_id` int NOT NULL,
 	`book_id` int NOT NULL,
     `search_date` DateTime NOT NULL,
     PRIMARY KEY (`search_history_id`),
@@ -43,8 +43,8 @@ CREATE TABLE `search_history` (
 );
 
 CREATE TABLE `favorite` (
-	`favorite_id`	int	NOT NULL AUTO_INCREMENT,
-	`member_id`	int	NOT NULL ,
+	`favorite_id` int NOT NULL AUTO_INCREMENT,
+	`member_id` int NOT NULL ,
 	`book_id` int NOT NULL unique,
     `favorite_date` DateTime NOT NULL,
     PRIMARY KEY (`favorite_id`),
@@ -52,21 +52,20 @@ CREATE TABLE `favorite` (
     FOREIGN KEY (`book_id`) REFERENCES `book` (`book_id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-
 CREATE TABLE `book_count` (
-	`book_count_id`	int	NOT NULL AUTO_INCREMENT,
-	`department_id`	int	NOT NULL,
+	`book_count_id` int NOT NULL AUTO_INCREMENT,
+	`department_id` int NOT NULL,
     `book_id` int NOT NULL,
-	`book_count` int NULL default 1,
+	`book_count` int default 1,
     PRIMARY KEY (`book_count_id`),
     FOREIGN KEY (`department_id`) REFERENCES `department` (`department_id`) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (`book_id`) REFERENCES `book` (`book_id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE `popular_book` (
-	`popular_id`	int	NOT NULL AUTO_INCREMENT,
+	`popular_id` int NOT NULL AUTO_INCREMENT,
 	`book_id` int NOT NULL unique,
-	`popular_date` DateTime	NULL,
+	`popular_date` DateTime default NULL,
     PRIMARY KEY (`popular_id`),
     FOREIGN KEY (`book_id`) REFERENCES `book` (`book_id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -80,6 +79,11 @@ CREATE TABLE `popular_book_members` (
     FOREIGN KEY (`member_id`) REFERENCES `member_info` (`member_id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+create table `keyword` (
+	`word` varchar(100) NOT NULL,
+    `weight` int NOT NULL DEFAULT '0',
+    PRIMARY KEY (`word`)
+);
 
 Insert into department values(1, '컴퓨터정보계열');
 Insert into department values(2, 'IT온라인창업과');
@@ -106,7 +110,3 @@ Insert into department values(22, '반려동물과');
 Insert into department values(23, '조리제과제빵과');
 Insert into department values(24, '콘텐츠디자인과');
 Insert into department values(25, '만화애니메이션과');
-
-insert into book values (null, 'genshin impact', 123412314123, '엄준식', '이홍준','https://i.namu.wiki/i/NpoCw6SZ0849_mTrqUxIMyTCLRK65S6MxuroLk46j2IzNs7uwW_iuw0b2KQX-lqpX06XVOEwa3LbTKOTh600Cw.webp', 2024, 'go', 1 );
-insert into search_history values(null, 1, 1, '2024-05-24');
-

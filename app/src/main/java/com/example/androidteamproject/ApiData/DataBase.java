@@ -1,401 +1,303 @@
 package com.example.androidteamproject.ApiData;
 
-import android.os.StrictMode;
 import android.util.Log;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import com.example.androidteamproject.BuildConfig;
+import com.google.gson.Gson;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class DataBase {
-    // 도서 중복 확인 중복시 안하고 없을시 추가
-    // 검색 기록 도서pk확인 있으면 삭제하고 추가 없으면 추가
-    //// 즐겨찾기 온클릭시 즐겨찾기 추가
-    // 학과별 검색횟수 있으면 업데이트 없으면 추가
+//    private static final String BASE_URL = BuildConfig.BASE_URL; // 서버
+    private static final String BASE_URL = BuildConfig.LOCAL_BASE_URL; // 로컬
+    private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
+    private OkHttpClient client;
+    private Gson gson;
 
-    public Connection dbConn() throws ClassNotFoundException, SQLException {
-        // JDBC 드라이버 로드
-        Class.forName("com.mysql.jdbc.Driver");
-
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-
-        // 데이터베이스에 연결 (url : "jdbc:mysql://10.0.2.2 (에뮬레이터 로컬 호스트 주소) :3306/your-database-name", user : DB 아이디, password : DB 비밀번호)
-        return DriverManager.getConnection("jdbc:mysql://10.0.2.2:3306/test", "root", "root");
+    // DB연결 요청
+    public DataBase() {
+        this.client = new OkHttpClient.Builder()
+                .connectTimeout(60, TimeUnit.SECONDS)
+                .readTimeout(60, TimeUnit.SECONDS)
+                .writeTimeout(60, TimeUnit.SECONDS)
+                .build();
+        this.gson = new Gson();
     }
 
-    public int selectBookId(SearchBookDetail sbd) {
-        ResultSet rs = null;
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        try {
-            conn = dbConn();
-            String sql = "select book_id from book where isbn = ?";
-            // 쿼리 실행
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, sbd.getIsbn13());  //String 저장 어떻게 할건지 수정필요
+    // POST
+    private void postRequest(String url, String json, Callback callback) {
+        RequestBody body = RequestBody.create(json, JSON);
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .build();
 
-            // 쿼리 실행
-            rs = pstmt.executeQuery();
-            if (rs.next()) {
-                return rs.getInt("book_id");
-            }
-
-            return 1;
-        } catch (Exception e) {
-            Log.e("InsertDataTask", "Error inserting data", e);
-            return 0;
-        } finally {
-            try {
-                if (rs != null) rs.close();
-                if (pstmt != null) pstmt.close();
-                if (conn != null) conn.close();
-            } catch (Exception e) {
-                Log.e("InsertDataTask", "Error closing connection", e);
-            }
-        }
+        client.newCall(request).enqueue(callback);
     }
 
-    public int checkDuplicate(SearchBookDetail sbd, String sql) { //상세보기에 들어가면 체크
-        ResultSet rs = null;
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        try {
-            conn = dbConn();
-            // 쿼리 실행
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, sbd.getIsbn13());  //String 저장 어떻게 할건지 수정필요
+    // PUT
+    private void putRequest(String url, String json, Callback callback) {
+        RequestBody body = RequestBody.create(json, JSON);
+        Request request = new Request.Builder()
+                .url(url)
+                .put(body)
+                .build();
 
-            // 쿼리 실행
-            rs = pstmt.executeQuery();
-            if (!rs.next()) {
-                return 0;
-            }
-
-            return 1;
-        } catch (Exception e) {
-            Log.e("InsertDataTask", "Error inserting data", e);
-            return 2;
-        } finally {
-            try {
-                if (rs != null) rs.close();
-                if (pstmt != null) pstmt.close();
-                if (conn != null) conn.close();
-            } catch (Exception e) {
-                Log.e("InsertDataTask", "Error closing connection", e);
-            }
-        }
+        client.newCall(request).enqueue(callback);
     }
 
-    public String insertBook(SearchBookDetail sbd) {
-        String sql1 = "select isbn from book where isbn = ?";
-        if (checkDuplicate(sbd, sql1) == 0) {
-            Connection conn = null;
-            PreparedStatement pstmt = null;
-            try {
-                conn = dbConn();
+    // GET
+    private void getRequest(String url, Callback callback) {
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .build();
 
-                // 쿼리 실행
-                String sql = "Insert into book (bookname, isbn, authors, publisher, book_image_URL, publication_year, class_no, loan_count) Values (?, ?, ?, ?, ?, ?, ?, ?)";
-                pstmt = conn.prepareStatement(sql);
-                pstmt.setString(1, sbd.getBookName());
-                pstmt.setString(2, sbd.getIsbn13());
-                pstmt.setString(3, sbd.getAuthors());
-                pstmt.setString(4, sbd.getPublisher());
-                pstmt.setString(5, sbd.getBookImageUrl());
-                pstmt.setInt(6, sbd.getPublication_year());
-                pstmt.setString(7, sbd.getClass_no());
-                pstmt.setInt(8, sbd.getLoanCnt());
-
-                // 쿼리 실행
-                int rowsInserted = pstmt.executeUpdate();
-                return rowsInserted > 0 ? "데이터 삽입 성공" : "데이터 삽입 실패";
-
-            } catch (Exception e) {
-                Log.e("InsertDataTask", "Error inserting data", e);
-                return "데이터 삽입 중 오류 발생";
-            } finally {
-                try {
-                    if (pstmt != null) pstmt.close();
-                    if (conn != null) conn.close();
-                } catch (Exception e) {
-                    Log.e("InsertDataTask", "Error closing connection", e);
-                }
-            }
-        }
-        return "중복 있음.";
+        client.newCall(request).enqueue(callback);
     }
 
-    public String insertBookCount(Integer department_id, Integer book_id) {
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        try {
-            conn = dbConn();
+    // DELETE
+        private void deleteRequest(String url, Callback callback) {
+        Request request = new Request.Builder()
+                .url(url)
+                .delete()
+                .build();
 
-            // 쿼리 실행
-            String sql = "Insert into book_count (department_id, book_id) Values (?, ?)";
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, department_id);
-            pstmt.setInt(2, book_id);
-
-            // 쿼리 실행
-            int rowsInserted = pstmt.executeUpdate();
-            return rowsInserted > 0 ? "데이터 삽입 성공" : "데이터 삽입 실패";
-
-        } catch (Exception e) {
-            Log.e("InsertDataTask", "Error inserting data", e);
-            return "데이터 삽입 중 오류 발생";
-        } finally {
-            try {
-                if (pstmt != null) pstmt.close();
-                if (conn != null) conn.close();
-            } catch (Exception e) {
-                Log.e("InsertDataTask", "Error closing connection", e);
-            }
-        }
+        client.newCall(request).enqueue(callback);
     }
 
-    public int findBookCount(int book_id, int department_id) {
-        ResultSet rs = null;
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        try {
-            conn = dbConn();
-            String sql = "select book_count_id from book_count where book_id = ? and department_id = ?";
-            // 쿼리 실행
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, book_id);
-            pstmt.setInt(2, department_id);
-            // 쿼리 실행
-            rs = pstmt.executeQuery();
-            if (rs.next()) {
-                return rs.getInt("book_count_id");
-            }
-            return 0;
-        } catch (Exception e) {
-            Log.e("InsertDataTask", "Error inserting data", e);
-            return -1;
-        } finally {
-            try {
-                if (rs != null) rs.close();
-                if (pstmt != null) pstmt.close();
-                if (conn != null) conn.close();
-            } catch (Exception e) {
-                Log.e("InsertDataTask", "Error closing connection", e);
-            }
-        }
+    // Book Insert
+    public void insertBook(SearchBookDetail bookDetail, Callback callback) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("bookName", bookDetail.getBookName());
+        data.put("isbn13", bookDetail.getIsbn13());
+        data.put("authors", bookDetail.getAuthors());
+        data.put("publisher", bookDetail.getPublisher());
+        data.put("bookImageUrl", bookDetail.getBookImageUrl());
+        data.put("publication_year", bookDetail.getPublication_year());
+        data.put("class_no", bookDetail.getClass_no());
+        data.put("loanCnt", bookDetail.getLoanCnt());
+
+        String json = gson.toJson(data);
+        postRequest(BASE_URL + "/books/add", json, callback);
     }
 
-    public String updateBookCount(Integer book_count_id) {
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-
-        try {
-            conn = dbConn();
-
-            // 쿼리 실행
-            String sql = "update book_count set book_count = book_count + 1 where book_count_id = ?";
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, book_count_id);
-
-            // 쿼리 실행
-            int rowsInserted = pstmt.executeUpdate();
-            return rowsInserted > 0 ? "데이터 수정 성공" : "데이터 수정 실패";
-
-        } catch (Exception e) {
-            Log.e("UpdateDataTask", "Error updating data", e);
-            return "데이터 수정 중 오류 발생";
-
-        } finally {
-            try {
-                if (pstmt != null) pstmt.close();
-                if (conn != null) conn.close();
-            } catch (Exception e) {
-                Log.e("UpdateDataTask", "Error closing connection", e);
-            }
-        }
+    // BookId Select
+    public void selectBookId(String isbn13, Callback callback) {
+        getRequest(BASE_URL + "/books/" + isbn13, callback);
     }
 
-    public List<SearchBookDetail> getPopularBooks(Integer department_id) throws SQLException { //학과별 도서검색 탑10
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        List<SearchBookDetail> books = new ArrayList<>();
-        try {
-            conn = dbConn();
-            String sql;
+    // History Insert
+    public void insertHistory(int member_id, int book_id, Callback callback) {
+        Map<String, Integer> data = new HashMap<>();
+        data.put("member_id", member_id);
+        data.put("book_id", book_id);
 
-            if (department_id == 0) {
-                // 전체학과 조회
-                sql = "SELECT b.bookname, b.authors, b.book_image_URL, b.loan_count, b.isbn, b.publisher, b.publication_year, b.class_no, SUM(bc.book_count) AS total_book_count " +
-                        "FROM book_count bc " +
-                        "JOIN book b ON b.book_id = bc.book_id " +
-                        "GROUP BY bc.book_id " +
-                        "ORDER BY total_book_count DESC, b.loan_count DESC " +
-                        "LIMIT 20";
-            } else {
-                // 선택학과 조회
-                sql = "select bc.book_count, b.bookname, b.authors, b.book_image_URL, b.loan_count, b.isbn, b.publisher, b.publication_year, b.class_no " +
-                        "from book_count bc, book b " +
-                        "where b.book_id = bc.book_id " +
-                        "and bc.department_id = ? " +
-                        "order by bc.book_count desc, b.loan_count desc limit 0,10";
-            }
-            pstmt = conn.prepareStatement(sql);
-            if (department_id != 0) {
-            pstmt.setInt(1, department_id);
-            }
-            // 쿼리 실행
-            rs = pstmt.executeQuery();
-
-            while(rs.next()){
-                // 책 이름(bookname)을 가져옴
-                String bookName = rs.getString("bookname");
-                // 책 이미지 URL(bookImageURL)을 가져옴
-                String bookImageUrl = rs.getString("book_image_URL");
-                // 저자(authors)를 가져옴
-                String authors = rs.getString("authors");
-                // 출판사를 가져옴
-                String publisher = rs.getString("publisher");
-                // 출판년도를 가져옴
-                int publication_year = rs.getInt("publication_year");
-                String isbn13 = rs.getString("isbn");
-                String class_no = rs.getString("class_no");
-                int loanCnt = rs.getInt("loan_count");
-                int book_count = department_id == 0 ? rs.getInt("total_book_count") : rs.getInt("book_count");
-
-                Log.d("DB 결과 ", "BookName: " + bookName + ", ImageURL: " + bookImageUrl);
-                // 책 정보를 담은 SearchBookDetail 객체 생성
-                SearchBookDetail book = new SearchBookDetail(bookName, authors, bookImageUrl, publisher, publication_year, isbn13, class_no, loanCnt, book_count);
-
-                // 생성한 SearchBookDetail 객체를 리스트에 추가
-                books.add(book);
-            }
-        } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (rs != null) rs.close();
-                if (pstmt != null) pstmt.close();
-                if (conn != null) conn.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return books;
+        String json = gson.toJson(data);
+        postRequest(BASE_URL + "/history/add", json, callback);
     }
 
-    // 검색 기록 DB 삽입
-    public String insertHistory(int member_id, int book_id) {
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        try {
-            conn = dbConn();
+    // BookCount Find
+    public void findBookCount(int book_id, int department_id, Callback callback) {
+        getRequest(BASE_URL + "/book_count/" + book_id + "/" + department_id, callback);
+    }
 
-            String sql = "insert into search_history (member_id, book_id, search_date) values(?, ?, now()) ";
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, member_id);
-            pstmt.setInt(2, book_id);
+    // BookCount Update
+    public void updateBookCount(int book_count_id, Callback callback) {
+        // 빈 JSON 객체를 생성
+        String json = "{}";
+        putRequest(BASE_URL + "/book_count/update/" + book_count_id, json, callback);
+    }
 
-            // 쿼리 실행
-            int rowsInserted = pstmt.executeUpdate();
-            return rowsInserted > 0 ? "데이터 삽입 성공" : "데이터 삽입 실패";
+    // BookCount Insert
+    public void insertBookCount(int department_id, int book_id, Callback callback) {
+        Map<String, Integer> data = new HashMap<>();
+        data.put("department_id", department_id);
+        data.put("book_id", book_id);
 
-        } catch (Exception e) {
-            Log.e("History Insert Error" , e.toString());
-            return e.toString();
-        } finally {
-            // DB 연결 끊기
-            try {
-                if (pstmt != null) pstmt.close();
-                if (conn != null) conn.close();
-            } catch (Exception e) {
-                Log.e("InsertDataTask", "Error closing connection", e);
-            }
-        }
+        String json = gson.toJson(data);
+        postRequest(BASE_URL + "/book_count/add", json, callback);
     }
 
     // 즐겨찾기 확인
-    public boolean isFavorite(int member_id, int book_id) {
-        ResultSet rs = null;
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        try {
-            conn = dbConn();
-            String sql = "SELECT * FROM favorite WHERE member_id = ? AND book_id = ?";
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, member_id);
-            pstmt.setInt(2, book_id);
-
-            rs = pstmt.executeQuery();
-            return rs.next();
-        } catch (Exception e) {
-            Log.e("Database", "Error checking favorite", e);
-            return false;
-        } finally {
-            try {
-                if (rs != null) rs.close();
-                if (pstmt != null) pstmt.close();
-                if (conn != null) conn.close();
-            } catch (Exception e) {
-                Log.e("Database", "Error closing connection", e);
-            }
-        }
+    public void isFavorite(int memberId, int bookId, Callback callback) {
+        String url = BASE_URL + "/m/favorite?member_id=" + memberId + "&book_id=" + bookId;
+        getRequest(url, callback);
     }
 
     // 즐겨찾기 추가
-    public String addFavorite(int member_id, int book_id) {
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        try {
-            conn = dbConn();
-            String sql = "INSERT INTO favorite (member_id, book_id, favorite_date) VALUES (?, ?, NOW())";
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, member_id);
-            pstmt.setInt(2, book_id);
-
-            int rowsInserted = pstmt.executeUpdate();
-            return rowsInserted > 0 ? "즐겨찾기 추가 성공" : "즐겨찾기 추가 실패";
-        } catch (Exception e) {
-            Log.e("Database", "Error adding favorite", e);
-            return "즐겨찾기 추가 중 오류 발생";
-        } finally {
-            try {
-                if (pstmt != null) pstmt.close();
-                if (conn != null) conn.close();
-            } catch (Exception e) {
-                Log.e("Database", "Error closing connection", e);
-            }
-        }
+    public void addFavorite(int member_id, int book_id, Callback callback) {
+        String url = BASE_URL + "/m/favorite/" + book_id + "?member_id=" + member_id;
+        Request request = new Request.Builder()
+                .url(url)
+                .post(RequestBody.create("", JSON)) // POST 요청을 위한 빈 바디 사용
+                .build();
+        client.newCall(request).enqueue(callback);
     }
 
     // 즐겨찾기 삭제
-    public String removeFavorite(int member_id, int book_id) {
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        try {
-            conn = dbConn();
-            String sql = "DELETE FROM favorite WHERE member_id = ? AND book_id = ?";
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, member_id);
-            pstmt.setInt(2, book_id);
-
-            int rowsDeleted = pstmt.executeUpdate();
-            return rowsDeleted > 0 ? "즐겨찾기 삭제 성공" : "즐겨찾기 삭제 실패";
-        } catch (Exception e) {
-            Log.e("Database", "Error removing favorite", e);
-            return "즐겨찾기 삭제 중 오류 발생";
-        } finally {
-            try {
-                if (pstmt != null) pstmt.close();
-                if (conn != null) conn.close();
-            } catch (Exception e) {
-                Log.e("Database", "Error closing connection", e);
-            }
-        }
+    public void removeFavorite(int member_id, int book_id, Callback callback) {
+        String url = BASE_URL + "/m/favorite?member_id=" + member_id + "&book_id=" + book_id;
+        Request request = new Request.Builder()
+                .url(url)
+                .delete() // HTTP DELETE 메서드 사용
+                .build();
+        client.newCall(request).enqueue(callback);
     }
+
+    // 즐겨찾기 기록(ALL) 가져오기
+    public void getFavoriteAll(int member_id, Callback callback) {
+        String url = BASE_URL + "/m/favorite/history?member_id=" + member_id;
+        getRequest(url, callback);
+    }
+
+    // 검색 기록(ALL) 가져오기
+    public void getSearchHistoryAll(int member_id, Callback callback) {
+        String url = BASE_URL + "/m/history?member_id=" + member_id;
+        Log.d("SearchHistoryAll", url);
+        getRequest(url, callback);
+    }
+
+
+    // 학과별 인기도서 데이터 요청
+    public void getPopularBooks(int departmentId, Callback callback) {
+        String url = BASE_URL + "/api/popular?departmentId=" + departmentId;
+        Request request = new Request.Builder().url(url).build();
+        client.newCall(request).enqueue(callback);
+    }
+
+    // 학과별 인기도서 데이터 응답/파싱
+    public List<SearchBookDetail> parsePopularBooksResponse(Response response) throws IOException {
+        String jsonResponse = response.body().string();
+        List<SearchBookDetail> bookList = new ArrayList<>();
+
+        try {
+            JSONArray responseArray = new JSONArray(jsonResponse);
+            for (int i = 0; i < responseArray.length(); i++) {
+                JSONObject bookObject = responseArray.getJSONObject(i);
+
+                SearchBookDetail bookDetail = new SearchBookDetail();
+                bookDetail.setBookName(bookObject.optString("bookname", "N/A"));
+                bookDetail.setAuthors(bookObject.optString("authors", "N/A"));
+                bookDetail.setPublisher(bookObject.optString("publisher", "N/A"));
+                bookDetail.setPublication_year(bookObject.optInt("publication_year", 0));
+                bookDetail.setClass_no(bookObject.optString("class_no", "N/A"));
+                bookDetail.setLoanCnt(bookObject.optInt("loan_count", 0));
+                bookDetail.setBookImageUrl(bookObject.optString("book_image_URL", ""));
+                bookDetail.setIsbn13(bookObject.optString("isbn", "N/A"));
+
+                bookList.add(bookDetail);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return bookList;
+    } // end of parsePopularBooksResponse
+
+
+    // 회원가입
+    public void addMember(String name, String gender, String age, String department_id, String id, String password, String email, Callback callback) {
+        Map<String, String> data = new HashMap<>();
+        data.put("name", name);
+        data.put("gender", gender);
+        data.put("age", age);
+        data.put("department_id", department_id);
+        data.put("id", id);
+        data.put("password", password);
+        data.put("email", email);
+
+        String json = gson.toJson(data);
+        postRequest(BASE_URL + "/join/add", json, callback);
+    }
+
+    // 로그인
+    public void login(String id, String password, Callback callback) {
+        String url = BASE_URL + "/m/login";
+        RequestBody formBody = new FormBody.Builder()
+                .add("id", id)
+                .add("password", password)
+                .build();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .post(formBody)
+                .build();
+
+        client.newCall(request).enqueue(callback);
+    }
+
+    // 로그인 아이디 중복체크
+    public void checkIdDuplicate(String id, Callback callback) {
+        String url = BASE_URL + "/join/check_id";
+        RequestBody formBody = new FormBody.Builder()
+                .add("id", id)
+                .build();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .post(formBody)
+                .build();
+
+        client.newCall(request).enqueue(callback);
+    }
+
+    // 로그아웃 요청
+    public void logout(Callback callback) {
+        String url = BASE_URL + "/logout";
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .build();
+
+        client.newCall(request).enqueue(callback);
+    }
+
+    // 세션에서 member_id 가져오기
+    public void getMemberId(Callback callback) {
+        String url = BASE_URL + "/session/member_id";
+        Request request = new Request.Builder().url(url).build();
+        client.newCall(request).enqueue(callback);
+    }
+
+    // 세션에서 회원 정보 수정 데이터 가져오기
+    public void getModify(Integer member_id, String password, Callback callback) {
+        String url = BASE_URL + "/join/m/modify?member_id=" + member_id + "&password=" + password;
+        Request request = new Request.Builder().url(url).build();
+        client.newCall(request).enqueue(callback);
+    }
+
+    // 회원 정보 수정 요청
+    public void modifyMember(String name, String gender, String age, int department_id, String id, String password, String email, Callback callback) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("name", name);
+        data.put("gender", gender);
+        data.put("age", age);
+        data.put("department_id", department_id);
+        data.put("id", id);
+        data.put("password", password);
+        data.put("email", email);
+
+        String json = gson.toJson(data);
+        putRequest(BASE_URL + "/join/modify", json, callback);
+    }
+
 }
