@@ -2,16 +2,14 @@ package com.example.androidteamproject.ApiData;
 
 import android.util.Log;
 
-import com.example.androidteamproject.R;
+import com.example.androidteamproject.BuildConfig;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,8 +26,8 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class DataBase {
-//    private static final String BASE_URL = "***REMOVED***"; // 로컬
-    private static final String BASE_URL = "***REMOVED***"; // 서버 URL
+//    private static final String BASE_URL = BuildConfig.BASE_URL; // 서버
+    private static final String BASE_URL = BuildConfig.LOCAL_BASE_URL; // 로컬
     private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     private OkHttpClient client;
     private Gson gson;
