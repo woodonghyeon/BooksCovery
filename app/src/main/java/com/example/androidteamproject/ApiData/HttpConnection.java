@@ -23,8 +23,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class HttpConnection {
-//    private static final String BASE_URL = BuildConfig.BASE_URL + "/api"; // 서버
-    private static final String BASE_URL = BuildConfig.LOCAL_BASE_URL + "/api"; // 로컬
+    private static final String BASE_URL = BuildConfig.BASE_URL + "/api"; // 서버
+//    private static final String BASE_URL = BuildConfig.LOCAL_BASE_URL + "/api"; // 로컬
     private static HttpConnection instance;
     private OkHttpClient client;
 
