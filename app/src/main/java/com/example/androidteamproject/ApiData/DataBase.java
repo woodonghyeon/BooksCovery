@@ -26,8 +26,8 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class DataBase {
-//    private static final String BASE_URL = BuildConfig.BASE_URL; // 서버
-    private static final String BASE_URL = BuildConfig.LOCAL_BASE_URL; // 로컬
+    private static final String BASE_URL = BuildConfig.BASE_URL; // 서버
+//    private static final String BASE_URL = BuildConfig.LOCAL_BASE_URL; // 로컬
     private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     private OkHttpClient client;
     private Gson gson;
