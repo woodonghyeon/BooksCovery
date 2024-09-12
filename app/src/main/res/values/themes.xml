@@ -5,6 +5,7 @@
         <!-- 기타 스타일 속성 -->
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="bottomNavigationStyle">@style/CustomBottomNavigationView</item>
+        <item name="android:windowFullscreen">true</item>
     </style>
 
     <style name="Theme.AndroidTeamProject" parent="Base.Theme.AndroidTeamProject" >
